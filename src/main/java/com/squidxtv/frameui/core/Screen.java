@@ -270,8 +270,16 @@ public final class Screen {
         content.addAll(components);
     }
 
+    public void addContent(@NotNull Component component) {
+        content.add(component);
+    }
+
     public void removeContent(@NotNull Collection<Component> components) {
         content.removeAll(components);
+    }
+
+    public void removeContent(@NotNull Component component) {
+        content.remove(component);
     }
 
     public void clearContent() {
