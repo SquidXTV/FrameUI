@@ -22,7 +22,7 @@ FrameUI provides a number of customization options to allow you to create the pe
 You can also customize the appearance of the screen by setting the background image and adjusting the size and location of the screen.
 
 ## License
-FrameUI is released under the MIT License.
+FrameUI is released under the [MIT License]("/LICENSE").
 
 ## Credits
 FrameUI was developed by SquidXTV.
