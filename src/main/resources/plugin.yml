@@ -1,0 +1,9 @@
+name: FrameUI
+version: '1.0'
+main: com.squidxtv.frameui.FrameUI
+api-version: 1.19.2
+prefix: FrameUI
+load: STARTUP
+authors: [ SquidXTV ]
+depend: [ ProtocolLib ]
+description: ToDo
