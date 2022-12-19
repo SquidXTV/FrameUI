@@ -1,6 +1,6 @@
-package com.squidxtv.frameui.util;
+package me.squidxtv.frameui.util;
 
-import com.squidxtv.frameui.core.Screen;
+import me.squidxtv.frameui.core.Screen;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 

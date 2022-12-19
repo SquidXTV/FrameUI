@@ -1,4 +1,4 @@
-package com.squidxtv.frameui.core.content;
+package me.squidxtv.frameui.core.content;
 
 public enum Alignment {
     TOP_RIGHT(),

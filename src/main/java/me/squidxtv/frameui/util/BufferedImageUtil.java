@@ -1,4 +1,4 @@
-package com.squidxtv.frameui.util;
+package me.squidxtv.frameui.util;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -1,8 +1,8 @@
-package com.squidxtv.frameui.listener;
+package me.squidxtv.frameui.listener;
 
-import com.squidxtv.frameui.core.Screen;
-import com.squidxtv.frameui.util.ScreenIntersection;
-import com.squidxtv.frameui.util.ScreenUtil;
+import me.squidxtv.frameui.core.Screen;
+import me.squidxtv.frameui.util.ScreenIntersection;
+import me.squidxtv.frameui.util.ScreenUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

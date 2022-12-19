@@ -1,11 +1,11 @@
-package com.squidxtv.frameui.packets;
+package me.squidxtv.frameui.packets;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import com.squidxtv.frameui.FrameUI;
-import com.squidxtv.frameui.util.Direction;
+import me.squidxtv.frameui.FrameUI;
+import me.squidxtv.frameui.util.Direction;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;

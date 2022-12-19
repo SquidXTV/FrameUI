@@ -6,4 +6,4 @@ prefix: FrameUI
 load: STARTUP
 authors: [ SquidXTV ]
 depend: [ ProtocolLib ]
-description: ToDo
+description: FrameUI is a library for creating GUI layouts in Minecraft using item frames and maps.

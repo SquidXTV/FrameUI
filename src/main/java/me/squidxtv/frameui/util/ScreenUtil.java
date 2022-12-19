@@ -1,7 +1,7 @@
-package com.squidxtv.frameui.util;
+package me.squidxtv.frameui.util;
 
-import com.squidxtv.frameui.core.Screen;
-import com.squidxtv.frameui.core.ScreenManager;
+import me.squidxtv.frameui.core.Screen;
+import me.squidxtv.frameui.core.ScreenManager;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;

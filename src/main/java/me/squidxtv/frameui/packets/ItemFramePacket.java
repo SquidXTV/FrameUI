@@ -1,4 +1,4 @@
-package com.squidxtv.frameui.packets;
+package me.squidxtv.frameui.packets;
 
 import com.comphenix.protocol.events.PacketContainer;
 import org.jetbrains.annotations.NotNull;

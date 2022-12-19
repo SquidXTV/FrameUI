@@ -1,13 +1,13 @@
-package com.squidxtv.frameui.core;
+package me.squidxtv.frameui.core;
 
-import com.squidxtv.frameui.FrameUI;
-import com.squidxtv.frameui.core.content.Component;
-import com.squidxtv.frameui.packets.ItemFramePacket;
-import com.squidxtv.frameui.packets.PacketManager;
-import com.squidxtv.frameui.util.BufferedImageUtil;
-import com.squidxtv.frameui.util.Direction;
-import com.squidxtv.frameui.util.FrameRenderer;
-import com.squidxtv.frameui.util.MapUtil;
+import me.squidxtv.frameui.FrameUI;
+import me.squidxtv.frameui.core.content.Component;
+import me.squidxtv.frameui.packets.ItemFramePacket;
+import me.squidxtv.frameui.packets.PacketManager;
+import me.squidxtv.frameui.util.BufferedImageUtil;
+import me.squidxtv.frameui.util.Direction;
+import me.squidxtv.frameui.util.FrameRenderer;
+import me.squidxtv.frameui.util.MapUtil;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;

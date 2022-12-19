@@ -1,4 +1,4 @@
-package com.squidxtv.frameui.core;
+package me.squidxtv.frameui.core;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;

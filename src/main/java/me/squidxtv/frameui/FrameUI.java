@@ -1,10 +1,10 @@
-package com.squidxtv.frameui;
+package me.squidxtv.frameui;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.squidxtv.frameui.listener.ClickListener;
-import com.squidxtv.frameui.listener.ScrollListener;
-import com.squidxtv.frameui.packets.PacketManager;
+import me.squidxtv.frameui.listener.ClickListener;
+import me.squidxtv.frameui.listener.ScrollListener;
+import me.squidxtv.frameui.packets.PacketManager;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
