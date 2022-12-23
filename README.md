@@ -13,6 +13,9 @@ To use FrameUI, you will need to create a new `Screen` using the `Screen.Builder
 Here is an example of how to create a simple screen with a button:
 
 ```java
+JavaPlugin plugin = ...;
+ScreenManager manager = ScreenManager.getInstance();
+
 Location location = ...;
 BufferedImage background = ...;
 World world = ...;
@@ -20,10 +23,13 @@ List<Player> viewers = ...;
 Screen screen = new Screen.Builder(location, background, world, viewers)
         .width(5)
         .height(3);
+
 Component button = new Component(texture, 0, 0, 10, 10);
 button.setClickAction((component, clickX, clickY) -> System.out.println("Button clicked!"));
 screen.addContent(button);
+
 screen.open();
+manager.register(plugin, screen);
 ```
 To open the screen for a player, simply call the `screen.open()` method. The screen will be displayed to the player as a series of item frames and maps.
 
@@ -38,7 +44,7 @@ You can also customize the appearance of the screen by setting the background im
 FrameUI is released under the [MIT License](/LICENSE).
 
 ## Credits
-FrameUI was developed by SquidXTV with help from [Kademlia](https://www.twitch.tv/kademlia).
+FrameUI was developed by SquidXTV with inspiration and help from [Kademlia](https://www.twitch.tv/kademlia).
 
 ## Contact
 If you have any questions or suggestions for FrameUI, please don't hesitate to contact me via email at [squidxtv@gmail.com](mailto:squidxtv@gmail.com).
