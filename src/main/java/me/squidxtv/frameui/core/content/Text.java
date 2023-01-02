@@ -1,59 +1,73 @@
 package me.squidxtv.frameui.core.content;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Element;
 
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Objects;
 
-public class Text {
+public class Text extends ElementNode {
 
-    private @NotNull String string;
+    public static final Font MINECRAFT_FONT;
+
+    static  {
+        try {
+            MINECRAFT_FONT = Font.createFont(Font.TRUETYPE_FONT, new File(Objects.requireNonNull(Text.class.getResource("/minecraft_font.ttf")).toURI()));
+        } catch (FontFormatException | URISyntaxException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private @NotNull String text;
+
+    private int x;
+    private int y;
+
     private @NotNull Font font;
-    private @NotNull Alignment alignment;
 
-    private int offsetX;
-    private int offsetY;
-
-    public Text(@NotNull String text, @NotNull Font font, @NotNull Alignment alignment, int offsetX, int offsetY) {
-        this.string = text;
+    public Text(@NotNull String id, int x, int y, @NotNull String text, @NotNull Font font) {
+        super(id);
+        this.text = text;
+        this.x = x;
+        this.y = y;
         this.font = font;
-        this.alignment = alignment;
-
-        this.offsetX = offsetX;
-        this.offsetY = offsetY;
     }
 
-    public Text(@NotNull String text, @NotNull Font font, @NotNull Alignment alignment) {
-        this(text, font, alignment, 0, 0);
+    @Override
+    public void draw(Graphics g) {
+        if (text.isEmpty() || text.isBlank()) {
+            return;
+        }
+        g.setFont(font);
+        g.drawString(text, x, y);
     }
 
-    public Text(@NotNull String text, @NotNull Font font) {
-        this(text, font, Alignment.TOP_LEFT);
+    public @NotNull String getText() {
+        return text;
     }
 
-    public @NotNull Point getDrawPoint(@NotNull Component component, @NotNull Graphics graphics) {
-        FontMetrics metrics = graphics.getFontMetrics(this.font);
-        int x = switch (alignment) {
-            case TOP_RIGHT, RIGHT, BOTTOM_RIGHT -> component.x + (component.width - metrics.stringWidth(string))
-                    + 1 + offsetX;
-            case TOP, CENTER, BOTTOM -> component.x + (component.width - metrics.stringWidth(string)) / 2 + 1 + offsetX;
-            case TOP_LEFT, LEFT, BOTTOM_LEFT -> component.x - 1 + offsetX;
-        };
-        int y = switch (alignment) {
-            case TOP_RIGHT, TOP, TOP_LEFT -> component.y + (metrics.getHeight() / 2) + 1 + offsetY;
-            case RIGHT, CENTER, LEFT -> component.y + ((component.height - metrics.getHeight()) / 2)
-                    + metrics.getAscent() + offsetY;
-            case BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT -> component.y + component.height + offsetY;
-        };
-
-        return new Point(x, y);
+    public void setText(@NotNull String text) {
+        this.text = text;
     }
 
-    public @NotNull String getString() {
-        return string;
+    public int getX() {
+        return x;
     }
 
-    public void setString(@NotNull String string) {
-        this.string = string;
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 
     public @NotNull Font getFont() {
@@ -64,51 +78,31 @@ public class Text {
         this.font = font;
     }
 
-    public @NotNull Alignment getAlignment() {
-        return alignment;
-    }
+    @Contract("_ -> new")
+    public static @NotNull Text of(@NotNull Element element) {
+        String id = element.getAttribute("id");
+        String text = element.getTextContent();
 
-    public void setAlignment(@NotNull Alignment alignment) {
-        this.alignment = alignment;
-    }
+        int x = Integer.parseInt(element.getAttribute("x"));
+        int y = Integer.parseInt(element.getAttribute("y"));
 
-    public int getOffsetX() {
-        return offsetX;
-    }
+        String fontName = element.getAttribute("font");
+        Font font;
 
-    public void setOffsetX(int offsetX) {
-        this.offsetX = offsetX;
-    }
+        if (fontName.isBlank() || fontName.isEmpty()) {
+            font = MINECRAFT_FONT;
+        } else {
+            font = Font.decode(fontName);
+        }
 
-    public int getOffsetY() {
-        return offsetY;
-    }
+        float fontSize = Float.parseFloat(element.getAttribute("font-size"));
+        font.deriveFont(fontSize);
 
-    public void setOffsetY(int offsetY) {
-        this.offsetY = offsetY;
-    }
+        boolean bold = Boolean.parseBoolean(element.getAttribute("bold"));
+        if (bold) {
+            font.deriveFont(Font.BOLD);
+        }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Text text = (Text) o;
-
-        if (offsetX != text.offsetX) return false;
-        if (offsetY != text.offsetY) return false;
-        if (!string.equals(text.string)) return false;
-        if (!font.equals(text.font)) return false;
-        return alignment == text.alignment;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = string.hashCode();
-        result = 31 * result + font.hashCode();
-        result = 31 * result + alignment.hashCode();
-        result = 31 * result + offsetX;
-        result = 31 * result + offsetY;
-        return result;
+        return new Text(id, x, y, text, font);
     }
 }

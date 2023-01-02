@@ -1,7 +1,7 @@
 package me.squidxtv.frameui.core;
 
-import me.squidxtv.frameui.FrameUI;
-import me.squidxtv.frameui.core.content.Component;
+import me.squidxtv.frameui.JavaPlugin;
+import me.squidxtv.frameui.core.content.ElementNode;
 import me.squidxtv.frameui.packets.ItemFramePacket;
 import me.squidxtv.frameui.packets.PacketManager;
 import me.squidxtv.frameui.util.BufferedImageUtil;
@@ -17,219 +17,207 @@ import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 import org.bukkit.permissions.Permission;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.awt.image.*;
+import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ *
+ */
 public final class Screen {
 
-    private static final @NotNull Logger LOGGER = JavaPlugin.getPlugin(FrameUI.class).getLogger();
+    private static final @NotNull Logger LOGGER = org.bukkit.plugin.java.JavaPlugin.getPlugin(JavaPlugin.class).getLogger();
 
-    private final @NotNull UUID id;
-
-    private final @NotNull PacketManager packetManager;
-    private ItemFramePacket[][] packets;
-
-    // location
     /**
-     * Top-left's item frame location
+     * Unique Identifier for this Screen.
      */
-    private @NotNull Location location;
-    private @NotNull Direction direction;
-    private @NotNull World world;
+    private final @NotNull UUID uuid;
 
-    // size
-    private final int width;
-    private final int height;
+    /**
+     * Identifier for this Screen.
+     */
+    private @NotNull String id;
 
-    // content
-    private @NotNull BufferedImage background;
-    private final @NotNull List<Component> content;
+    /**
+     * Width in Minecraft blocks.
+     */
+    private int width;
+
+    /**
+     * Height in Minecraft blocks.
+     */
+    private int height;
+
+    /**
+     * Background image rendered on this Screen.
+     */
+    private BufferedImage background;
+
+    /**
+     * Content drawn on the background.
+     */
+    private ElementNode[] content;
+
+    /**
+     * Maps inside the item frames.
+     */
     private ItemStack[][] maps;
+
+    /**
+     * Entity identifier for Item Frames. Used to send destroy
+     * packets later.
+     */
     private int[][] frameIDs;
 
+    /**
+     * Manager to send packets to the player.
+     */
+    private final @NotNull PacketManager packetManager;
+
+    /**
+     * Current packets send. Used to send same packets to new viewer.
+     */
+    private ItemFramePacket[][] packets;
+
+    /**
+     * Top-left's item frame location.
+     */
+    private @NotNull Location location;
+
+    /**
+     * Direction of Item frames.
+     */
+    private @NotNull Direction direction;
+
+    /**
+     * World of Item frames.
+     */
+    private @NotNull World world;
+
+    /**
+     * State of Screen.
+     */
     private @NotNull State state;
+
+    /**
+     * Set of the current viewer.
+     */
     private final @NotNull Set<Player> viewer;
+
+    /**
+     * Permission to restrict usage of clicking.
+     */
     private Permission clickPermission;
+
+    /**
+     * Permission to restrict usage of scrolling.
+     */
     private Permission scrollPermission;
 
+    /**
+     * State of Screen, either OPEN or CLOSED.
+     */
     public enum State {
         OPENED,
         CLOSED
     }
 
-    public static class Builder {
-        private final @NotNull Location location;
-        private final @NotNull BufferedImage background;
-        private final @NotNull World world;
-        private final @NotNull Set<Player> viewer;
-
-        private Permission clickPermission;
-
-        private @NotNull Direction direction = Direction.NORTH;
-        private int width = 5;
-        private int height = 3;
-
-        public Builder(@NotNull Location location, @NotNull BufferedImage background, @NotNull World world, @NotNull Collection<Player> viewer) {
-            this.location = location;
-            this.background = background;
-            this.world = world;
-            this.viewer = new HashSet<>(viewer);
-        }
-
-        public @NotNull Builder direction(@NotNull Direction direction) {
-            this.direction = direction;
-            return this;
-        }
-
-        public @NotNull Builder width(int width) {
-            this.width = width;
-            return this;
-        }
-
-        public @NotNull Builder height(int height) {
-            this.height = height;
-            return this;
-        }
-
-        public @NotNull Builder clickPermission(Permission clickPermission) {
-            this.clickPermission = clickPermission;
-            return this;
-        }
-
-        public @NotNull Screen build() {
-            return new Screen(this);
-        }
-    }
-
-    private Screen(@NotNull Builder builder) {
-        this.packetManager = JavaPlugin.getPlugin(FrameUI.class).getPacketManager();
-        this.id = UUID.randomUUID();
+    public Screen(@NotNull ScreenXML screenXML, @NotNull Location location, @NotNull World world, @NotNull Direction direction) {
+        this.uuid = UUID.randomUUID();
+        setXMLBlueprint(screenXML);
+        this.location = location;
+        this.direction = direction;
+        this.world = world;
+        this.viewer = new HashSet<>();
         this.state = State.CLOSED;
-
-        this.location = builder.location;
-        this.direction = builder.direction;
-        this.world = builder.world;
-
-        this.width = builder.width;
-        this.height = builder.height;
-
-        this.background = builder.background;
-        this.content = new ArrayList<>();
-        this.frameIDs = new int[height][width];
-        this.packets = new ItemFramePacket[height][width];
-        this.maps = new ItemStack[height][width];
-
-        this.viewer = builder.viewer;
-        this.clickPermission = builder.clickPermission;
-    }
-
-    public void open() {
-        if (state == State.OPENED) {
-            close();
-        }
+        clickPermission = null;
+        scrollPermission = null;
+        packetManager = org.bukkit.plugin.java.JavaPlugin.getPlugin(JavaPlugin.class).getPacketManager();
 
         this.frameIDs = new int[height][width];
         this.packets = new ItemFramePacket[height][width];
         this.maps = new ItemStack[height][width];
+    }
 
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                ItemStack map = MapUtil.construct(id, viewer, world, i, j);
-                maps[i][j] = map;
+    public Screen(@NotNull ScreenXML screenXML, @NotNull Location location, @NotNull World world) {
+        this(screenXML, location, world, Direction.NORTH);
+    }
 
-                int x = location.getBlockX() + (j * direction.getMultiplierX());
-                int y = location.getBlockY() - i;
-                int z = location.getBlockZ() + (j * direction.getMultiplierZ());
+    public synchronized void open() {
+        synchronized (this) {
+            if (state == State.OPENED) {
+                close();
+            }
 
-                ItemFramePacket packet = packetManager.createItemFrame(map, x, y, z, true, direction);
-                packets[i][j] = packet;
-                frameIDs[i][j] = packet.entityID();
-                packetManager.sendItemFramePacket(viewer, packet);
+            this.frameIDs = new int[height][width];
+            this.packets = new ItemFramePacket[height][width];
+            this.maps = new ItemStack[height][width];
+
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    ItemStack map = MapUtil.construct(uuid, viewer, world, i, j);
+                    maps[i][j] = map;
+
+                    int x = location.getBlockX() + (j * direction.getMultiplierX());
+                    int y = location.getBlockY() - i;
+                    int z = location.getBlockZ() + (j * direction.getMultiplierZ());
+
+                    ItemFramePacket packet = packetManager.createItemFrame(map, x, y, z, true, direction);
+                    packets[i][j] = packet;
+                    frameIDs[i][j] = packet.entityID();
+                    packetManager.sendItemFramePacket(viewer, packet);
+                }
+            }
+
+            state = State.OPENED;
+            update();
+        }
+    }
+
+    public synchronized void close() {
+        synchronized (this) {
+            if (state == State.CLOSED) {
+                return;
+            }
+
+            packetManager.destroyItemFrame(viewer, frameIDs);
+            frameIDs = new int[height][width];
+            packets = new ItemFramePacket[height][width];
+
+            state = State.CLOSED;
+        }
+    }
+
+    public synchronized void update() {
+        synchronized (this) {
+            if (state == State.CLOSED) {
+                return;
+            }
+
+            BufferedImage currentFrame = generateCurrentState();
+            BufferedImage[][] sections = BufferedImageUtil.split(currentFrame, width, height);
+
+            for (int i = 0; i < sections.length; i++) {
+                for (int j = 0; j < sections[i].length; j++) {
+                    BufferedImage part = sections[i][j];
+                    ItemStack map = maps[i][j];
+
+                    updateImage(map, part);
+                }
             }
         }
-
-        state = State.OPENED;
-        render();
     }
 
-    public void close() {
-        if (state == State.CLOSED) {
-            return;
-        }
-
-        packetManager.destroyItemFrame(viewer, frameIDs);
-        frameIDs = new int[height][width];
-        packets = new ItemFramePacket[height][width];
-
-        state = State.CLOSED;
-    }
-
-    public synchronized void render() {
-        if (state == State.CLOSED) {
-            return;
-        }
-
-        BufferedImage currentFrame = calculateFrame();
-        BufferedImage[][] sections = BufferedImageUtil.split(currentFrame, width, height);
-
-        for (int i = 0; i < sections.length; i++) {
-            for (int j = 0; j < sections[i].length; j++) {
-                BufferedImage part = sections[i][j];
-                ItemStack map = maps[i][j];
-
-                updateImage(map, part);
-            }
-        }
-    }
-
-    public void click(@NotNull Player player, int x, int y) {
-        if (state == State.CLOSED) {
-            return;
-        }
-
-        if (!viewer.contains(player)) {
-            return;
-        }
-
-        if (clickPermission != null && !player.hasPermission(clickPermission)) {
-            return;
-        }
-
-        for (Component component : content) {
-            component.click(x, y);
-        }
-    }
-
-    public void scroll(@NotNull Player player, int direction, int speed, int x, int y) {
-        if (state == State.CLOSED) {
-            return;
-        }
-
-        if (!viewer.contains(player)) {
-            return;
-        }
-
-        if (scrollPermission != null && !player.hasPermission(scrollPermission)) {
-            return;
-        }
-
-        for (Component component : content) {
-            component.scroll(direction, speed, x, y);
-        }
-    }
-
-    private @NotNull BufferedImage calculateFrame() {
+    private @NotNull BufferedImage generateCurrentState() {
         BufferedImage image = BufferedImageUtil.deepCopy(background);
         Graphics g = image.getGraphics();
 
-        for (Component component : content) {
-            component.draw(g);
+        for (ElementNode element : content) {
+            element.draw(g);
         }
 
         return image;
@@ -262,31 +250,43 @@ public final class Screen {
         renderer.setImage(updated);
     }
 
-    public @NotNull Collection<Component> getContent() {
-        return Collections.unmodifiableList(content);
+    public void click(@NotNull Player player, int x, int y) {
+        if (state == State.CLOSED) {
+            return;
+        }
+
+        if (!viewer.contains(player)) {
+            return;
+        }
+
+        if (clickPermission != null && !player.hasPermission(clickPermission)) {
+            return;
+        }
+
+        for (ElementNode element : content) {
+            element.click(x, y);
+        }
     }
 
-    public void addContent(@NotNull Collection<Component> components) {
-        content.addAll(components);
+    public void scroll(@NotNull Player player, int direction, int speed, int x, int y) {
+        if (state == State.CLOSED) {
+            return;
+        }
+
+        if (!viewer.contains(player)) {
+            return;
+        }
+
+        if (scrollPermission != null && !player.hasPermission(scrollPermission)) {
+            return;
+        }
+
+        for (ElementNode element : content) {
+            element.scroll(direction, speed, x, y);
+        }
     }
 
-    public void addContent(@NotNull Component component) {
-        content.add(component);
-    }
-
-    public void removeContent(@NotNull Collection<Component> components) {
-        content.removeAll(components);
-    }
-
-    public void removeContent(@NotNull Component component) {
-        content.remove(component);
-    }
-
-    public void clearContent() {
-        content.clear();
-    }
-
-    public void addViewer(@NotNull Player player) {
+    public synchronized void addViewer(@NotNull Player player) {
         if (state == State.OPENED) {
             for (ItemFramePacket[] row : packets) {
                 for (ItemFramePacket packet : row) {
@@ -297,7 +297,7 @@ public final class Screen {
         viewer.add(player);
     }
 
-    public void addViewer(@NotNull Collection<Player> players) {
+    public synchronized void addViewer(@NotNull Collection<Player> players) {
         if (state == State.OPENED) {
             for (ItemFramePacket[] row : packets) {
                 for (ItemFramePacket packet : row) {
@@ -308,21 +308,21 @@ public final class Screen {
         viewer.addAll(players);
     }
 
-    public void removeViewer(@NotNull Player player) {
+    public synchronized void removeViewer(@NotNull Player player) {
         if (state == State.OPENED) {
             packetManager.destroyItemFrame(List.of(player), frameIDs);
         }
         viewer.remove(player);
     }
 
-    public void removeViewer(@NotNull Collection<Player> players) {
+    public synchronized void removeViewer(@NotNull Collection<Player> players) {
         if (state == State.OPENED) {
             packetManager.destroyItemFrame(players, frameIDs);
         }
         viewer.removeAll(players);
     }
 
-    public void clearViewer() {
+    public synchronized void clearViewer() {
         if (state == State.OPENED) {
             packetManager.destroyItemFrame(viewer, frameIDs);
         }
@@ -333,23 +333,19 @@ public final class Screen {
         return viewer.contains(player);
     }
 
-    public void setLocation(@NotNull Location location) {
+    public synchronized void setLocation(@NotNull Location location) {
         this.location = location;
     }
 
-    public void setDirection(@NotNull Direction direction) {
+    public synchronized void setDirection(@NotNull Direction direction) {
         this.direction = direction;
     }
 
-    public void setWorld(@NotNull World world) {
+    public synchronized void setWorld(@NotNull World world) {
         this.world = world;
     }
 
-    public void setBackground(@NotNull BufferedImage background) {
-        this.background = background;
-    }
-
-    public void setClickPermission(@NotNull Permission clickPermission) {
+    public void setClickPermission(Permission clickPermission) {
         this.clickPermission = clickPermission;
     }
 
@@ -357,24 +353,15 @@ public final class Screen {
         this.scrollPermission = scrollPermission;
     }
 
-
-    public @NotNull State getState() {
-        return this.state;
+    public synchronized void setXMLBlueprint(@NotNull ScreenXML screenXML) {
+        this.id = screenXML.getId();
+        this.width = screenXML.getWidth();
+        this.height = screenXML.getHeight();
+        this.background = screenXML.getBackground();
+        this.content = screenXML.getChildNodes();
     }
 
-    public @NotNull Direction getDirection() {
-        return direction;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public @NotNull UUID getId() {
+    public @NotNull String getId() {
         return id;
     }
 
@@ -382,7 +369,31 @@ public final class Screen {
         return location;
     }
 
+    public @NotNull Direction getDirection() {
+        return direction;
+    }
+
     public @NotNull World getWorld() {
         return world;
+    }
+
+    public @NotNull State getState() {
+        return state;
+    }
+
+    public List<ElementNode> getContentById(String id) {
+        return Arrays.stream(content).filter(elementNode -> elementNode.getId().equals(id)).toList();
+    }
+
+    public @NotNull Set<Player> getViewer() {
+        return viewer;
+    }
+
+    public Permission getClickPermission() {
+        return clickPermission;
+    }
+
+    public Permission getScrollPermission() {
+        return scrollPermission;
     }
 }
