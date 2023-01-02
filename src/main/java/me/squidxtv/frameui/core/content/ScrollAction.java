@@ -5,5 +5,6 @@ import org.jetbrains.annotations.NotNull;
 @FunctionalInterface
 public interface ScrollAction {
 
-    void performScroll(@NotNull Component component, int direction, int speed, int clickX, int clickY);
+    void performScroll(@NotNull ElementNode element, int direction, int speed, int x, int y);
+
 }
