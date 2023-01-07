@@ -17,7 +17,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-public final class JavaPlugin extends org.bukkit.plugin.java.JavaPlugin {
+public final class FrameUI extends org.bukkit.plugin.java.JavaPlugin {
 
     private DocumentBuilder documentBuilder;
     private ProtocolManager protocolManager;

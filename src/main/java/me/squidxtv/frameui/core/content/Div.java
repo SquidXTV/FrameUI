@@ -1,6 +1,6 @@
 package me.squidxtv.frameui.core.content;
 
-import me.squidxtv.frameui.JavaPlugin;
+import me.squidxtv.frameui.FrameUI;
 import me.squidxtv.frameui.util.XMLUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 public class Div extends ElementNode {
 
-    private static final Logger LOGGER = org.bukkit.plugin.java.JavaPlugin.getPlugin(JavaPlugin.class).getLogger();
+    private static final Logger LOGGER = org.bukkit.plugin.java.JavaPlugin.getPlugin(FrameUI.class).getLogger();
 
     private final int x;
     private final int y;

@@ -1,6 +1,6 @@
 package me.squidxtv.frameui.core;
 
-import me.squidxtv.frameui.JavaPlugin;
+import me.squidxtv.frameui.FrameUI;
 import me.squidxtv.frameui.core.content.ElementNode;
 import me.squidxtv.frameui.util.XMLUtil;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +32,7 @@ public class ScreenModel {
     private final ElementNode[] childNodes;
 
     public ScreenModel(URI xmlFile) throws SAXException, IOException {
-        DocumentBuilder documentBuilder = org.bukkit.plugin.java.JavaPlugin.getPlugin(JavaPlugin.class).getDocumentBuilder();
+        DocumentBuilder documentBuilder = org.bukkit.plugin.java.JavaPlugin.getPlugin(FrameUI.class).getDocumentBuilder();
 
         Document xml = documentBuilder.parse(xmlFile.getPath());
         Element root = xml.getDocumentElement();

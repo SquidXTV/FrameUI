@@ -4,7 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import me.squidxtv.frameui.JavaPlugin;
+import me.squidxtv.frameui.FrameUI;
 import me.squidxtv.frameui.util.Direction;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -26,11 +26,11 @@ public final class PacketManager {
     private static final int[] YAW = {0, 0, 180, 0, 90, 270};
     private static final int[] PITCH = {90, -90, 0, 0, 0, 0};
 
-    private final @NotNull JavaPlugin plugin;
+    private final @NotNull FrameUI plugin;
     private final @NotNull ProtocolManager manager;
     private final @NotNull BukkitScheduler scheduler;
 
-    public PacketManager(JavaPlugin plugin) {
+    public PacketManager(FrameUI plugin) {
         this.plugin = plugin;
         this.manager = plugin.getProtocolManager();
         this.scheduler = Bukkit.getScheduler();

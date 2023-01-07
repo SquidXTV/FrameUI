@@ -1,6 +1,6 @@
 package me.squidxtv.frameui.core;
 
-import me.squidxtv.frameui.JavaPlugin;
+import me.squidxtv.frameui.FrameUI;
 import me.squidxtv.frameui.core.content.ElementNode;
 import me.squidxtv.frameui.packets.ItemFramePacket;
 import me.squidxtv.frameui.packets.PacketManager;
@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  */
 public final class Screen {
 
-    private static final @NotNull Logger LOGGER = org.bukkit.plugin.java.JavaPlugin.getPlugin(JavaPlugin.class).getLogger();
+    private static final @NotNull Logger LOGGER = org.bukkit.plugin.java.JavaPlugin.getPlugin(FrameUI.class).getLogger();
 
     /**
      * Unique Identifier for this Screen.
@@ -136,7 +136,7 @@ public final class Screen {
         this.state = State.CLOSED;
         clickPermission = null;
         scrollPermission = null;
-        packetManager = org.bukkit.plugin.java.JavaPlugin.getPlugin(JavaPlugin.class).getPacketManager();
+        packetManager = org.bukkit.plugin.java.JavaPlugin.getPlugin(FrameUI.class).getPacketManager();
 
         this.frameIDs = new int[height][width];
         this.packets = new ItemFramePacket[height][width];
