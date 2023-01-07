@@ -2,7 +2,7 @@ package me.squidxtv.frameui;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import me.squidxtv.frameui.core.ScreenXML;
+import me.squidxtv.frameui.core.ScreenModel;
 import me.squidxtv.frameui.listener.ClickListener;
 import me.squidxtv.frameui.listener.ScrollListener;
 import me.squidxtv.frameui.packets.PacketManager;
@@ -38,7 +38,7 @@ public final class JavaPlugin extends org.bukkit.plugin.java.JavaPlugin {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = schemaFactory.newSchema(ScreenXML.class.getResource("/frameui.xsd"));
+            Schema schema = schemaFactory.newSchema(ScreenModel.class.getResource("/frameui.xsd"));
 
             documentBuilderFactory.setSchema(schema);
             documentBuilder = documentBuilderFactory.newDocumentBuilder();

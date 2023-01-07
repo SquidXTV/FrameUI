@@ -16,9 +16,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.logging.Logger;
 
-public class ScreenXML {
+public class ScreenModel {
 
     private static final Color BLACK = new Color(13, 13, 13);
 
@@ -32,7 +31,7 @@ public class ScreenXML {
 
     private final ElementNode[] childNodes;
 
-    public ScreenXML(URI xmlFile) throws SAXException, IOException {
+    public ScreenModel(URI xmlFile) throws SAXException, IOException {
         DocumentBuilder documentBuilder = org.bukkit.plugin.java.JavaPlugin.getPlugin(JavaPlugin.class).getDocumentBuilder();
 
         Document xml = documentBuilder.parse(xmlFile.getPath());
@@ -79,7 +78,7 @@ public class ScreenXML {
 
     @Override
     public String toString() {
-        return "ScreenXML{" +
+        return "ScreenModel{" +
                 "id='" + id + '\'' +
                 ", width=" + width +
                 ", height=" + height +

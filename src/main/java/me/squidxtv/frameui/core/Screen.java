@@ -126,9 +126,9 @@ public final class Screen {
         CLOSED
     }
 
-    public Screen(@NotNull ScreenXML screenXML, @NotNull Location location, @NotNull World world, @NotNull Direction direction) {
+    public Screen(@NotNull ScreenModel screenModel, @NotNull Location location, @NotNull World world, @NotNull Direction direction) {
         this.uuid = UUID.randomUUID();
-        setXMLBlueprint(screenXML);
+        setXMLBlueprint(screenModel);
         this.location = location;
         this.direction = direction;
         this.world = world;
@@ -143,8 +143,8 @@ public final class Screen {
         this.maps = new ItemStack[height][width];
     }
 
-    public Screen(@NotNull ScreenXML screenXML, @NotNull Location location, @NotNull World world) {
-        this(screenXML, location, world, Direction.NORTH);
+    public Screen(@NotNull ScreenModel screenModel, @NotNull Location location, @NotNull World world) {
+        this(screenModel, location, world, Direction.NORTH);
     }
 
     public synchronized void open() {
@@ -309,7 +309,7 @@ public final class Screen {
     }
 
     public synchronized void removeViewer(@NotNull Player player) {
-        if (state == State.OPENED) {
+        if (state == State.OPENED && player.isOnline()) {
             packetManager.destroyItemFrame(List.of(player), frameIDs);
         }
         viewer.remove(player);
@@ -353,12 +353,12 @@ public final class Screen {
         this.scrollPermission = scrollPermission;
     }
 
-    public synchronized void setXMLBlueprint(@NotNull ScreenXML screenXML) {
-        this.id = screenXML.getId();
-        this.width = screenXML.getWidth();
-        this.height = screenXML.getHeight();
-        this.background = screenXML.getBackground();
-        this.content = screenXML.getChildNodes();
+    public synchronized void setXMLBlueprint(@NotNull ScreenModel screenModel) {
+        this.id = screenModel.getId();
+        this.width = screenModel.getWidth();
+        this.height = screenModel.getHeight();
+        this.background = screenModel.getBackground();
+        this.content = screenModel.getChildNodes();
     }
 
     public @NotNull String getId() {
