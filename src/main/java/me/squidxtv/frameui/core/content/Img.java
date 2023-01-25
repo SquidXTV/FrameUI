@@ -16,9 +16,9 @@ public class Img extends ElementNode {
     private int y;
     private int width;
     private int height;
-    private BufferedImage image;
+    private @NotNull BufferedImage image;
 
-    public Img(@NotNull String id, int x, int y, int width, int height, BufferedImage image) {
+    public Img(String id, int x, int y, int width, int height, BufferedImage image) {
         super(id);
         this.x = x;
         this.y = y;
@@ -29,9 +29,6 @@ public class Img extends ElementNode {
 
     @Override
     public void draw(Graphics g) {
-        if (image == null) {
-            return;
-        }
         g.drawImage(image, x, y, width, height, null);
     }
 
@@ -72,7 +69,7 @@ public class Img extends ElementNode {
     }
 
     @Contract("_ -> new")
-    public static @NotNull Img of(@NotNull Element element) {
+    public static Img of(Element element) {
         String id = element.getAttribute("id");
         int x = Integer.parseInt(element.getAttribute("x"));
         int y = Integer.parseInt(element.getAttribute("y"));
@@ -83,7 +80,7 @@ public class Img extends ElementNode {
         try {
             image = ImageIO.read(Path.of(imagePath).toFile());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e); // TODO: 25/01/2023 throw custom exception 
         }
         return new Img(id, x, y, width, height, image);
     }

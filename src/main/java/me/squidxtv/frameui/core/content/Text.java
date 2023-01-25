@@ -12,7 +12,7 @@ import java.util.Objects;
 
 public class Text extends ElementNode {
 
-    public static final Font MINECRAFT_FONT;
+    public static final @NotNull Font MINECRAFT_FONT;
 
     static  {
         try {
@@ -29,7 +29,7 @@ public class Text extends ElementNode {
 
     private @NotNull Font font;
 
-    public Text(@NotNull String id, int x, int y, @NotNull String text, @NotNull Font font) {
+    public Text(String id, int x, int y, String text, Font font) {
         super(id);
         this.text = text;
         this.x = x;
@@ -46,11 +46,11 @@ public class Text extends ElementNode {
         g.drawString(text, x, y);
     }
 
-    public @NotNull String getText() {
+    public String getText() {
         return text;
     }
 
-    public void setText(@NotNull String text) {
+    public void setText(String text) {
         this.text = text;
     }
 
@@ -70,16 +70,16 @@ public class Text extends ElementNode {
         this.y = y;
     }
 
-    public @NotNull Font getFont() {
+    public Font getFont() {
         return font;
     }
 
-    public void setFont(@NotNull Font font) {
+    public void setFont(Font font) {
         this.font = font;
     }
 
     @Contract("_ -> new")
-    public static @NotNull Text of(@NotNull Element element) {
+    public static Text of(Element element) {
         String id = element.getAttribute("id");
         String text = element.getTextContent();
 

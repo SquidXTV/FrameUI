@@ -5,7 +5,7 @@ import me.squidxtv.frameui.core.content.ElementNode;
 import me.squidxtv.frameui.packets.ItemFramePacket;
 import me.squidxtv.frameui.packets.PacketManager;
 import me.squidxtv.frameui.util.BufferedImageUtil;
-import me.squidxtv.frameui.util.Direction;
+import me.squidxtv.frameui.core.properties.Direction;
 import me.squidxtv.frameui.util.FrameRenderer;
 import me.squidxtv.frameui.util.MapUtil;
 import org.bukkit.Location;
@@ -17,8 +17,11 @@ import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 import org.bukkit.permissions.Permission;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
@@ -26,11 +29,15 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- *
+ * This class represents a Screen in the Minecraft World.
+ * A screen consist of invisible item frames with maps inside.
+ * These maps use a custom renderer {@link FrameRenderer} which enables custom
+ * {@link BufferedImage} on these maps. One image gets split into multiple smaller with size of
+ * 128x128 and then rendered on the correct position in the item frames.
  */
-public final class Screen {
+public class Screen {
 
-    private static final @NotNull Logger LOGGER = org.bukkit.plugin.java.JavaPlugin.getPlugin(FrameUI.class).getLogger();
+    private static final @NotNull Logger LOGGER = JavaPlugin.getPlugin(FrameUI.class).getLogger();
 
     /**
      * Unique Identifier for this Screen.
@@ -38,7 +45,7 @@ public final class Screen {
     private final @NotNull UUID uuid;
 
     /**
-     * Identifier for this Screen.
+     * Identifier for this Screen specified in the xml file.
      */
     private @NotNull String id;
 
@@ -54,18 +61,22 @@ public final class Screen {
 
     /**
      * Background image rendered on this Screen.
+     * Width and height should be multiples of 128px, as
+     * Minecraft maps can render 128x128 images.
+     * You can replace not used space with black (0, 0, 0)
+     * pixels because that is transparent.
      */
-    private BufferedImage background;
+    private @NotNull BufferedImage background;
 
     /**
      * Content drawn on the background.
      */
-    private ElementNode[] content;
+    private @NotNull ElementNode[] content;
 
     /**
      * Maps inside the item frames.
      */
-    private ItemStack[][] maps;
+    private @NotNull ItemStack[][] maps;
 
     /**
      * Entity identifier for Item Frames. Used to send destroy
@@ -81,7 +92,7 @@ public final class Screen {
     /**
      * Current packets send. Used to send same packets to new viewer.
      */
-    private ItemFramePacket[][] packets;
+    private @NotNull ItemFramePacket[][] packets;
 
     /**
      * Top-left's item frame location.
@@ -111,12 +122,12 @@ public final class Screen {
     /**
      * Permission to restrict usage of clicking.
      */
-    private Permission clickPermission;
+    private @Nullable Permission clickPermission;
 
     /**
      * Permission to restrict usage of scrolling.
      */
-    private Permission scrollPermission;
+    private @Nullable Permission scrollPermission;
 
     /**
      * State of Screen, either OPEN or CLOSED.
@@ -126,7 +137,7 @@ public final class Screen {
         CLOSED
     }
 
-    public Screen(@NotNull ScreenModel screenModel, @NotNull Location location, @NotNull World world, @NotNull Direction direction) {
+    public Screen(ScreenModel screenModel, Location location, World world, Direction direction) {
         this.uuid = UUID.randomUUID();
         setXMLBlueprint(screenModel);
         this.location = location;
@@ -136,14 +147,14 @@ public final class Screen {
         this.state = State.CLOSED;
         clickPermission = null;
         scrollPermission = null;
-        packetManager = org.bukkit.plugin.java.JavaPlugin.getPlugin(FrameUI.class).getPacketManager();
+        packetManager = JavaPlugin.getPlugin(FrameUI.class).getPacketManager();
 
         this.frameIDs = new int[height][width];
         this.packets = new ItemFramePacket[height][width];
         this.maps = new ItemStack[height][width];
     }
 
-    public Screen(@NotNull ScreenModel screenModel, @NotNull Location location, @NotNull World world) {
+    public Screen(ScreenModel screenModel, Location location, World world) {
         this(screenModel, location, world, Direction.NORTH);
     }
 
@@ -159,7 +170,7 @@ public final class Screen {
 
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {
-                    ItemStack map = MapUtil.construct(uuid, viewer, world, i, j);
+                    ItemStack map = MapUtil.construct(viewer, world);
                     maps[i][j] = map;
 
                     int x = location.getBlockX() + (j * direction.getMultiplierX());
@@ -184,7 +195,7 @@ public final class Screen {
                 return;
             }
 
-            packetManager.destroyItemFrame(viewer, frameIDs);
+            packetManager.removeItemFrames(viewer, frameIDs);
             frameIDs = new int[height][width];
             packets = new ItemFramePacket[height][width];
 
@@ -212,7 +223,7 @@ public final class Screen {
         }
     }
 
-    private @NotNull BufferedImage generateCurrentState() {
+    private BufferedImage generateCurrentState() {
         BufferedImage image = BufferedImageUtil.deepCopy(background);
         Graphics g = image.getGraphics();
 
@@ -223,7 +234,7 @@ public final class Screen {
         return image;
     }
 
-    private void updateImage(@NotNull ItemStack map, @NotNull BufferedImage updated) {
+    private void updateImage(ItemStack map, BufferedImage updated) {
         ItemMeta meta = map.getItemMeta();
 
         if (meta == null) {
@@ -250,7 +261,7 @@ public final class Screen {
         renderer.setImage(updated);
     }
 
-    public void click(@NotNull Player player, int x, int y) {
+    public void click(Player player, int x, int y) {
         if (state == State.CLOSED) {
             return;
         }
@@ -268,7 +279,7 @@ public final class Screen {
         }
     }
 
-    public void scroll(@NotNull Player player, int direction, int speed, int x, int y) {
+    public void scroll(Player player, int direction, int speed, int x, int y) {
         if (state == State.CLOSED) {
             return;
         }
@@ -286,7 +297,7 @@ public final class Screen {
         }
     }
 
-    public synchronized void addViewer(@NotNull Player player) {
+    public synchronized void addViewer(Player player) {
         if (state == State.OPENED) {
             for (ItemFramePacket[] row : packets) {
                 for (ItemFramePacket packet : row) {
@@ -297,7 +308,7 @@ public final class Screen {
         viewer.add(player);
     }
 
-    public synchronized void addViewer(@NotNull Collection<Player> players) {
+    public synchronized void addViewer(Collection<Player> players) {
         if (state == State.OPENED) {
             for (ItemFramePacket[] row : packets) {
                 for (ItemFramePacket packet : row) {
@@ -308,52 +319,52 @@ public final class Screen {
         viewer.addAll(players);
     }
 
-    public synchronized void removeViewer(@NotNull Player player) {
+    public synchronized void removeViewer(Player player) {
         if (state == State.OPENED && player.isOnline()) {
-            packetManager.destroyItemFrame(List.of(player), frameIDs);
+            packetManager.removeItemFrames(List.of(player), frameIDs);
         }
         viewer.remove(player);
     }
 
-    public synchronized void removeViewer(@NotNull Collection<Player> players) {
+    public synchronized void removeViewer(Collection<Player> players) {
         if (state == State.OPENED) {
-            packetManager.destroyItemFrame(players, frameIDs);
+            packetManager.removeItemFrames(players, frameIDs);
         }
         viewer.removeAll(players);
     }
 
     public synchronized void clearViewer() {
         if (state == State.OPENED) {
-            packetManager.destroyItemFrame(viewer, frameIDs);
+            packetManager.removeItemFrames(viewer, frameIDs);
         }
         viewer.clear();
     }
 
-    public boolean containsViewer(@NotNull Player player) {
+    public boolean containsViewer(Player player) {
         return viewer.contains(player);
     }
 
-    public synchronized void setLocation(@NotNull Location location) {
+    public synchronized void setLocation(Location location) {
         this.location = location;
     }
 
-    public synchronized void setDirection(@NotNull Direction direction) {
+    public synchronized void setDirection(Direction direction) {
         this.direction = direction;
     }
 
-    public synchronized void setWorld(@NotNull World world) {
+    public synchronized void setWorld(World world) {
         this.world = world;
     }
 
-    public void setClickPermission(Permission clickPermission) {
+    public void setClickPermission(@Nullable Permission clickPermission) {
         this.clickPermission = clickPermission;
     }
 
-    public void setScrollPermission(Permission scrollPermission) {
+    public void setScrollPermission(@Nullable Permission scrollPermission) {
         this.scrollPermission = scrollPermission;
     }
 
-    public synchronized void setXMLBlueprint(@NotNull ScreenModel screenModel) {
+    public final synchronized void setXMLBlueprint(ScreenModel screenModel) {
         this.id = screenModel.getId();
         this.width = screenModel.getWidth();
         this.height = screenModel.getHeight();
@@ -361,23 +372,23 @@ public final class Screen {
         this.content = screenModel.getChildNodes();
     }
 
-    public @NotNull String getId() {
+    public String getId() {
         return id;
     }
 
-    public @NotNull Location getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public @NotNull Direction getDirection() {
+    public Direction getDirection() {
         return direction;
     }
 
-    public @NotNull World getWorld() {
+    public World getWorld() {
         return world;
     }
 
-    public @NotNull State getState() {
+    public State getState() {
         return state;
     }
 
@@ -385,15 +396,15 @@ public final class Screen {
         return Arrays.stream(content).filter(elementNode -> elementNode.getId().equals(id)).toList();
     }
 
-    public @NotNull Set<Player> getViewer() {
+    public Set<Player> getViewer() {
         return viewer;
     }
 
-    public Permission getClickPermission() {
+    public @Nullable Permission getClickPermission() {
         return clickPermission;
     }
 
-    public Permission getScrollPermission() {
+    public @Nullable Permission getScrollPermission() {
         return scrollPermission;
     }
 }

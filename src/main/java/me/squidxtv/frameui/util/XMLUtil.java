@@ -11,14 +11,22 @@ import org.w3c.dom.NodeList;
 import java.util.Arrays;
 import java.util.Objects;
 
+/**
+ * Utility class for parsing XML files.
+ */
 public final class XMLUtil {
 
     private XMLUtil() {}
 
+    /**
+     * Gets all child nodes of given Node.
+     * @param node Node
+     * @return array of child nodes
+     */
     public static ElementNode[] getChildNodes(Node node) {
         NodeList nodes = node.getChildNodes();
         if (nodes.getLength() == 0) {
-            return null;
+            return new ElementNode[0];
         }
 
         ElementNode[] sub = new ElementNode[nodes.getLength()];

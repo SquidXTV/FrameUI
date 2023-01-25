@@ -2,6 +2,8 @@ package me.squidxtv.frameui.util;
 
 import me.squidxtv.frameui.core.Screen;
 import me.squidxtv.frameui.core.ScreenManager;
+import me.squidxtv.frameui.core.properties.Direction;
+import me.squidxtv.frameui.core.properties.ScreenIntersection;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -11,10 +13,16 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.*;
 
 /**
- * Utility class for handling clicks on screens in Minecraft.
+ * Utility class for Screen calculation,
+ * for example 3D intersection point.
+ * @see me.squidxtv.frameui.listener.ClickListener
+ * @see ScreenIntersection
  */
 public final class ScreenUtil {
 
+    /**
+     * Pixel length of map in Minecraft world.
+     */
     private static final double PIXEL_LENGTH = 1.0 / 128.0;
 
     private ScreenUtil() {}
@@ -27,7 +35,7 @@ public final class ScreenUtil {
      * @param lookDirection the player's look direction
      * @return the intersection point, or null if no intersection is found
      */
-    public static @Nullable Vector getIntersectionPoint(@NotNull Screen screen, @NotNull Vector playerEye, @NotNull Vector lookDirection) {
+    public static @Nullable Vector getIntersectionPoint(Screen screen, Vector playerEye, Vector lookDirection) {
         Vector planeNormal = screen.getDirection().getNormal();
         Vector topLeft = getTopLeft(screen);
 
@@ -53,7 +61,7 @@ public final class ScreenUtil {
         return intersection;
     }
 
-    private static @NotNull Vector getTopLeft(@NotNull Screen screen) {
+    private static Vector getTopLeft(Screen screen) {
         Location loc = screen.getLocation();
         Direction direction = screen.getDirection();
 
@@ -78,7 +86,7 @@ public final class ScreenUtil {
      * @param intersection the 3D coordinates of the point on the screen
      * @return the pixel coordinates of the point on the screen
      */
-    public static @NotNull Point getPixel(@NotNull Screen screen, @NotNull Vector intersection) {
+    public static Point getPixel(Screen screen, Vector intersection) {
         // FIXME: 19.12.2022 check direction for proper calculation (pixel area depends on screen direction)
         Vector topLeft = getTopLeft(screen);
 
@@ -93,7 +101,7 @@ public final class ScreenUtil {
         return new Point((int) xz, (int) y);
     }
 
-    public static @Nullable ScreenIntersection getScreenIntersection(@NotNull Player player) {
+    public static @Nullable ScreenIntersection getScreenIntersection(Player player) {
         Location playerEye = player.getEyeLocation().clone();
         Vector eye = playerEye.toVector();
         Vector lookDirection = playerEye.getDirection();

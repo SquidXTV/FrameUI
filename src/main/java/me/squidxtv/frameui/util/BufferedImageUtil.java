@@ -1,6 +1,7 @@
 package me.squidxtv.frameui.util;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -9,18 +10,21 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class BufferedImageUtil {
+/**
+ * Utility class for {@link BufferedImage}.
+ */
+public final class BufferedImageUtil {
 
     private BufferedImageUtil() {}
 
     /**
      * Splits {@link BufferedImage} in a matrix, using width and height of each split.
-     * @param original BufferedImage to split
-     * @param width width of part
-     * @param height height of part
-     * @return BufferedImage 2d Array
+     * @param original Image to split
+     * @param width Width of part
+     * @param height Height of part
+     * @return 2D array of images
      */
-    public static @NotNull BufferedImage[][] split(@NotNull BufferedImage original, int width, int height) {
+    public static BufferedImage[][] split(BufferedImage original, int width, int height) {
         BufferedImage[][] parts = new BufferedImage[height][width];
         int heightPerPart = original.getHeight() / height;
         int widthPerPart = original.getWidth() / width;
@@ -34,11 +38,11 @@ public class BufferedImageUtil {
     }
 
     /**
-     * Creates and returns deepCopy of given {@link BufferedImage}.
-     * @param original BufferedImage to copy
-     * @return copy of original
+     * Generates a copy of given {@link BufferedImage}.
+     * @param original Image to copy
+     * @return copy of original Image
      */
-    public static @NotNull BufferedImage deepCopy(@NotNull BufferedImage original) {
+    public static BufferedImage deepCopy(BufferedImage original) {
         ColorModel model = original.getColorModel();
         boolean premultiplied = original.isAlphaPremultiplied();
         WritableRaster raster =
@@ -46,29 +50,16 @@ public class BufferedImageUtil {
         return new BufferedImage(model, raster, premultiplied, null);
     }
 
-    /**
-     * Loads {@link BufferedImage} from given Path.
-     * @param path Path of BufferedImage
-     * @return loaded BufferedImage
-     * @throws IOException if {@link ImageIO#read(InputStream)} fails
-     */
-    public static @NotNull BufferedImage loadFromPath(@NotNull String path) throws IOException {
-        try (InputStream in = BufferedImageUtil.class.getResourceAsStream(path)) {
-            if (in == null) {
-                throw new FileNotFoundException();
-            }
-            return ImageIO.read(in);
-        }
-    }
 
     /**
      * Resizes {@link BufferedImage} to new width and height.
+     * @implNote this method uses {@link Image.SCALE_SMOOTH}
      * @param image BufferedImage
      * @param width new width
      * @param height new height
-     * @return resized BufferedImage
+     * @return resized Image
      */
-    public static @NotNull BufferedImage resize(@NotNull BufferedImage image, int width, int height) {
+    public static BufferedImage resize(BufferedImage image, int width, int height) {
         Image tmp = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         BufferedImage newSize = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
@@ -79,31 +70,13 @@ public class BufferedImageUtil {
     }
 
     /**
-     * Returns best fitting width for given BufferedImage.
-     * @param image BufferedImage
-     * @return best fitting width
+     * Checks if both {@link BufferedImage} are equal.
+     * @param a first Image
+     * @param b second Image
+     * @return true if all pixel are equal or both null
      */
-    public static int getBestWidth(@NotNull BufferedImage image) {
-        return (int) Math.round(image.getWidth() / 128.0);
-    }
-
-    /**
-     * Returns best fitting height for given BufferedImage.
-     * @param image BufferedImage
-     * @return best fitting height
-     */
-    public static int getBestHeight(@NotNull BufferedImage image) {
-        return (int) Math.round(image.getHeight() / 128.0);
-    }
-
-    /**
-     * Returns true if both images are equal.
-     * @param a first {@link BufferedImage}
-     * @param b second {@link BufferedImage}
-     * @return true if equal
-     */
-    public static boolean deepEquals(BufferedImage a, BufferedImage b) {
-        if (a == null && b == null) {
+    public static boolean deepEquals(@Nullable BufferedImage a, @Nullable BufferedImage b) {
+        if (a == b) {
             return true;
         } else if (a == null || b == null) {
             return false;

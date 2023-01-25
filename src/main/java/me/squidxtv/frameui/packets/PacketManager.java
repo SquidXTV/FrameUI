@@ -5,7 +5,7 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import me.squidxtv.frameui.FrameUI;
-import me.squidxtv.frameui.util.Direction;
+import me.squidxtv.frameui.core.properties.Direction;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -14,15 +14,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.*;
 
+/**
+ * Manager for Packet sending.
+ */
 public final class PacketManager {
 
-    private static final @NotNull AtomicInteger ID_GENERATOR = new AtomicInteger(40000);
     private static final int[] YAW = {0, 0, 180, 0, 90, 270};
     private static final int[] PITCH = {90, -90, 0, 0, 0, 0};
 
@@ -36,23 +34,33 @@ public final class PacketManager {
         this.scheduler = Bukkit.getScheduler();
     }
 
-    public void sendItemFramePacket(@NotNull Collection<Player> players, @NotNull ItemFramePacket packet) {
+    public void sendItemFramePacket(Collection<Player> players, ItemFramePacket packet) {
         scheduler.runTaskAsynchronously(plugin, () -> {
             for (Player player : players) {
                 manager.sendServerPacket(player, packet.itemFrame());
-                manager.sendServerPacket(player, packet.itemFrameData());
+                manager.sendServerPacket(player, packet.data());
             }
         });
     }
 
-    public @NotNull ItemFramePacket createItemFrame(@NotNull ItemStack map, double x, double y, double z, boolean invisible, @NotNull Direction direction) {
+    /**
+     * Creates Item Frame packet using given configuration.
+     * @param map Map inside item frame
+     * @param x x coordinate in world
+     * @param y y coordinate in world
+     * @param z z coordinate in world
+     * @param invisible sets item frame itself invisible
+     * @param direction direction of item frame
+     * @return {@link ItemFramePacket}
+     */
+    public ItemFramePacket createItemFrame(ItemStack map, double x, double y, double z, boolean invisible, Direction direction) {
         if (map.getType() != Material.FILLED_MAP) {
             throw new IllegalArgumentException("ItemStack must be of type FILLED_MAP.");
         }
 
         PacketContainer itemFrame = manager.createPacket(PacketType.Play.Server.SPAWN_ENTITY);
 
-        int entityID = ID_GENERATOR.getAndIncrement();
+        int entityID = UUID.randomUUID().hashCode();
         setItemFrameData(itemFrame, entityID, x, y, z, direction.getInternalDirection());
 
         PacketContainer entityData = manager.createPacket(PacketType.Play.Server.ENTITY_METADATA);
@@ -70,7 +78,7 @@ public final class PacketManager {
      * @param z z-position
      * @param direction direction of item frame
      */
-    private static void setItemFrameData(@NotNull PacketContainer packet, int entityID, double x, double y, double z, int direction) {
+    private static void setItemFrameData(PacketContainer packet, int entityID, double x, double y, double z, int direction) {
         packet.getIntegers().write(0, entityID);
         packet.getEntityTypeModifier().write(0, EntityType.ITEM_FRAME);
         packet.getUUIDs().write(0, UUID.randomUUID());
@@ -91,7 +99,7 @@ public final class PacketManager {
      * @param item item
      * @param invisible is invisible
      */
-    private static void setEntityData(@NotNull PacketContainer entityData, int entityID, @NotNull ItemStack item, boolean invisible) {
+    private static void setEntityData(PacketContainer entityData, int entityID, ItemStack item, boolean invisible) {
         entityData.getIntegers().write(0, entityID);
 
         WrappedDataWatcher dataWatcher = new WrappedDataWatcher();
@@ -108,7 +116,7 @@ public final class PacketManager {
      * @param players players
      * @param entityIDs entity IDs
      */
-    public void destroyItemFrame(@NotNull Collection<Player> players, int[][] entityIDs) {
+    public void removeItemFrames(Collection<Player> players, int[][] entityIDs) {
         List<Integer> ids = new ArrayList<>();
         for (int[] row : entityIDs) {
             for (int i : row) {
