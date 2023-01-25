@@ -1,6 +1,7 @@
 package me.squidxtv.frameui.core.content;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
@@ -8,18 +9,18 @@ public abstract class ElementNode {
 
     private final @NotNull String id;
 
-    private ClickAction clickAction;
-    private ScrollAction scrollAction;
+    private @Nullable ClickAction clickAction;
+    private @Nullable ScrollAction scrollAction;
 
-    protected ElementNode(@NotNull String id) {
+    protected ElementNode(String id) {
         this.id = id;
     }
 
-    public void setClickAction(ClickAction clickAction) {
+    public void setClickAction(@Nullable ClickAction clickAction) {
         this.clickAction = clickAction;
     }
 
-    public void setScrollAction(ScrollAction scrollAction) {
+    public void setScrollAction(@Nullable ScrollAction scrollAction) {
         this.scrollAction = scrollAction;
     }
 
@@ -39,7 +40,7 @@ public abstract class ElementNode {
 
     public abstract void draw(Graphics g);
 
-    public @NotNull String getId() {
+    public String getId() {
         return id;
     }
 

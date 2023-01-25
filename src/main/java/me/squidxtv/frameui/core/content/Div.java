@@ -4,6 +4,7 @@ import me.squidxtv.frameui.FrameUI;
 import me.squidxtv.frameui.util.XMLUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Element;
 
 import javax.imageio.ImageIO;
@@ -23,11 +24,10 @@ public class Div extends ElementNode {
     private final int width;
     private final int height;
 
+    private @Nullable BufferedImage background;
+    private final @NotNull ElementNode[] childNodes;
 
-    private BufferedImage background;
-    private final ElementNode[] childNodes;
-
-    public Div(@NotNull String id, int x, int y, int width, int height, BufferedImage background, ElementNode[] childNodes) {
+    public Div(String id, int x, int y, int width, int height, @Nullable BufferedImage background, ElementNode[] childNodes) {
         super(id);
         this.x = x;
         this.y = y;
@@ -63,16 +63,16 @@ public class Div extends ElementNode {
         return height;
     }
 
-    public BufferedImage getBackground() {
+    public @Nullable BufferedImage getBackground() {
         return background;
     }
 
-    public void setBackground(BufferedImage background) {
+    public void setBackground(@Nullable BufferedImage background) {
         this.background = background;
     }
 
     @Contract("_ -> new")
-    public static @NotNull Div of(@NotNull Element element) {
+    public static Div of(Element element) {
         String id = element.getAttribute("id");
         int x = Integer.parseInt(element.getAttribute("x"));
         int y = Integer.parseInt(element.getAttribute("y"));

@@ -2,11 +2,16 @@ package me.squidxtv.frameui;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.utility.ByteBuddyFactory;
+import com.comphenix.protocol.utility.HexDumper;
+import com.comphenix.protocol.utility.MinecraftReflection;
+import com.comphenix.protocol.utility.Util;
 import me.squidxtv.frameui.core.ScreenModel;
 import me.squidxtv.frameui.listener.ClickListener;
 import me.squidxtv.frameui.listener.ScrollListener;
 import me.squidxtv.frameui.packets.PacketManager;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.xml.sax.SAXException;
 
@@ -17,7 +22,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-public final class FrameUI extends org.bukkit.plugin.java.JavaPlugin {
+public final class FrameUI extends JavaPlugin {
 
     private DocumentBuilder documentBuilder;
     private ProtocolManager protocolManager;
@@ -38,7 +43,7 @@ public final class FrameUI extends org.bukkit.plugin.java.JavaPlugin {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = schemaFactory.newSchema(ScreenModel.class.getResource("/frameui.xsd"));
+            Schema schema = schemaFactory.newSchema(FrameUI.class.getResource("/frameui.xsd"));
 
             documentBuilderFactory.setSchema(schema);
             documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -51,15 +56,15 @@ public final class FrameUI extends org.bukkit.plugin.java.JavaPlugin {
         pluginManager.registerEvents(new ScrollListener(), this);
     }
 
-    public @NotNull ProtocolManager getProtocolManager() {
+    public ProtocolManager getProtocolManager() {
         return protocolManager;
     }
 
-    public @NotNull PacketManager getPacketManager() {
+    public PacketManager getPacketManager() {
         return packetManager;
     }
 
-    public @NotNull DocumentBuilder getDocumentBuilder() {
+    public DocumentBuilder getDocumentBuilder() {
         return this.documentBuilder;
     }
 

@@ -8,6 +8,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.image.*;
 
+/**
+ * Renderer used by {@link me.squidxtv.frameui.core.Screen}.
+ */
 public final class FrameRenderer extends MapRenderer {
 
     private BufferedImage image;
@@ -15,7 +18,7 @@ public final class FrameRenderer extends MapRenderer {
     private final Object lock = new Object();
 
     @Override
-    public void render(@NotNull MapView view, @NotNull MapCanvas canvas, @NotNull Player player) {
+    public void render(MapView view, MapCanvas canvas, Player player) {
         synchronized (lock) {
             if (done) {
                 return;
@@ -27,7 +30,11 @@ public final class FrameRenderer extends MapRenderer {
         }
     }
 
-    public void setImage(@NotNull BufferedImage image) {
+    /**
+     * Sets Image on this Map.
+     * @param image new Image
+     */
+    public void setImage(BufferedImage image) {
         synchronized (lock) {
             this.image = image;
             this.done = false;

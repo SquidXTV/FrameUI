@@ -1,4 +1,4 @@
-package me.squidxtv.frameui.util;
+package me.squidxtv.frameui.core.properties;
 
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -25,14 +25,14 @@ public enum Direction {
     private final int multiplierX;
     private final int multiplierZ;
 
-    Direction(int internalDirection, @NotNull Vector normal, int multiplierX, int multiplierY) {
+    Direction(int internalDirection, Vector normal, int multiplierX, int multiplierY) {
         this.internalDirection = internalDirection;
         this.normal = normal;
         this.multiplierX = multiplierX;
         this.multiplierZ = multiplierY;
     }
 
-    public @NotNull Vector getNormal() {
+    public Vector getNormal() {
         return normal.clone();
     }
 

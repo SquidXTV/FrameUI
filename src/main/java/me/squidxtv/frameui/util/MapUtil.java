@@ -13,11 +13,20 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.UUID;
 
+/**
+ * Utility class for constructing maps.
+ */
 public final class MapUtil {
 
     private MapUtil() {}
 
-    public static @NotNull ItemStack construct(@NotNull UUID id, @NotNull Collection<Player> viewer, @NotNull World world, int i, int j) {
+    /**
+     * Constructs new map in given {@link World} and sends map to player.
+     * @param viewer player seeing this map
+     * @param world world of this map
+     * @return created Map
+     */
+    public static ItemStack construct(Collection<Player> viewer, World world) {
         MapView view = Bukkit.createMap(world);
 
         for (MapRenderer renderer : view.getRenderers()) {
@@ -38,7 +47,7 @@ public final class MapUtil {
         meta.setMapView(view);
         map.setItemMeta(meta);
 
-        for (@NotNull Player player : viewer) {
+        for (Player player : viewer) {
             player.sendMap(view);
         }
 

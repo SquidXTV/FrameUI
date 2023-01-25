@@ -3,7 +3,9 @@ package me.squidxtv.frameui.core;
 import me.squidxtv.frameui.FrameUI;
 import me.squidxtv.frameui.core.content.ElementNode;
 import me.squidxtv.frameui.util.XMLUtil;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -13,13 +15,14 @@ import javax.xml.parsers.DocumentBuilder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.lang.annotation.Retention;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.Arrays;
 
 public class ScreenModel {
 
-    private static final Color BLACK = new Color(13, 13, 13);
+    private static final @NotNull Color BLACK = new Color(13, 13, 13);
 
     private final @NotNull String id;
 
@@ -27,12 +30,12 @@ public class ScreenModel {
 
     private final int height;
 
-    private final BufferedImage background;
+    private final @NotNull BufferedImage background;
 
-    private final ElementNode[] childNodes;
+    private final @NotNull ElementNode[] childNodes;
 
     public ScreenModel(URI xmlFile) throws SAXException, IOException {
-        DocumentBuilder documentBuilder = org.bukkit.plugin.java.JavaPlugin.getPlugin(FrameUI.class).getDocumentBuilder();
+        DocumentBuilder documentBuilder = JavaPlugin.getPlugin(FrameUI.class).getDocumentBuilder();
 
         Document xml = documentBuilder.parse(xmlFile.getPath());
         Element root = xml.getDocumentElement();
@@ -55,7 +58,7 @@ public class ScreenModel {
         this.childNodes = XMLUtil.getChildNodes(root);
     }
 
-    public @NotNull String getId() {
+    public String getId() {
         return id;
     }
 

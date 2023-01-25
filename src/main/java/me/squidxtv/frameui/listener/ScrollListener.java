@@ -1,7 +1,7 @@
 package me.squidxtv.frameui.listener;
 
 import me.squidxtv.frameui.core.Screen;
-import me.squidxtv.frameui.util.ScreenIntersection;
+import me.squidxtv.frameui.core.properties.ScreenIntersection;
 import me.squidxtv.frameui.util.ScreenUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,8 +15,14 @@ import java.awt.*;
 
 public final class ScrollListener implements Listener {
 
+    /**
+     * Triggered when player scrolls on screen.
+     * Calculates scroll position and triggers on specific screen.
+     * @param event {@link PlayerItemHeldEvent}
+     * @implNote scroll triggers on nearest screen.
+     */
     @EventHandler
-    public void onScroll(@NotNull PlayerItemHeldEvent event) {
+    public void onScroll(PlayerItemHeldEvent event) {
         Player player = event.getPlayer();
         ScreenIntersection screenIntersectionWithPlayer = ScreenUtil.getScreenIntersection(player);
         if (screenIntersectionWithPlayer == null) {
