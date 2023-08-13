@@ -26,7 +26,7 @@ public enum Direction {
         return packetDirection;
     }
 
-    public Vector getNormal() {
+    public @NotNull Vector getNormal() {
         return normal;
     }
 
