@@ -11,17 +11,17 @@ public final class PathUtils {
     /**
      * The regular expression pattern for matching Windows-style paths.
      */
-    private static final @NotNull Predicate<String> WINDOWS_PATH = Pattern.compile("^[A-Z]:\\\\.+$").asMatchPredicate();
+    private static final Predicate<String> WINDOWS_PATH = Pattern.compile("^[A-Z]:\\\\.+$").asMatchPredicate();
 
     /**
      * The regular expression pattern for matching Unix-style paths.
      */
-    private static final @NotNull Predicate<String> UNIX_PATH = Pattern.compile("^/.+$").asMatchPredicate();
+    private static final Predicate<String> UNIX_PATH = Pattern.compile("^/.+$").asMatchPredicate();
 
     /**
      * The regular expression pattern for matching relative paths.
      */
-    private static final @NotNull Predicate<String> RELATIVE_PATH = Pattern.compile("^@\\{.+}$").asMatchPredicate();
+    private static final Predicate<String> RELATIVE_PATH = Pattern.compile("^@\\{.+}$").asMatchPredicate();
 
     private PathUtils() {
         throw new UnsupportedOperationException("Utils class, construction not supported.");
