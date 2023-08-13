@@ -1,0 +1,88 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified"
+           targetNamespace="http://www.squidxtv.me/schema/frameui/v1/frameui.xsd"
+           xmlns="http://www.squidxtv.me/schema/frameui/v1/frameui.xsd"
+           version="1.0">
+    <xs:element name="screen">
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="text" type="TextType"/>
+                <xs:element name="image" type="ImgType" />
+                <xs:element name="div" type="DivType"/>
+            </xs:choice>
+            <xs:attribute name="id" type="xs:string" use="required"/>
+            <xs:attribute name="width" type="xs:positiveInteger" use="required"/>
+            <xs:attribute name="height" type="xs:positiveInteger" use="required"/>
+            <xs:attribute name="background-color" type="hexType" default="#0D0D0D"/>
+            <xs:attribute name="background-image" type="pathType"/>
+            <xs:attributeGroup ref="border"/>
+            <xs:attribute name="click-radius" type="xs:positiveInteger" default="6"/>
+            <xs:attribute name="scroll-radius" type="xs:positiveInteger" default="6"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="TextType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="id" type="xs:string" use="required"/>
+                <xs:attributeGroup ref="position"/>
+                <xs:attributeGroup ref="font"/>
+                <xs:attributeGroup ref="border"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="ImgType">
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attributeGroup ref="position"/>
+        <xs:attribute name="path" type="pathType" use="required"/>
+        <xs:attributeGroup ref="border"/>
+    </xs:complexType>
+
+    <xs:complexType name="DivType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="text" type="TextType" minOccurs="0"/>
+            <xs:element name="image" type="ImgType" minOccurs="0"/>
+            <xs:element name="div" type="DivType" minOccurs="0"/>
+        </xs:choice>
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attributeGroup ref="position"/>
+        <xs:attribute name="width" type="xs:positiveInteger" use="required"/>
+        <xs:attribute name="height" type="xs:positiveInteger" use="required"/>
+        <xs:attributeGroup ref="border"/>
+    </xs:complexType>
+
+    <xs:attributeGroup name="font">
+        <xs:attribute name="font" type="xs:string" default=""/>
+        <xs:attribute name="font-size" type="xs:positiveInteger" default="12"/>
+        <xs:attribute name="font-color" type="hexType" default="#FFFFFF"/>
+        <xs:attribute name="bold" type="xs:boolean" default="false"/>
+        <xs:attribute name="italic" type="xs:boolean" default="false"/>
+        <xs:attribute name="border-padding" type="xs:nonNegativeInteger" default="1"/>
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="border">
+        <xs:attribute name="border-color" type="hexType" default="#0D0D0D"/>
+        <xs:attribute name="border-width" type="xs:nonNegativeInteger" default="0"/>
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="position">
+        <xs:attribute name="x" type="xs:integer" default="0"/>
+        <xs:attribute name="y" type="xs:integer" default="0"/>
+    </xs:attributeGroup>
+
+    <xs:simpleType name="hexType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="#[0-9a-fA-F]{6}"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!--ToDo: maybe support more endings or even completely remove this check for specific type which could support web urls at the end-->
+    <xs:simpleType name="pathType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="@\{.*\.(png|jpg)\}|([A-Z]:)?/.*\.(png|jpg)"/>
+            <xs:whiteSpace value="collapse"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>
