@@ -1,4 +1,4 @@
-package me.squidxtv.frameui.api;
+package me.squidxtv.frameui.api.cache;
 
 import org.jetbrains.annotations.NotNull;
 

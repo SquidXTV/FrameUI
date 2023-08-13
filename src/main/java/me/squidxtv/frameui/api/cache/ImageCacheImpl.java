@@ -1,7 +1,8 @@
-package me.squidxtv.frameui.api;
+package me.squidxtv.frameui.api.cache;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
@@ -16,10 +17,14 @@ public class ImageCacheImpl implements ImageCache {
 
     private final @NotNull Cache<Path, BufferedImage> cache;
 
-    public ImageCacheImpl(/*ToDo: add config*/) {
+    public ImageCacheImpl(FileConfiguration config) {
+        int maximumSize = config.getInt("cache.maximum-size", 100);
+        int expireDuration = config.getInt("cache.expire-duration", 10);
+        TimeUnit expireUnit = TimeUnit.valueOf(config.getString("cache.expire-unit", "MINUTES"));
+
         cache = Caffeine.newBuilder()
-                .maximumSize(100)
-                .expireAfterAccess(10, TimeUnit.MINUTES)
+                .maximumSize(maximumSize)
+                .expireAfterAccess(expireDuration, expireUnit)
                 .build();
     }
 
