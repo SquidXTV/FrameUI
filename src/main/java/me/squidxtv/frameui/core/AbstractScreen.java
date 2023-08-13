@@ -1,19 +1,84 @@
 package me.squidxtv.frameui.core;
 
+import me.squidxtv.frameui.api.registry.ScreenRegistry;
+import me.squidxtv.frameui.core.content.ScreenModel;
+import me.squidxtv.frameui.core.graphics.AbstractGraphics;
 import me.squidxtv.frameui.exceptions.ScreenRemovedException;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class AbstractScreen implements Screen {
+public abstract class AbstractScreen<G extends AbstractGraphics<?>> implements Screen<G> {
 
-    // TODO: 31/07/2023 implement screen manager and add remove/close method
-//    protected static final ScreenManager SCREEN_MANAGER = Bukkit.getServicesManager().load(ScreenManager.class);
+    protected static final @NotNull ScreenRegistry SCREEN_REGISTRY = Bukkit.getServicesManager().load(ScreenRegistry.class);
 
+    private final @NotNull JavaPlugin plugin;
+    private @NotNull ScreenModel model;
+    private @NotNull G graphics;
     private @Nullable Permission clickPermission = null;
     private @Nullable Permission scrollPermission = null;
     private @NotNull State state = State.CLOSED;
+
+    protected AbstractScreen(@NotNull JavaPlugin plugin, @NotNull ScreenModel model, @NotNull G graphics) {
+        this.plugin = plugin;
+        this.model = model;
+        this.graphics = graphics;
+
+        SCREEN_REGISTRY.add(this);
+    }
+
+    @Override
+    public void open() {
+        throwIfRemoved();
+
+        if (state == State.OPEN) {
+            close();
+        }
+
+        graphics.open();
+        state = State.OPEN;
+    }
+
+    @Override
+    public void close() {
+        throwIfRemoved();
+
+        if (state == State.CLOSED) {
+            return;
+        }
+
+        graphics.close();
+        state = State.CLOSED;
+    }
+
+    @Override
+    public void remove() {
+        throwIfRemoved();
+        close();
+        graphics.remove();
+
+        SCREEN_REGISTRY.remove(this);
+
+        state = State.REMOVED;
+    }
+
+    @Override
+    public void update() {
+        model.draw(graphics, 0, 0, graphics.getPixelWidth(), graphics.getPixelHeight());
+    }
+
+    @Override
+    public @NotNull G getGraphics() {
+        return graphics;
+    }
+
+    @Override
+    public void setGraphics(@NotNull G graphics) {
+        this.graphics = graphics;
+    }
 
     @Override
     public boolean click(@NotNull Player player, int x, int y) {
@@ -22,12 +87,7 @@ public abstract class AbstractScreen implements Screen {
             return false;
         }
 
-        if (clickPermission != null && !player.hasPermission(clickPermission)) {
-            return false;
-        }
-
-        // TODO: 27/07/2023 Perform click on content
-        return true;
+        return clickPermission == null || player.hasPermission(clickPermission);
     }
 
     @Override
@@ -37,18 +97,28 @@ public abstract class AbstractScreen implements Screen {
             return false;
         }
 
-        if (scrollPermission != null && !player.hasPermission(scrollPermission)) {
-            return false;
-        }
-
-        // TODO: 27/07/2023 Perform scroll on content
-        return true;
+        return scrollPermission == null || player.hasPermission(scrollPermission);
     }
 
     protected void throwIfRemoved() {
         if (state == State.REMOVED) {
             throw new ScreenRemovedException(this);
         }
+    }
+
+    @Override
+    public @NotNull JavaPlugin getPlugin() {
+        return plugin;
+    }
+
+    @Override
+    public @NotNull ScreenModel getModel() {
+        return model;
+    }
+
+    @Override
+    public void setModel(@NotNull ScreenModel model) {
+        this.model = model;
     }
 
     public @Nullable Permission getClickPermission() {
