@@ -1,11 +1,10 @@
-
 plugins {
     id 'java-library'
-    id 'maven-publish'
 }
 
 repositories {
     mavenLocal()
+    mavenCentral()
     maven {
         url = uri('https://hub.spigotmc.org/nexus/content/repositories/snapshots/')
     }
@@ -25,6 +24,7 @@ dependencies {
     api 'com.github.ben-manes.caffeine:caffeine:3.1.6'
     compileOnly 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
     compileOnly 'com.comphenix.protocol:ProtocolLib:5.0.0'
+    testImplementation 'org.mockito:mockito-core:5.4.0'
 }
 
 group = 'me.squidxtv'
@@ -35,14 +35,6 @@ java.sourceCompatibility = JavaVersion.VERSION_20
 
 java {
     withJavadocJar()
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from(components.java)
-        }
-    }
 }
 
 tasks.withType(JavaCompile).configureEach {
