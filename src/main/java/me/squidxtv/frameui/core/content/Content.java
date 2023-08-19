@@ -1,7 +1,7 @@
 package me.squidxtv.frameui.core.content;
 
-import me.squidxtv.frameui.core.actions.Clickable;
-import me.squidxtv.frameui.core.actions.Scrollable;
+import me.squidxtv.frameui.core.actions.click.Clickable;
+import me.squidxtv.frameui.core.actions.scroll.Scrollable;
 import me.squidxtv.frameui.core.graphics.Graphics;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Element;

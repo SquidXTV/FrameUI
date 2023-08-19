@@ -1,5 +1,7 @@
 package me.squidxtv.frameui.core;
 
+import me.squidxtv.frameui.core.actions.initiator.ActionInitiator;
+import me.squidxtv.frameui.core.actions.initiator.PlayerInitiator;
 import me.squidxtv.frameui.core.content.ScreenModel;
 import me.squidxtv.frameui.core.graphics.VirtualGraphics;
 import me.squidxtv.frameui.core.math.Direction;
@@ -31,31 +33,29 @@ public class VirtualScreen extends AbstractScreen<VirtualGraphics> {
     }
 
     @Override
-    public boolean click(@NotNull Player player, int x, int y) {
-        throwIfRemoved();
-        if (!super.click(player, x, y)) {
+    public boolean click(@NotNull ActionInitiator<?> initiator, int x, int y) {
+        if (!super.click(initiator, x, y)) {
             return false;
         }
 
-        if (!containsViewer(player)) {
+        if (initiator instanceof PlayerInitiator playerInitiator && (!containsViewer(playerInitiator.getInitiator()))) {
             return false;
         }
 
-        return getModel().click(player, x, y);
+        return getModel().click(initiator, x, y);
     }
 
     @Override
-    public boolean scroll(@NotNull Player player, @NotNull ScrollDirection direction, int x, int y) {
-        throwIfRemoved();
-        if (!super.scroll(player, direction, x, y)) {
+    public boolean scroll(@NotNull ActionInitiator<?> initiator, @NotNull ScrollDirection direction, int x, int y) {
+        if (!super.scroll(initiator, direction, x, y)) {
             return false;
         }
 
-        if (!containsViewer(player)) {
+        if (initiator instanceof PlayerInitiator playerInitiator && (!containsViewer(playerInitiator.getInitiator()))) {
             return false;
         }
 
-        return getModel().scroll(player, direction, x, y);
+        return getModel().scroll(initiator, direction, x, y);
     }
 
     public @NotNull World getWorld() {

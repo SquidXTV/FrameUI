@@ -1,11 +1,12 @@
 package me.squidxtv.frameui.core;
 
 import me.squidxtv.frameui.api.registry.ScreenRegistry;
+import me.squidxtv.frameui.core.actions.initiator.ActionInitiator;
+import me.squidxtv.frameui.core.actions.initiator.PlayerInitiator;
 import me.squidxtv.frameui.core.content.ScreenModel;
 import me.squidxtv.frameui.core.graphics.AbstractGraphics;
 import me.squidxtv.frameui.exceptions.ScreenRemovedException;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -82,23 +83,39 @@ public abstract class AbstractScreen<G extends AbstractGraphics<?>> implements S
     }
 
     @Override
-    public boolean click(@NotNull Player player, int x, int y) {
+    public boolean click(@NotNull ActionInitiator<?> initiator, int x, int y) {
         throwIfRemoved();
         if (state == State.CLOSED) {
             return false;
         }
 
-        return clickPermission == null || player.hasPermission(clickPermission);
+        if (clickPermission == null) {
+            return true;
+        }
+
+        if (initiator instanceof PlayerInitiator playerInitiator) {
+            return playerInitiator.getInitiator().hasPermission(clickPermission);
+        }
+
+        return true;
     }
 
     @Override
-    public boolean scroll(@NotNull Player player, @NotNull ScrollDirection direction, int x, int y) {
+    public boolean scroll(@NotNull ActionInitiator<?> initiator, @NotNull ScrollDirection direction, int x, int y) {
         throwIfRemoved();
         if (state == State.CLOSED) {
             return false;
         }
 
-        return scrollPermission == null || player.hasPermission(scrollPermission);
+        if (scrollPermission == null) {
+            return true;
+        }
+
+        if (initiator instanceof PlayerInitiator playerInitiator) {
+            return playerInitiator.getInitiator().hasPermission(scrollPermission);
+        }
+
+        return true;
     }
 
     protected void throwIfRemoved() {
