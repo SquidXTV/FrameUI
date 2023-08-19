@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screen xmlns="http://www.squidxtv.me/schema/frameui/v1/frameui.xsd"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.squidxtv.me/schema/frameui/v1 /frameui.xsd"
+         id="test-frame"
+         width="5"
+         height="3"
+         background-image="@{bgmarker.png}">
+<!--    <div id="first-div" width="500" height="100" x="100" y="100" border-color="#FFFFFF" border-width="1">-->
+<!--        <text id="first-test" x="100" y="50" border-color="#FFFFFF" border-width="1" font-size="24">Test Text</text>-->
+<!--    </div>-->
+</screen>
