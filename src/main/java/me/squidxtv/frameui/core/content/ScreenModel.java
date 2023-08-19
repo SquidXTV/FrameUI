@@ -18,9 +18,9 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
-public class ScreenModel extends AbstractContent {
+public class ScreenModel extends AbstractContent implements Parent {
 
-    protected static final ScreenParser SCREEN_PARSER = Bukkit.getServicesManager().load(ScreenParser.class);
+    private static final ScreenParser SCREEN_PARSER = Bukkit.getServicesManager().load(ScreenParser.class);
 
     private int width;
     private int height;
@@ -155,20 +155,14 @@ public class ScreenModel extends AbstractContent {
         this.scrollRadius = scrollRadius;
     }
 
+    @Override
     public @NotNull List<Content> getChildren() {
         return children;
     }
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("{\n");
-        builder.append("\tScreen(%s, %d, %d, %s, %s, %s, %d, %d)\n".formatted(getId(), width, height, backgroundColor, backgroundImage, border, clickRadius, scrollRadius));
-        for (Content child : children) {
-            builder.append("\t\t").append(child).append("\n");
-        }
-        builder.append("}");
-        return builder.toString();
+        return "Screen(%s, %d, %d, %s, %s, %s, %d, %d)".formatted(getId(), width, height, backgroundColor, backgroundImage, border, clickRadius, scrollRadius);
     }
 
     public static @NotNull ScreenModel of(@NotNull Path xml) throws IOException, SAXException {

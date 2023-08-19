@@ -3,6 +3,7 @@ package me.squidxtv.frameui.api.parser;
 import me.squidxtv.frameui.FrameUI;
 import me.squidxtv.frameui.core.content.ScreenModel;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -23,7 +24,11 @@ public class ScreenParserImpl implements ScreenParser {
 
     private final @NotNull DocumentBuilder documentBuilder;
 
-    public ScreenParserImpl(@NotNull FrameUI plugin) throws SAXException, ParserConfigurationException {
+    public ScreenParserImpl() throws ParserConfigurationException, SAXException {
+        this(null);
+    }
+
+    public ScreenParserImpl(@Nullable FrameUI plugin) throws SAXException, ParserConfigurationException {
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Schema schema = schemaFactory.newSchema(getClass().getResource(SCHEMA_PATH));
 
@@ -32,7 +37,9 @@ public class ScreenParserImpl implements ScreenParser {
         documentBuilderFactory.setNamespaceAware(true);
 
         documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        documentBuilder.setErrorHandler(new ParserErrorHandler(plugin));
+        if (plugin != null) {
+            documentBuilder.setErrorHandler(new ParserErrorHandler(plugin));
+        }
     }
 
     @Override
