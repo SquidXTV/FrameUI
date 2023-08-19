@@ -1,11 +1,11 @@
-package me.squidxtv.frameui.core.actions;
+package me.squidxtv.frameui.core.actions.scroll;
 
-import org.bukkit.entity.Player;
+import me.squidxtv.frameui.core.actions.initiator.ActionInitiator;
 import org.jetbrains.annotations.NotNull;
 
 public interface Scrollable {
 
-    boolean scroll(@NotNull Player player, @NotNull ScrollDirection direction, int x, int y);
+    boolean scroll(@NotNull ActionInitiator<?> initiator, @NotNull ScrollDirection direction, int x, int y);
 
     enum ScrollDirection {
         LEFT(-1),
