@@ -67,6 +67,7 @@ public abstract class AbstractScreen<G extends AbstractGraphics<?>> implements S
 
     @Override
     public void update() {
+        throwIfRemoved();
         model.draw(graphics, 0, 0, graphics.getPixelWidth(), graphics.getPixelHeight());
     }
 
