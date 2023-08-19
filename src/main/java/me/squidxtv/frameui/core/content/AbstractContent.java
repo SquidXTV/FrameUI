@@ -1,8 +1,8 @@
 package me.squidxtv.frameui.core.content;
 
-import me.squidxtv.frameui.core.actions.ClickAction;
-import me.squidxtv.frameui.core.actions.ScrollAction;
-import org.bukkit.entity.Player;
+import me.squidxtv.frameui.core.actions.click.ClickAction;
+import me.squidxtv.frameui.core.actions.initiator.ActionInitiator;
+import me.squidxtv.frameui.core.actions.scroll.ScrollAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,13 +20,23 @@ public abstract class AbstractContent implements Content {
     }
 
     @Override
-    public boolean click(@NotNull Player player, int x, int y) {
-        return clickAction != null;
+    public boolean click(@NotNull ActionInitiator<?> initiator, int x, int y) {
+        if (clickAction == null) {
+            return true;
+        }
+
+        clickAction.perform(initiator, x, y);
+        return true;
     }
 
     @Override
-    public boolean scroll(@NotNull Player player, @NotNull ScrollDirection direction, int x, int y) {
-        return scrollAction != null;
+    public boolean scroll(@NotNull ActionInitiator<?> initiator, @NotNull ScrollDirection direction, int x, int y) {
+        if (scrollAction == null) {
+            return true;
+        }
+
+        scrollAction.perform(initiator, direction, x, y);
+        return true;
     }
 
     public @NotNull String getId() {

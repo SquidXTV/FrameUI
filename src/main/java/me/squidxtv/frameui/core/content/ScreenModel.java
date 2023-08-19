@@ -1,11 +1,11 @@
 package me.squidxtv.frameui.core.content;
 
 import me.squidxtv.frameui.api.parser.ScreenParser;
+import me.squidxtv.frameui.core.actions.initiator.ActionInitiator;
 import me.squidxtv.frameui.core.attributes.Attribute;
 import me.squidxtv.frameui.core.attributes.BorderAttribute;
 import me.squidxtv.frameui.core.graphics.Graphics;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Element;
@@ -74,26 +74,25 @@ public class ScreenModel extends AbstractContent implements Parent {
     }
 
     @Override
-    public boolean click(@NotNull Player player, int x, int y) {
-        if (!super.click(player, x, y)) {
+    public boolean click(@NotNull ActionInitiator<?> initiator, int x, int y) {
+        if (!super.click(initiator, x, y)) {
             return false;
         }
 
         for (Content child : children) {
-            child.click(player, x, y);
+            child.click(initiator, x, y);
         }
 
         return true;
     }
-
     @Override
-    public boolean scroll(@NotNull Player player, @NotNull ScrollDirection direction, int x, int y) {
-        if (!super.scroll(player, direction, x, y)) {
+    public boolean scroll(@NotNull ActionInitiator<?> initiator, @NotNull ScrollDirection direction, int x, int y) {
+        if (!super.scroll(initiator, direction, x, y)) {
             return false;
         }
 
         for (Content child : children) {
-            child.scroll(player, direction, x, y);
+            child.scroll(initiator, direction, x, y);
         }
 
         return true;

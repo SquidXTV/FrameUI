@@ -1,9 +1,9 @@
 package me.squidxtv.frameui.screen;
 
 import me.squidxtv.frameui.core.Screen;
+import me.squidxtv.frameui.core.actions.initiator.ActionInitiator;
 import me.squidxtv.frameui.core.content.ScreenModel;
 import me.squidxtv.frameui.exceptions.ScreenRemovedException;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,13 +67,13 @@ public class DebugScreen implements Screen<DebugGraphics> {
     }
 
     @Override
-    public boolean click(@NotNull Player player, int x, int y) {
-        return false;
+    public boolean click(@NotNull ActionInitiator<?> initiator, int x, int y) {
+        return model.click(initiator, x, y);
     }
 
     @Override
-    public boolean scroll(@NotNull Player player, @NotNull ScrollDirection direction, int x, int y) {
-        return false;
+    public boolean scroll(@NotNull ActionInitiator<?> initiator, @NotNull ScrollDirection direction, int x, int y) {
+        return model.scroll(initiator, direction, x, y);
     }
 
 
