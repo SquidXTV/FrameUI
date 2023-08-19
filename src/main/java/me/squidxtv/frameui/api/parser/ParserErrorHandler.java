@@ -1,6 +1,5 @@
 package me.squidxtv.frameui.api.parser;
 
-import me.squidxtv.frameui.FrameUI;
 import org.jetbrains.annotations.NotNull;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
@@ -13,8 +12,8 @@ public final class ParserErrorHandler implements ErrorHandler {
 
     private final @NotNull Logger logger;
 
-    ParserErrorHandler(@NotNull FrameUI plugin) {
-        logger = plugin.getLogger();
+    ParserErrorHandler(@NotNull Logger logger) {
+        this.logger = logger;
     }
 
     @Override
