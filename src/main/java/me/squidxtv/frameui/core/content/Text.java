@@ -150,6 +150,6 @@ public class Text extends AbstractContent {
 
     @Override
     public String toString() {
-        return "Text(%s, \"%s\", %d, %d, %s, %s) {}".formatted(getId(), content, x, y, font, border);
+        return "Text(%s, \"%s\", %d, %d, %s, %s)".formatted(getId(), content, x, y, font, border);
     }
 }

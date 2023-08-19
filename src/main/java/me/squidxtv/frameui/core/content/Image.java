@@ -102,6 +102,6 @@ public class Image extends AbstractContent {
 
     @Override
     public String toString() {
-        return "Image(%s, %d, %d, %s, %s, %s) {}".formatted(getId(), x, y, path, visual, border);
+        return "Image(%s, %d, %d, %s, %s, %s)".formatted(getId(), x, y, path, visual, border);
     }
 }

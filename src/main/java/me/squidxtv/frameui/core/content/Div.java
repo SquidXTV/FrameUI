@@ -9,7 +9,7 @@ import org.w3c.dom.Element;
 import java.util.Arrays;
 import java.util.List;
 
-public class Div extends AbstractContent {
+public class Div extends AbstractContent implements Parent {
 
     private int x;
     private int y;
@@ -75,6 +75,7 @@ public class Div extends AbstractContent {
         this.height = height;
     }
 
+    @Override
     public @NotNull List<Content> getChildren() {
         return children;
     }
@@ -105,12 +106,6 @@ public class Div extends AbstractContent {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Div(%s, %d, %d, %d, %d, %s) {%n".formatted(getId(), x, y, width, height, border));
-        for (Content child : children) {
-            builder.append("\t").append(child).append("\n");
-        }
-        builder.append("}");
-        return builder.toString();
+        return "Div(%s, %d, %d, %d, %d, %s)".formatted(getId(), x, y, width, height, border);
     }
 }
