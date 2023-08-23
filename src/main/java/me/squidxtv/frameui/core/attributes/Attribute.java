@@ -80,7 +80,7 @@ public class Attribute<T> {
 
     public static final Attribute<Path> PATH = new Attribute<>("path", (element, result) -> {
         URI documentLocation = URI.create(element.getOwnerDocument().getDocumentURI());
-        return Path.of(documentLocation).resolve(result);
+        return PathUtils.convert(Path.of(documentLocation), result);
     });
 
     private final @NotNull String name;
