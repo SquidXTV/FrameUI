@@ -1,0 +1,16 @@
+<screen xmlns="http://www.squidxtv.me/schema/frameui/v1/frameui.xsd"
+        id="screen"
+        width="5"
+        height="3">
+    <div id="to-search-for" width="100" height="100">
+        <text id="to-search-for">Text</text>
+    </div>
+    <div id="div" width="100" height="100">
+        <text id="to-search-for">
+            Text
+        </text>
+    </div>
+    <text id="to-search-for">
+        Text
+    </text>
+</screen>

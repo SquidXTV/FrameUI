@@ -1,4 +1,4 @@
-package me.squidxtv.frameui.screen;
+package me.squidxtv.visual.screen;
 
 import me.squidxtv.frameui.core.Screen;
 import me.squidxtv.frameui.core.actions.initiator.ActionInitiator;

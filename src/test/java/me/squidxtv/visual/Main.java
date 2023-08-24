@@ -1,5 +1,6 @@
-package me.squidxtv.frameui;
+package me.squidxtv.visual;
 
+import me.squidxtv.frameui.FrameUI;
 import me.squidxtv.frameui.api.FrameAPI;
 import me.squidxtv.frameui.api.FrameAPIImpl;
 import me.squidxtv.frameui.api.cache.ImageCache;
@@ -11,7 +12,7 @@ import me.squidxtv.frameui.api.registry.ScreenRegistryImpl;
 import me.squidxtv.frameui.core.content.Content;
 import me.squidxtv.frameui.core.content.Parent;
 import me.squidxtv.frameui.core.content.ScreenModel;
-import me.squidxtv.frameui.screen.DebugScreen;
+import me.squidxtv.visual.screen.DebugScreen;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -25,6 +26,7 @@ import org.xml.sax.SAXException;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
@@ -76,6 +78,8 @@ public class Main {
             screen.update();
             screen.getGraphics().update();
             render.repaint();
+            components.setModel(new DefaultTreeModel(toTree(screen.getModel())));
+            components.revalidate();
             components.repaint();
         });
         timer.setRepeats(true);
@@ -86,7 +90,7 @@ public class Main {
         FrameUI plugin = mock(FrameUI.class);
         when(plugin.getLogger()).thenReturn(LOGGER);
 
-        FileConfiguration config = YamlConfiguration.loadConfiguration(Files.newBufferedReader(Path.of(Main.class.getResource("/config.yml").toURI())));
+        FileConfiguration config = YamlConfiguration.loadConfiguration(Files.newBufferedReader(Path.of(Main.class.getResource("/me/squidxtv/plugin-config.yml").toURI())));
 
         ServicesManager manager = new ServicesManager() {
 
@@ -144,7 +148,7 @@ public class Main {
 
         try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class)) {
             bukkit.when(Bukkit::getServicesManager).thenReturn(manager);
-            ScreenModel model = ScreenModel.of(Path.of(Main.class.getResource("/test.xml").toURI()));
+            ScreenModel model = ScreenModel.of(Path.of(Main.class.getResource("/me/squidxtv/visual/test.xml").toURI()));
             return new DebugScreen(model);
         }
     }
