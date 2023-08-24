@@ -108,6 +108,7 @@ public class Text extends AbstractContent {
         return derivedFont;
     }
 
+    // TODO: 24/08/2023 maybe rename to not cause confusion with Content class
     public @NotNull String getContent() {
         return content;
     }
