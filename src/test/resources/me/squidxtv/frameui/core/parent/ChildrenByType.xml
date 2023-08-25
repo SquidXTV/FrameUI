@@ -1,0 +1,10 @@
+<screen xmlns="http://www.squidxtv.me/schema/frameui/v1/frameui.xsd"
+        id="screen"
+        width="5"
+        height="3">
+    <div id="div1" width="100" height="100">
+        <text id="text1">My Text</text>
+    </div>
+    <div id="div2" width="100" height="100"/>
+    <image id="image1" path="@{../../../visual/bgmarker.png}"/>
+</screen>

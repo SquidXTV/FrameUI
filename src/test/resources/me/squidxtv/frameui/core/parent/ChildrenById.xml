@@ -1,0 +1,13 @@
+<screen xmlns="http://www.squidxtv.me/schema/frameui/v1/frameui.xsd"
+        id="screen"
+        width="5"
+        height="3">
+    <div id="div" width="100" height="100">
+        <div id="to-search-for" width="100" height="100">
+
+        </div>
+    </div>
+    <div id="to-search-for" width="100" height="100">
+        <image id="to-search-for" path="@{../../../visual/bgmarker.png}"/>
+    </div>
+</screen>

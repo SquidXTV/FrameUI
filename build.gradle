@@ -22,8 +22,10 @@ dependencies {
     api 'org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT'
     api 'org.jetbrains:annotations:23.1.0'
     api 'com.github.ben-manes.caffeine:caffeine:3.1.6'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
     compileOnly 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
     compileOnly 'com.comphenix.protocol:ProtocolLib:5.0.0'
+    testImplementation(platform('org.junit:junit5-api:5.0.0-ALPHA'))
     testImplementation 'org.mockito:mockito-core:5.4.0'
 }
 
@@ -31,10 +33,14 @@ group = 'me.squidxtv'
 version = '1.0-SNAPSHOT'
 description = 'FrameUI'
 
-java.sourceCompatibility = JavaVersion.VERSION_20
+java.sourceCompatibility = JavaVersion.VERSION_19
 
 java {
     withJavadocJar()
+}
+
+test {
+    useJUnitPlatform()
 }
 
 tasks.withType(JavaCompile).configureEach {

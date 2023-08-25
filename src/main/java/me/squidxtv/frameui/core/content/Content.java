@@ -17,6 +17,8 @@ public interface Content extends Clickable, Scrollable {
 
     void draw(@NotNull Graphics<?> graphics, int parentX, int parentY, int parentWidth, int parentHeight);
 
+    @NotNull String getId();
+
     static @NotNull Content[] getChildren(@NotNull Element root) {
         NodeList children = root.getChildNodes();
         if (children.getLength() == 0) {
@@ -45,4 +47,5 @@ public interface Content extends Clickable, Scrollable {
         }
         return sub.stream().filter(Objects::nonNull).toArray(Content[]::new);
     }
+
 }
