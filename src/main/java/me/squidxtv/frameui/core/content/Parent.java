@@ -134,35 +134,26 @@ public interface Parent {
     }
 
     private static @NotNull Stream<Content> getContentsById(@NotNull List<Content> contents, @NotNull String id, boolean deep) {
-        Stream<Content> byId = contents.stream()
-                .filter(content -> content.getId().equals(id));
-
-        if (deep) {
-            Stream<Content> childrenById = contents.stream()
-                    .filter(Parent.class::isInstance)
-                    .flatMap(content -> getContentsById(((Parent) content).getChildren(), id, true));
-
-            byId = Stream.concat(byId, childrenById);
-        }
-
-        return byId;
+        return contents.stream()
+                .flatMap(content -> {
+                    Stream<Content> byId = content.getId().equals(id) ? Stream.of(content) : Stream.empty();
+                    if (deep && content instanceof Parent parent) {
+                        byId = Stream.concat(byId, getContentsById(parent.getChildren(), id, true));
+                    }
+                    return byId;
+                });
     }
 
     @SuppressWarnings("unchecked")
     private static <T extends Content> @NotNull Stream<T> getContentsByType(@NotNull List<Content> contents, Class<T> type, boolean deep) {
-        Stream<T> filteredContent = contents.stream()
-                .filter(type::isInstance)
-                .map(content -> (T) content);
-
-        if (deep) {
-            Stream<T> descendantFilteredContent = contents.stream()
-                    .filter(Parent.class::isInstance)
-                    .flatMap(content -> getContentsByType(((Parent) content).getChildren(), type, true));
-
-            filteredContent = Stream.concat(filteredContent, descendantFilteredContent);
-        }
-
-        return filteredContent;
+        return contents.stream()
+                .flatMap(content -> {
+                    Stream<T> byId = type.isInstance(content) ? Stream.of((T) content) : Stream.empty();
+                    if (deep && content instanceof Parent parent) {
+                        byId = Stream.concat(byId, getContentsByType(parent.getChildren(), type, true));
+                    }
+                    return byId;
+                });
     }
 
 }
