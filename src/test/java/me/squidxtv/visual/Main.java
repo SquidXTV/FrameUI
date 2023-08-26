@@ -4,6 +4,7 @@ import me.squidxtv.frameui.core.content.Content;
 import me.squidxtv.frameui.core.content.Parent;
 import me.squidxtv.util.ScreenUtil;
 import me.squidxtv.visual.screen.DebugScreen;
+import me.squidxtv.visual.ui.SwingScreenRenderer;
 import org.jetbrains.annotations.NotNull;
 import org.xml.sax.SAXException;
 
@@ -28,8 +29,7 @@ public class Main {
         JFrame window = new JFrame("FrameUI - Visual Testing");
         window.setLayout(new BorderLayout());
 
-        JLabel render = new JLabel();
-        render.setIcon(new ImageIcon(screen.getGraphics().getImage()));
+        SwingScreenRenderer render = new SwingScreenRenderer(screen);
 
         JPanel panel = new JPanel(new BorderLayout());
         JTree components = new JTree(toTree(screen.getModel()));
