@@ -21,4 +21,5 @@ public interface Screen<G extends Graphics<?>> extends Clickable, Scrollable {
     @NotNull JavaPlugin getPlugin();
     @NotNull ScreenModel getModel();
     void setModel(@NotNull ScreenModel model);
+
 }
