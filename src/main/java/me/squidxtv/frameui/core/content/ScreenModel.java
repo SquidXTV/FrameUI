@@ -2,9 +2,12 @@ package me.squidxtv.frameui.core.content;
 
 import me.squidxtv.frameui.api.parser.ScreenParser;
 import me.squidxtv.frameui.core.actions.initiator.ActionInitiator;
+import me.squidxtv.frameui.core.actions.scroll.ScrollDirection;
 import me.squidxtv.frameui.core.attributes.Attribute;
 import me.squidxtv.frameui.core.attributes.BorderAttribute;
 import me.squidxtv.frameui.core.graphics.Graphics;
+import me.squidxtv.frameui.core.map.Map;
+import me.squidxtv.frameui.core.math.BoundingBox;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,10 +20,11 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class ScreenModel extends AbstractContent implements Parent {
 
-    private static final ScreenParser SCREEN_PARSER = Bukkit.getServicesManager().load(ScreenParser.class);
+    private static final ScreenParser SCREEN_PARSER = Objects.requireNonNull(Bukkit.getServicesManager().load(ScreenParser.class));
 
     private int width;
     private int height;
@@ -57,73 +61,125 @@ public class ScreenModel extends AbstractContent implements Parent {
     }
 
     @Override
-    public void draw(@NotNull Graphics<?> graphics, int parentX, int parentY, int parentWidth, int parentHeight) {
-        Color[] background = new Color[parentWidth * parentHeight];
+    public void draw(@NotNull Graphics<?> graphics, @NotNull BoundingBox parentBoundingBox) {
+        Color[] background = new Color[parentBoundingBox.width() * parentBoundingBox.height()];
         Arrays.fill(background, backgroundColor);
-        graphics.draw(background, parentWidth, parentHeight, parentX, parentY);
+        graphics.draw(background, parentBoundingBox.width(), parentBoundingBox.height(), parentBoundingBox.x(), parentBoundingBox.y());
 
         if (backgroundImage != null) {
             graphics.draw(backgroundImage);
         }
 
         for (Content child : children) {
-            child.draw(graphics, parentX, parentY, parentWidth, parentHeight);
+            child.draw(graphics, parentBoundingBox);
         }
 
-        border.draw(graphics, 0, 0, parentWidth, parentHeight, parentX, parentY, parentWidth, parentHeight);
+        border.draw(graphics, 0, 0, parentBoundingBox.width(), parentBoundingBox.height(), parentBoundingBox);
     }
 
     @Override
-    public boolean click(@NotNull ActionInitiator<?> initiator, int x, int y) {
-        if (!super.click(initiator, x, y)) {
-            return false;
+    public void click(@NotNull ActionInitiator<?> initiator, int clickX, int clickY, BoundingBox parentBoundingBox) {
+        if (getClickAction().isEmpty()) {
+            return;
+        }
+
+        BoundingBox absolutePosition = getAbsolutePosition(parentBoundingBox);
+
+        if (absolutePosition.width() <= 0 || absolutePosition.height() <= 0) {
+            return;
+        }
+
+        if(absolutePosition.isPositionOutside(clickX, clickY)) {
+            return;
         }
 
         for (Content child : children) {
-            child.click(initiator, x, y);
+            child.click(initiator, clickX, clickY, absolutePosition);
         }
-
-        return true;
+        getClickAction().get().perform(initiator, clickX, clickY);
     }
+
     @Override
-    public boolean scroll(@NotNull ActionInitiator<?> initiator, @NotNull ScrollDirection direction, int x, int y) {
-        if (!super.scroll(initiator, direction, x, y)) {
-            return false;
+    public void scroll(@NotNull ActionInitiator<?> initiator, @NotNull ScrollDirection direction, int scrollX, int scrollY, @NotNull BoundingBox parentBoundingBox) {
+        if (getScrollAction().isEmpty()) {
+            return;
+        }
+
+        BoundingBox absolutePosition = getAbsolutePosition(parentBoundingBox);
+
+        if (absolutePosition.width() <= 0 || absolutePosition.height() <= 0) {
+            return;
+        }
+
+        if(absolutePosition.isPositionOutside(scrollX, scrollY)) {
+            return;
         }
 
         for (Content child : children) {
-            child.scroll(initiator, direction, x, y);
+            child.scroll(initiator, direction, scrollX, scrollY, absolutePosition);
         }
-
-        return true;
+        getScrollAction().get().perform(initiator, direction, scrollX, scrollY);
     }
 
+    @Override
+    public int getX() {
+        return 0;
+    }
+
+    @Override
+    public int getY() {
+        return 0;
+    }
+
+    @Override
     public int getWidth() {
+        return width * Map.WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return height * Map.HEIGHT;
+    }
+
+    public int getBlockWidth() {
         return width;
     }
 
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
+    public int getBlockHeight() {
         return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
     }
 
     public @NotNull Color getBackgroundColor() {
         return backgroundColor;
     }
 
-    public void setBackgroundColor(@NotNull Color backgroundColor) {
-        this.backgroundColor = backgroundColor;
-    }
-
     public @Nullable BufferedImage getBackgroundImage() {
         return backgroundImage;
+    }
+
+    public int getClickRadius() {
+        return clickRadius;
+    }
+
+    public int getScrollRadius() {
+        return scrollRadius;
+    }
+
+    @Override
+    public @NotNull List<Content> getChildren() {
+        return children;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public void setBackgroundColor(@NotNull Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
     }
 
     public void setBackgroundImage(@Nullable BufferedImage backgroundImage) {
@@ -138,25 +194,12 @@ public class ScreenModel extends AbstractContent implements Parent {
         this.border = border;
     }
 
-    public int getClickRadius() {
-        return clickRadius;
-    }
-
     public void setClickRadius(int clickRadius) {
         this.clickRadius = clickRadius;
     }
 
-    public int getScrollRadius() {
-        return scrollRadius;
-    }
-
     public void setScrollRadius(int scrollRadius) {
         this.scrollRadius = scrollRadius;
-    }
-
-    @Override
-    public @NotNull List<Content> getChildren() {
-        return children;
     }
 
     @Override

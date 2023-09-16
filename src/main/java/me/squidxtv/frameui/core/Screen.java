@@ -1,14 +1,14 @@
 package me.squidxtv.frameui.core;
 
-import me.squidxtv.frameui.core.actions.click.Clickable;
-import me.squidxtv.frameui.core.actions.scroll.Scrollable;
+import me.squidxtv.frameui.core.actions.initiator.ActionInitiator;
+import me.squidxtv.frameui.core.actions.scroll.ScrollDirection;
 import me.squidxtv.frameui.core.content.ScreenModel;
 import me.squidxtv.frameui.core.graphics.Graphics;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 
-public interface Screen<G extends Graphics<?>> extends Clickable, Scrollable {
+public interface Screen<G extends Graphics<?>> {
 
     void open();
     void close();
@@ -17,6 +17,9 @@ public interface Screen<G extends Graphics<?>> extends Clickable, Scrollable {
 
     @NotNull G getGraphics();
     void setGraphics(@NotNull G graphics);
+
+    boolean click(@NotNull ActionInitiator<?> initiator, int x, int y);
+    boolean scroll(@NotNull ActionInitiator<?> initiator, @NotNull ScrollDirection direction, int x, int y);
 
     @NotNull JavaPlugin getPlugin();
     @NotNull ScreenModel getModel();

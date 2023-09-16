@@ -1,13 +1,19 @@
 package me.squidxtv.frameui.core.content;
 
+import me.squidxtv.frameui.core.actions.click.ClickAction;
+import me.squidxtv.frameui.core.actions.initiator.ActionInitiator;
+import me.squidxtv.frameui.core.actions.scroll.ScrollAction;
+import me.squidxtv.frameui.core.actions.scroll.ScrollDirection;
 import me.squidxtv.frameui.core.attributes.Attribute;
 import me.squidxtv.frameui.core.attributes.BorderAttribute;
 import me.squidxtv.frameui.core.graphics.Graphics;
+import me.squidxtv.frameui.core.math.BoundingBox;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Element;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class Div extends AbstractContent implements Parent {
 
@@ -40,39 +46,76 @@ public class Div extends AbstractContent implements Parent {
     }
 
     @Override
-    public void draw(@NotNull Graphics<?> graphics, int parentX, int parentY, int parentWidth, int parentHeight) {
-        int canvasX = parentX + this.x;
-        int canvasY = parentY + this.y;
-        int visibleWidth = Math.min(parentWidth - this.x, width);
-        int visibleHeight = Math.min(parentHeight - this.y, height);
+    public void draw(@NotNull Graphics<?> graphics, BoundingBox parentBoundingBox) {
+        BoundingBox absolutePosition = getAbsolutePosition(parentBoundingBox);
 
-        if (visibleWidth <= 0 || visibleHeight <= 0) {
+        if (absolutePosition.width() <= 0 || absolutePosition.height() <= 0) {
             return;
         }
 
         // TODO: 31/07/2023 implement border padding for all borders / make issue for that instead
         for (Content child : children) {
-            child.draw(graphics, canvasX, canvasY, visibleWidth, visibleHeight);
+            child.draw(graphics, absolutePosition);
         }
 
         // TODO: 31/07/2023 check if visibleWidth/visibleHeight is needed instead
-        border.draw(graphics, canvasX, canvasY, width, height, parentX, parentY, parentWidth, parentHeight);
+        border.draw(graphics, absolutePosition.x(), absolutePosition.y(), width, height, parentBoundingBox);
     }
 
+    @Override
+    public void click(@NotNull ActionInitiator<?> initiator, int clickX, int clickY, BoundingBox parentBoundingBox) {
+        Optional<ClickAction> optionalClickAction = getClickAction();
+        if (optionalClickAction.isEmpty()) {
+            return;
+        }
+
+        BoundingBox absolutePosition = getAbsolutePosition(parentBoundingBox);
+
+        if (absolutePosition.width() <= 0 || absolutePosition.height() <= 0) {
+            return;
+        }
+
+        if(absolutePosition.isPositionOutside(clickX, clickY)) {
+            return;
+        }
+
+        for (Content child : children) {
+            child.click(initiator, clickX, clickY, absolutePosition);
+        }
+        optionalClickAction.get().perform(initiator, clickX, clickY);
+    }
+
+    @Override
+    public void scroll(@NotNull ActionInitiator<?> initiator, @NotNull ScrollDirection direction, int scrollX, int scrollY, @NotNull BoundingBox parentBoundingBox) {
+        Optional<ScrollAction> optionalScrollAction = getScrollAction();
+        if (optionalScrollAction.isEmpty()) {
+            return;
+        }
+
+        BoundingBox absolutePosition = getAbsolutePosition(parentBoundingBox);
+
+        if (absolutePosition.width() <= 0 || absolutePosition.height() <= 0) {
+            return;
+        }
+
+        if(absolutePosition.isPositionOutside(scrollX, scrollY)) {
+            return;
+        }
+
+        for (Content child : children) {
+            child.scroll(initiator, direction, scrollX, scrollY, absolutePosition);
+        }
+        optionalScrollAction.get().perform(initiator, direction, scrollX, scrollY);
+    }
+
+    @Override
     public int getWidth() {
         return width;
     }
 
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
+    @Override
     public int getHeight() {
         return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
     }
 
     @Override
@@ -80,24 +123,34 @@ public class Div extends AbstractContent implements Parent {
         return children;
     }
 
+    @Override
     public int getX() {
         return x;
+    }
+
+    @Override
+    public int getY() {
+        return y;
+    }
+
+    public @NotNull BorderAttribute getBorder() {
+        return border;
     }
 
     public void setX(int x) {
         this.x = x;
     }
 
-    public int getY() {
-        return y;
-    }
-
     public void setY(int y) {
         this.y = y;
     }
 
-    public @NotNull BorderAttribute getBorder() {
-        return border;
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     public void setBorder(@NotNull BorderAttribute border) {

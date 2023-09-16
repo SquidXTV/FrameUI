@@ -4,6 +4,7 @@ import me.squidxtv.frameui.api.cache.ImageCache;
 import me.squidxtv.frameui.core.attributes.Attribute;
 import me.squidxtv.frameui.core.attributes.BorderAttribute;
 import me.squidxtv.frameui.core.graphics.Graphics;
+import me.squidxtv.frameui.core.math.BoundingBox;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Element;
@@ -44,56 +45,65 @@ public class Image extends AbstractContent {
     }
 
     @Override
-    public void draw(@NotNull Graphics<?> graphics, int parentX, int parentY, int parentWidth, int parentHeight) {
-        int canvasX = parentX + this.x;
-        int canvasY = parentY + this.y;
-        int visibleWidth = Math.min(parentWidth - this.x, visual.getWidth());
-        int visibleHeight = Math.min(parentHeight - this.y, visual.getHeight());
+    public void draw(@NotNull Graphics<?> graphics, BoundingBox parentBoundingBox) {
+        BoundingBox absolutePosition = getAbsolutePosition(parentBoundingBox);
 
-        if (visibleWidth <= 0 || visibleHeight <= 0) {
+        if (absolutePosition.width() <= 0 || absolutePosition.height() <= 0) {
             return;
         }
 
-        graphics.draw(visual, visibleWidth, visibleHeight, canvasX, canvasY);
+        graphics.draw(visual, absolutePosition.width(), absolutePosition.height(), absolutePosition.x(), absolutePosition.y());
 
         // TODO: 31/07/2023 check if visibleWidth/visibleHeight is needed instead
-        border.draw(graphics, canvasX, canvasY, visual.getWidth(), visual.getHeight(), parentX, parentY, parentWidth, parentHeight);
+        border.draw(graphics, absolutePosition.x(), absolutePosition.y(), getWidth(), getHeight(), parentBoundingBox);
     }
 
+    @Override
     public int getX() {
         return x;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
+    @Override
     public int getY() {
         return y;
     }
 
-    public void setY(int y) {
-        this.y = y;
+    @Override
+    public int getWidth() {
+        return visual.getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return visual.getHeight();
     }
 
     public @NotNull Path getPath() {
         return path;
     }
 
-    public void setPath(@NotNull Path path) {
-        this.path = path;
-    }
-
     public @NotNull BufferedImage getVisual() {
         return visual;
     }
 
-    public void setVisual(@NotNull BufferedImage visual) {
-        this.visual = visual;
-    }
-
     public @NotNull BorderAttribute getBorder() {
         return border;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setPath(@NotNull Path path) {
+        this.path = path;
+    }
+
+    public void setVisual(@NotNull BufferedImage visual) {
+        this.visual = visual;
     }
 
     public void setBorder(@NotNull BorderAttribute border) {
@@ -104,4 +114,5 @@ public class Image extends AbstractContent {
     public String toString() {
         return "Image(%s, %d, %d, %s, %s, %s)".formatted(getId(), x, y, path, visual, border);
     }
+
 }

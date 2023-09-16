@@ -1,7 +1,7 @@
 package me.squidxtv.visual.ui;
 
 import me.squidxtv.frameui.core.actions.initiator.ActionInitiator;
-import me.squidxtv.frameui.core.actions.scroll.Scrollable;
+import me.squidxtv.frameui.core.actions.scroll.ScrollDirection;
 import me.squidxtv.visual.screen.DebugScreen;
 
 import javax.swing.*;
@@ -33,11 +33,11 @@ public class SwingScreenRenderer extends JLabel {
         });
 
         addMouseWheelListener(e -> {
-            Scrollable.ScrollDirection direction;
+            ScrollDirection direction;
             if (e.getWheelRotation() > 0) {
-                direction = Scrollable.ScrollDirection.LEFT;
+                direction = ScrollDirection.LEFT;
             } else if (e.getWheelRotation() < 0) {
-                direction = Scrollable.ScrollDirection.RIGHT;
+                direction = ScrollDirection.RIGHT;
             } else {
                 throw new IllegalStateException("Illegal wheel rotation direction.");
             }

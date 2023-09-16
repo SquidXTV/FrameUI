@@ -3,8 +3,10 @@ package me.squidxtv.frameui.core;
 import me.squidxtv.frameui.api.registry.ScreenRegistry;
 import me.squidxtv.frameui.core.actions.initiator.ActionInitiator;
 import me.squidxtv.frameui.core.actions.initiator.PlayerInitiator;
+import me.squidxtv.frameui.core.actions.scroll.ScrollDirection;
 import me.squidxtv.frameui.core.content.ScreenModel;
 import me.squidxtv.frameui.core.graphics.AbstractGraphics;
+import me.squidxtv.frameui.core.math.BoundingBox;
 import me.squidxtv.frameui.exceptions.ScreenRemovedException;
 import org.bukkit.Bukkit;
 import org.bukkit.permissions.Permission;
@@ -14,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractScreen<G extends AbstractGraphics<?>> implements Screen<G> {
 
-    protected static final @NotNull ScreenRegistry SCREEN_REGISTRY = Bukkit.getServicesManager().load(ScreenRegistry.class);
+    protected static final ScreenRegistry SCREEN_REGISTRY = Bukkit.getServicesManager().load(ScreenRegistry.class);
 
     private final @NotNull JavaPlugin plugin;
     private @NotNull ScreenModel model;
@@ -69,7 +71,7 @@ public abstract class AbstractScreen<G extends AbstractGraphics<?>> implements S
     @Override
     public void update() {
         throwIfRemoved();
-        model.draw(graphics, 0, 0, graphics.getPixelWidth(), graphics.getPixelHeight());
+        model.draw(graphics, new BoundingBox(0, 0, graphics.getPixelWidth(), graphics.getPixelHeight()));
     }
 
     @Override
@@ -136,6 +138,9 @@ public abstract class AbstractScreen<G extends AbstractGraphics<?>> implements S
 
     @Override
     public void setModel(@NotNull ScreenModel model) {
+        if (state == State.OPEN) {
+            close();
+        }
         this.model = model;
     }
 
@@ -168,4 +173,5 @@ public abstract class AbstractScreen<G extends AbstractGraphics<?>> implements S
         CLOSED,
         REMOVED
     }
+
 }
