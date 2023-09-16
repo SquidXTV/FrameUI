@@ -1,6 +1,7 @@
 package me.squidxtv.frameui.core.attributes;
 
 import me.squidxtv.frameui.core.graphics.Graphics;
+import me.squidxtv.frameui.core.math.BoundingBox;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Element;
 
@@ -22,7 +23,7 @@ public class BorderAttribute {
         this.width = width;
     }
 
-    public void draw(@NotNull Graphics<?> graphics, int x, int y, int width, int height, int parentX, int parentY, int parentWidth, int parentHeight) {
+    public void draw(@NotNull Graphics<?> graphics, int x, int y, int width, int height, BoundingBox parentBoundingBox) {
         if (this.width <= 0) {
             return;
         }
@@ -32,22 +33,22 @@ public class BorderAttribute {
         int realWidth = width;
         int realHeight = height;
 
-        if (realY < parentY) {
-            realHeight = realHeight - (parentY - realY);
-            realY = parentY;
+        if (realY < parentBoundingBox.y()) {
+            realHeight = realHeight - (parentBoundingBox.y() - realY);
+            realY = parentBoundingBox.y();
         }
 
-        if ((realY+realHeight) > (parentY + parentHeight)) {
-            realHeight = realHeight - ((realY + realHeight) - (parentY + parentHeight));
+        if ((realY+realHeight) > (parentBoundingBox.y() + parentBoundingBox.height())) {
+            realHeight = realHeight - ((realY + realHeight) - (parentBoundingBox.y() + parentBoundingBox.height()));
         }
 
-        if (realX < parentX) {
-            realWidth = realWidth - (parentX - realX);
-            realX = parentX;
+        if (realX < parentBoundingBox.x()) {
+            realWidth = realWidth - (parentBoundingBox.x() - realX);
+            realX = parentBoundingBox.x();
         }
 
-        if ((realX + realWidth) > (parentX + parentWidth)) {
-            realWidth = realWidth - ((realX + realWidth) - (parentX + parentWidth));
+        if ((realX + realWidth) > (parentBoundingBox.x() + parentBoundingBox.width())) {
+            realWidth = realWidth - ((realX + realWidth) - (parentBoundingBox.x() + parentBoundingBox.width()));
         }
 
 
@@ -64,8 +65,8 @@ public class BorderAttribute {
 
         // bottom border
         realStroke = this.width;
-        if ((y + height) > (parentY + parentHeight)) {
-            realStroke = this.width - ((y + height) - (parentY + parentHeight));
+        if ((y + height) > (parentBoundingBox.y() + parentBoundingBox.height())) {
+            realStroke = this.width - ((y + height) - (parentBoundingBox.y() + parentBoundingBox.height()));
         }
         if (realStroke > 0) {
             Color[] rect = new Color[realWidth * realStroke];
@@ -86,8 +87,8 @@ public class BorderAttribute {
 
         // right border
         realStroke = this.width;
-        if ((x + width) > (parentX + parentWidth)) {
-            realStroke = this.width - ((x + width) - (parentX + parentWidth));
+        if ((x + width) > (parentBoundingBox.x() + parentBoundingBox.width())) {
+            realStroke = this.width - ((x + width) - (parentBoundingBox.x() + parentBoundingBox.width()));
         }
         if (realStroke > 0) {
             Color[] rect = new Color[realWidth * realStroke];

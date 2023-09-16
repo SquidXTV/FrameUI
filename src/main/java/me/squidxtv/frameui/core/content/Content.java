@@ -3,6 +3,7 @@ package me.squidxtv.frameui.core.content;
 import me.squidxtv.frameui.core.actions.click.Clickable;
 import me.squidxtv.frameui.core.actions.scroll.Scrollable;
 import me.squidxtv.frameui.core.graphics.Graphics;
+import me.squidxtv.frameui.core.math.BoundingBox;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -15,9 +16,14 @@ import java.util.Objects;
 
 public interface Content extends Clickable, Scrollable {
 
-    void draw(@NotNull Graphics<?> graphics, int parentX, int parentY, int parentWidth, int parentHeight);
+    void draw(@NotNull Graphics<?> graphics, BoundingBox parent);
 
     @NotNull String getId();
+
+    int getX();
+    int getY();
+    int getWidth();
+    int getHeight();
 
     static @NotNull Content[] getChildren(@NotNull Element root) {
         NodeList children = root.getChildNodes();

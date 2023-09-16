@@ -2,8 +2,10 @@ package me.squidxtv.frameui.core;
 
 import me.squidxtv.frameui.core.actions.initiator.ActionInitiator;
 import me.squidxtv.frameui.core.actions.initiator.PlayerInitiator;
+import me.squidxtv.frameui.core.actions.scroll.ScrollDirection;
 import me.squidxtv.frameui.core.content.ScreenModel;
 import me.squidxtv.frameui.core.graphics.VirtualGraphics;
+import me.squidxtv.frameui.core.math.BoundingBox;
 import me.squidxtv.frameui.core.math.Direction;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -26,7 +28,7 @@ public class VirtualScreen extends AbstractScreen<VirtualGraphics> {
                          @NotNull World world,
                          @NotNull Location topLeftFrameLocation,
                          @NotNull Direction direction) {
-        super(plugin, model, new VirtualGraphics(world, topLeftFrameLocation, direction, model.getWidth(), model.getHeight()));
+        super(plugin, model, new VirtualGraphics(world, topLeftFrameLocation, direction, model.getBlockWidth(), model.getBlockHeight()));
         this.world = world;
         this.topLeftFrameLocation = topLeftFrameLocation;
         this.direction = direction;
@@ -42,7 +44,8 @@ public class VirtualScreen extends AbstractScreen<VirtualGraphics> {
             return false;
         }
 
-        return getModel().click(initiator, x, y);
+        getModel().click(initiator, x, y, new BoundingBox(0, 0, getGraphics().getPixelWidth(), getGraphics().getPixelHeight()));
+        return true;
     }
 
     @Override
@@ -55,7 +58,8 @@ public class VirtualScreen extends AbstractScreen<VirtualGraphics> {
             return false;
         }
 
-        return getModel().scroll(initiator, direction, x, y);
+        getModel().scroll(initiator, direction, x, y, new BoundingBox(0, 0, getGraphics().getPixelWidth(), getGraphics().getPixelHeight()));
+        return true;
     }
 
     public @NotNull World getWorld() {

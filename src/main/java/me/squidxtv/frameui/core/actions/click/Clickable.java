@@ -1,10 +1,11 @@
 package me.squidxtv.frameui.core.actions.click;
 
 import me.squidxtv.frameui.core.actions.initiator.ActionInitiator;
+import me.squidxtv.frameui.core.math.BoundingBox;
 import org.jetbrains.annotations.NotNull;
 
 public interface Clickable {
 
-    boolean click(@NotNull ActionInitiator<?> initiator, int x, int y);
+    void click(@NotNull ActionInitiator<?> initiator, int clickX, int clickY, BoundingBox parentBoundingBox);
 
 }

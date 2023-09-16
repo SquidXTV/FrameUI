@@ -2,7 +2,9 @@ package me.squidxtv.visual.screen;
 
 import me.squidxtv.frameui.core.Screen;
 import me.squidxtv.frameui.core.actions.initiator.ActionInitiator;
+import me.squidxtv.frameui.core.actions.scroll.ScrollDirection;
 import me.squidxtv.frameui.core.content.ScreenModel;
+import me.squidxtv.frameui.core.math.BoundingBox;
 import me.squidxtv.frameui.exceptions.ScreenRemovedException;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +17,7 @@ public class DebugScreen implements Screen<DebugGraphics> {
 
     public DebugScreen(ScreenModel model) {
         this.model = model;
-        graphics = new DebugGraphics(model.getWidth(), model.getHeight());
+        graphics = new DebugGraphics(model.getBlockWidth(), model.getBlockHeight());
     }
 
     @Override
@@ -51,7 +53,7 @@ public class DebugScreen implements Screen<DebugGraphics> {
     @Override
     public void update() {
         throwIfRemoved();
-        model.draw(graphics, 0, 0, graphics.getPixelWidth(), graphics.getPixelHeight());
+        model.draw(graphics, new BoundingBox(0, 0, graphics.getPixelWidth(), graphics.getPixelHeight()));
     }
 
     protected void throwIfRemoved() {
@@ -68,12 +70,14 @@ public class DebugScreen implements Screen<DebugGraphics> {
 
     @Override
     public boolean click(@NotNull ActionInitiator<?> initiator, int x, int y) {
-        return model.click(initiator, x, y);
+        model.click(initiator, x, y, new BoundingBox(0, 0, graphics.getPixelWidth(), graphics.getPixelHeight()));
+        return true;
     }
 
     @Override
     public boolean scroll(@NotNull ActionInitiator<?> initiator, @NotNull ScrollDirection direction, int x, int y) {
-        return model.scroll(initiator, direction, x, y);
+        model.scroll(initiator, direction, x, y, new BoundingBox(0, 0, graphics.getPixelWidth(), graphics.getPixelHeight()));
+        return true;
     }
 
 

@@ -4,6 +4,7 @@ import me.squidxtv.frameui.core.attributes.Attribute;
 import me.squidxtv.frameui.core.attributes.BorderAttribute;
 import me.squidxtv.frameui.core.attributes.FontAttribute;
 import me.squidxtv.frameui.core.graphics.Graphics;
+import me.squidxtv.frameui.core.math.BoundingBox;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Element;
 
@@ -23,6 +24,7 @@ public class Text extends AbstractContent {
     private int y;
 
     private @NotNull String content;
+    private @NotNull GlyphVector glyphVector;
     private @NotNull FontAttribute font;
     private @NotNull BorderAttribute border;
 
@@ -42,36 +44,20 @@ public class Text extends AbstractContent {
         this.y = y;
         this.font = font;
         this.border = border;
+
+        this.glyphVector = getDerivedFont().layoutGlyphVector(FONT_RENDER_CONTEXT, content.toCharArray(), 0, content.length(), Font.LAYOUT_LEFT_TO_RIGHT);
     }
 
     @Override
-    public void draw(@NotNull Graphics<?> graphics, int parentX, int parentY, int parentWidth, int parentHeight) {
-        Font derivedFont = getDerivedFont();
-        GlyphVector glyphVector = derivedFont.layoutGlyphVector(FONT_RENDER_CONTEXT, content.toCharArray(), 0, content.length(), Font.LAYOUT_LEFT_TO_RIGHT);
-        Rectangle textBounds = glyphVector.getPixelBounds(FONT_RENDER_CONTEXT, 0, 0);
+    public void draw(@NotNull Graphics<?> graphics, BoundingBox parentBoundingBox) {
+        BoundingBox absolutePosition = getAbsolutePosition(parentBoundingBox);
 
-        int borderWidth = border.getWidth();
-        int imageWidth = textBounds.width + (borderWidth*2);
-        int imageHeight = textBounds.height + (borderWidth*2);
-        int textX = borderWidth;
-        int textY = borderWidth - ((int) textBounds.getY());
-
-        if (borderWidth > 0) {
-            int borderPadding = font.getBorderPadding();
-            imageWidth += borderPadding *2;
-            imageHeight += borderPadding *2;
-            textX += borderPadding;
-            textY += borderPadding;
-        }
-
-        int canvasX = parentX + this.x;
-        int canvasY = parentY + this.y;
-        int visibleWidth = Math.min(parentWidth - this.x, imageWidth);
-        int visibleHeight = Math.min(parentHeight - this.y, imageHeight);
-
-        if (visibleWidth <= 0 || visibleHeight <= 0) {
+        if (absolutePosition.width() <= 0 || absolutePosition.height() <= 0) {
             return;
         }
+
+        int imageWidth = getWidth();
+        int imageHeight = getHeight();
 
         BufferedImage textImage = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D textGraphics = textImage.createGraphics();
@@ -87,11 +73,15 @@ public class Text extends AbstractContent {
         // TODO: test this and replace with custom static method Text#drawBorder(BorderAttribute)
         border.draw(textGraphics, 0, 0, imageWidth, imageHeight);
 
+        Rectangle textBounds = glyphVector.getPixelBounds(FONT_RENDER_CONTEXT, 0, 0);
+        int textX = border.getWidth() + font.getBorderPadding();
+        int textY = border.getWidth() - ((int) textBounds.getY()) + font.getBorderPadding();
+
         textGraphics.setColor(font.getColor());
         textGraphics.drawGlyphVector(glyphVector, textX, textY);
         textGraphics.dispose();
 
-        graphics.draw(textImage, visibleWidth, visibleHeight, canvasX, canvasY);
+        graphics.draw(textImage, absolutePosition.width(), absolutePosition.height(), absolutePosition.x(), absolutePosition.y());
     }
 
     private @NotNull Font getDerivedFont() {
@@ -108,41 +98,56 @@ public class Text extends AbstractContent {
         return derivedFont;
     }
 
+    @Override
+    public int getX() {
+        return x;
+    }
+
+    @Override
+    public int getY() {
+        return y;
+    }
+
+    @Override
+    public int getWidth() {
+        Rectangle textBounds = glyphVector.getPixelBounds(FONT_RENDER_CONTEXT, 0, 0);
+        return textBounds.width + (border.getWidth() * 2) + (font.getBorderPadding() * 2);
+    }
+
+    @Override
+    public int getHeight() {
+        Rectangle textBounds = glyphVector.getPixelBounds(FONT_RENDER_CONTEXT, 0, 0);
+        return textBounds.height + (border.getWidth() * 2) + (font.getBorderPadding() * 2);
+    }
+
     // TODO: 24/08/2023 maybe rename to not cause confusion with Content class
     public @NotNull String getContent() {
         return content;
-    }
-
-    public void setContent(@NotNull String content) {
-        this.content = content;
     }
 
     public @NotNull FontAttribute getFont() {
         return font;
     }
 
-    public void setFont(@NotNull FontAttribute font) {
-        this.font = font;
-    }
-
     public @NotNull BorderAttribute getBorder() {
         return border;
+    }
+
+    public void setContent(@NotNull String content) {
+        this.content = content;
+        this.glyphVector = getDerivedFont().layoutGlyphVector(FONT_RENDER_CONTEXT, content.toCharArray(), 0, content.length(), Font.LAYOUT_LEFT_TO_RIGHT);
+    }
+
+    public void setFont(@NotNull FontAttribute font) {
+        this.font = font;
     }
 
     public void setBorder(@NotNull BorderAttribute border) {
         this.border = border;
     }
 
-    public int getX() {
-        return x;
-    }
-
     public void setX(int x) {
         this.x = x;
-    }
-
-    public int getY() {
-        return y;
     }
 
     public void setY(int y) {
@@ -153,4 +158,5 @@ public class Text extends AbstractContent {
     public String toString() {
         return "Text(%s, \"%s\", %d, %d, %s, %s)".formatted(getId(), content, x, y, font, border);
     }
+
 }

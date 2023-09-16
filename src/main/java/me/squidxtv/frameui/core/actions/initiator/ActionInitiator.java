@@ -19,5 +19,6 @@ public sealed interface ActionInitiator<T> permits CodeInitiator, PlayerInitiato
     static @NotNull CodeInitiator ofClass(Class<?> clazz) {
         return new CodeInitiator(clazz);
     }
+
 }
 
