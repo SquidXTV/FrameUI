@@ -19,8 +19,8 @@ import java.util.Optional;
 
 public class Attribute<T> {
 
-    private static final @NotNull Font MINECRAFT_FONT;
-    private static final @NotNull ImageCache IMAGE_CACHE;
+    private static final Font MINECRAFT_FONT;
+    private static final ImageCache IMAGE_CACHE;
 
     static {
         ServicesManager servicesManager = Bukkit.getServicesManager();
@@ -105,8 +105,10 @@ public class Attribute<T> {
         return Optional.empty();
     }
 
+    @FunctionalInterface
     private interface AttributeSupplier<T> {
         @NotNull T get(@NotNull Element element, @NotNull String result);
 
     }
+
 }
