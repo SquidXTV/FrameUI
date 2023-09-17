@@ -48,7 +48,7 @@ public class ScreenModel extends AbstractContent implements Parent {
                 Content.getChildren(element));
     }
 
-    public ScreenModel(@NotNull String id, int width, int height, @NotNull Color backgroundColor, @Nullable BufferedImage backgroundImage, @NotNull BorderAttribute border, int clickRadius, int scrollRadius, @NotNull Content[] children) {
+    public ScreenModel(@NotNull String id, int width, int height, @NotNull Color backgroundColor, @Nullable BufferedImage backgroundImage, @NotNull BorderAttribute border, int clickRadius, int scrollRadius, @NotNull List<Content> children) {
         super(id);
         this.width = width;
         this.height = height;
@@ -57,7 +57,7 @@ public class ScreenModel extends AbstractContent implements Parent {
         this.border = border;
         this.clickRadius = clickRadius;
         this.scrollRadius = scrollRadius;
-        this.children = Arrays.asList(children);
+        this.children = children;
     }
 
     @Override

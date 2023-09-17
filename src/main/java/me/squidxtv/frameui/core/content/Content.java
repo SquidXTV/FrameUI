@@ -12,7 +12,6 @@ import org.w3c.dom.NodeList;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public interface Content extends Clickable, Scrollable {
 
@@ -25,10 +24,10 @@ public interface Content extends Clickable, Scrollable {
     int getWidth();
     int getHeight();
 
-    static @NotNull Content[] getChildren(@NotNull Element root) {
+    static List<Content> getChildren(@NotNull Element root) {
         NodeList children = root.getChildNodes();
         if (children.getLength() == 0) {
-            return new Content[0];
+            return new ArrayList<>();
         }
 
         List<Content> sub = new ArrayList<>(children.getLength());
@@ -48,10 +47,13 @@ public interface Content extends Clickable, Scrollable {
                     }
                     default -> null;
                 };
+                if (instance == null) {
+                    continue;
+                }
                 sub.add(instance);
             }
         }
-        return sub.stream().filter(Objects::nonNull).toArray(Content[]::new);
+        return sub;
     }
 
 }

@@ -11,7 +11,6 @@ import me.squidxtv.frameui.core.math.BoundingBox;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Element;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,14 +34,14 @@ public class Div extends AbstractContent implements Parent {
                 Content.getChildren(element));
     }
 
-    public Div(@NotNull String id, int x, int y, int width, int height, @NotNull BorderAttribute border, @NotNull Content[] children) {
+    public Div(@NotNull String id, int x, int y, int width, int height, @NotNull BorderAttribute border, @NotNull List<Content> children) {
         super(id);
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.border = border;
-        this.children = Arrays.asList(children);
+        this.children = children;
     }
 
     @Override
