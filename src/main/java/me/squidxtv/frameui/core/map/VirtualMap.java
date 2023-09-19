@@ -19,15 +19,13 @@ import org.bukkit.map.MapView;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.*;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 public class VirtualMap extends AbstractMap {
 
-    private static final @NotNull Logger LOGGER = Bukkit.getServicesManager().load(FrameAPI.class).getLogger();
+    private static final @NotNull Logger LOGGER = Objects.requireNonNull(Bukkit.getServicesManager().load(FrameAPI.class)).getLogger();
 
     private final @NotNull Location location;
     private final @NotNull Direction direction;
@@ -45,6 +43,7 @@ public class VirtualMap extends AbstractMap {
     public void update(@NotNull Color pixel, int x, int y) {
         renderer.setPixel(pixel, x, y);
     }
+
     public @NotNull Location getLocation() {
         return location;
     }
@@ -149,7 +148,6 @@ public class VirtualMap extends AbstractMap {
             send(List.of(player));
         }
 
-        // use static method instead
         public void destroy(@NotNull Collection<Player> players) {
             PacketContainer destroy = PROTOCOL_MANAGER.createPacket(PacketType.Play.Server.ENTITY_DESTROY);
             destroy.getIntLists().write(0, List.of(entityId));
@@ -157,14 +155,13 @@ public class VirtualMap extends AbstractMap {
                 PROTOCOL_MANAGER.sendServerPacket(player, destroy);
             }
         }
-    
-        // use static method instead
+
         public void destroy(@NotNull Player player) {
             destroy(List.of(player));
         }
         
-        public static void destroy(@NotNull VirtualMap[][] maps, @NotNull Collection<Player> players) {
-            List<Integer> ids = Arrays.stream(maps).flatMap(Arrays::stream).map(virtualMap -> virtualMap.packet.entityId).toList();
+        public static void destroy(@NotNull VirtualMap[] maps, @NotNull Collection<Player> players) {
+            List<Integer> ids = Arrays.stream(maps).map(virtualMap -> virtualMap.packet.entityId).toList();
             PacketContainer destroy = PROTOCOL_MANAGER.createPacket(PacketType.Play.Server.ENTITY_DESTROY);
             destroy.getIntegers().write(0, ids.size());
             destroy.getIntLists().write(0, ids);
@@ -173,7 +170,7 @@ public class VirtualMap extends AbstractMap {
             }
         }
 
-        public static void destroy(@NotNull VirtualMap[][] maps, @NotNull Player player) {
+        public static void destroy(@NotNull VirtualMap[] maps, @NotNull Player player) {
             destroy(maps, List.of(player));
         }
         

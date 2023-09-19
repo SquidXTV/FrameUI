@@ -14,9 +14,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 public abstract class AbstractScreen<G extends AbstractGraphics<?>> implements Screen<G> {
 
-    protected static final ScreenRegistry SCREEN_REGISTRY = Bukkit.getServicesManager().load(ScreenRegistry.class);
+    protected static final ScreenRegistry SCREEN_REGISTRY = Objects.requireNonNull(Bukkit.getServicesManager().load(ScreenRegistry.class));
 
     private final @NotNull JavaPlugin plugin;
     private @NotNull ScreenModel model;
