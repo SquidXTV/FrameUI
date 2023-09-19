@@ -81,4 +81,5 @@ public class VirtualGraphics extends AbstractGraphics<VirtualMap> {
     public void setDirection(@NotNull Direction direction) {
         this.direction = direction;
     }
+
 }

@@ -5,6 +5,7 @@ import me.squidxtv.frameui.core.actions.initiator.PlayerInitiator;
 import me.squidxtv.frameui.core.actions.scroll.ScrollDirection;
 import me.squidxtv.frameui.core.content.ScreenModel;
 import me.squidxtv.frameui.core.graphics.VirtualGraphics;
+import me.squidxtv.frameui.core.map.VirtualMap;
 import me.squidxtv.frameui.core.math.BoundingBox;
 import me.squidxtv.frameui.core.math.Direction;
 import org.bukkit.Location;
@@ -12,7 +13,10 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.UnmodifiableView;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,6 +36,20 @@ public class VirtualScreen extends AbstractScreen<VirtualGraphics> {
         this.world = world;
         this.topLeftFrameLocation = topLeftFrameLocation;
         this.direction = direction;
+    }
+
+    @Override
+    public void open() {
+        super.open();
+        for (VirtualMap map : getGraphics().getMaps()) {
+            map.getPacket().send(viewer);
+        }
+    }
+
+    @Override
+    public void close() {
+        super.close();
+        VirtualMap.Packet.destroy(getGraphics().getMaps(), viewer);
     }
 
     @Override
@@ -89,7 +107,82 @@ public class VirtualScreen extends AbstractScreen<VirtualGraphics> {
         getGraphics().setDirection(direction);
     }
 
+    @UnmodifiableView
+    public @NotNull Collection<Player> getViewer() {
+        return Collections.unmodifiableSet(viewer);
+    }
+
     public boolean containsViewer(@NotNull Player player) {
         return viewer.contains(player);
+    }
+
+    public void addViewer(@NotNull Player player) {
+        throwIfRemoved();
+
+        if (!viewer.add(player)) {
+            return;
+        }
+
+        if (getState() == State.CLOSED) {
+            return;
+        }
+
+        for (VirtualMap map : getGraphics().getMaps()) {
+            map.getPacket().send(player);
+        }
+    }
+
+    public void addViewer(@NotNull Collection<Player> players) {
+        throwIfRemoved();
+
+        if (!viewer.addAll(players)) {
+            return;
+        }
+
+        if (getState() == State.CLOSED) {
+            return;
+        }
+
+        for (VirtualMap map : getGraphics().getMaps()) {
+            map.getPacket().send(players);
+        }
+    }
+
+    public void removeViewer(@NotNull Player player) {
+        throwIfRemoved();
+
+        if (!viewer.remove(player)) {
+            return;
+        }
+
+        if (getState() == State.CLOSED) {
+            return;
+        }
+
+        VirtualMap.Packet.destroy(getGraphics().getMaps(), player);
+    }
+
+    public void removeViewer(@NotNull Collection<Player> players) {
+        throwIfRemoved();
+
+        if (!viewer.removeAll(players)) {
+            return;
+        }
+
+        if (getState() == State.CLOSED) {
+            return;
+        }
+
+        VirtualMap.Packet.destroy(getGraphics().getMaps(), players);
+    }
+
+    public void clearViewer() {
+        throwIfRemoved();
+
+        if (getState() == State.OPEN) {
+            VirtualMap.Packet.destroy(getGraphics().getMaps(), viewer);
+        }
+
+        viewer.clear();
     }
 }
