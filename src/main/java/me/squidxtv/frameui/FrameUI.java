@@ -8,12 +8,13 @@ import me.squidxtv.frameui.api.parser.ScreenParser;
 import me.squidxtv.frameui.api.parser.ScreenParserImpl;
 import me.squidxtv.frameui.api.registry.ScreenRegistry;
 import me.squidxtv.frameui.api.registry.ScreenRegistryImpl;
+import me.squidxtv.frameui.core.actions.click.ClickListener;
 import org.bukkit.plugin.PluginLoadOrder;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.annotation.dependency.Dependency;
-import org.bukkit.plugin.java.annotation.dependency.Library;
 import org.bukkit.plugin.java.annotation.plugin.*;
 import org.bukkit.plugin.java.annotation.plugin.author.Author;
 import org.xml.sax.SAXException;
@@ -39,7 +40,6 @@ import java.util.logging.Level;
 @LogPrefix("FrameUI")
 @Website("www.squidxtv.me")
 @Dependency("ProtocolLib")
-@Library("com.comphenix.protocol:ProtocolLib:5.0.0")
 @Author("SquidXTV")
 public class FrameUI extends JavaPlugin {
 
@@ -57,5 +57,8 @@ public class FrameUI extends JavaPlugin {
             getLogger().log(Level.SEVERE, "Exception thrown when creating ScreenParser. Disabling FrameUI plugin.", e);
             getServer().getPluginManager().disablePlugin(this);
         }
+
+        PluginManager pluginManager = getServer().getPluginManager();
+        pluginManager.registerEvents(new ClickListener(), this);
     }
 }

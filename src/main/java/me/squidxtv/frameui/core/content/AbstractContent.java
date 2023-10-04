@@ -74,18 +74,22 @@ public abstract class AbstractContent implements Content {
         return new BoundingBox(absoluteX, absoluteY, visibleWidth, visibleHeight);
     }
 
-    public Optional<ClickAction> getClickAction() {
+    @Override
+    public @NotNull Optional<ClickAction> getClickAction() {
         return Optional.ofNullable(clickAction);
     }
 
+    @Override
     public void setClickAction(@Nullable ClickAction clickAction) {
         this.clickAction = clickAction;
     }
 
-    public Optional<ScrollAction> getScrollAction() {
+    @Override
+    public @NotNull Optional<ScrollAction> getScrollAction() {
         return Optional.ofNullable(scrollAction);
     }
 
+    @Override
     public void setScrollAction(@Nullable ScrollAction scrollAction) {
         this.scrollAction = scrollAction;
     }
