@@ -16,6 +16,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 
 public class ScreenParserImpl implements ScreenParser {
@@ -46,6 +47,13 @@ public class ScreenParserImpl implements ScreenParser {
     @Override
     public @NotNull ScreenModel parse(@NotNull File file) throws IOException, SAXException {
         Document document = documentBuilder.parse(file);
+        Element root = document.getDocumentElement();
+        return new ScreenModel(root);
+    }
+
+    @Override
+    public @NotNull ScreenModel parse(@NotNull InputStream stream) throws IOException, SAXException {
+        Document document = documentBuilder.parse(stream);
         Element root = document.getDocumentElement();
         return new ScreenModel(root);
     }

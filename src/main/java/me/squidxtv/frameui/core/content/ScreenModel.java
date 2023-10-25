@@ -16,7 +16,9 @@ import org.xml.sax.SAXException;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
@@ -210,4 +212,13 @@ public class ScreenModel extends AbstractContent implements Parent {
     public static @NotNull ScreenModel of(@NotNull Path xml) throws IOException, SAXException {
         return SCREEN_PARSER.parse(xml);
     }
+
+    public static @NotNull ScreenModel of(@NotNull File file) throws IOException, SAXException {
+        return SCREEN_PARSER.parse(file);
+    }
+
+    public static @NotNull ScreenModel of(@NotNull InputStream stream) throws IOException, SAXException {
+        return SCREEN_PARSER.parse(stream);
+    }
+
 }
