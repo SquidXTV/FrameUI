@@ -12,32 +12,35 @@ repositories {
     }
 
     maven {
-        url = uri('https://repo.dmulloy2.net/repository/public/')
+        url = uri('https://repo.maven.apache.org/maven2/')
     }
 
     maven {
-        url = uri('https://repo.maven.apache.org/maven2/')
+        url = uri('https://repo.codemc.io/repository/maven-releases/')
     }
 }
 
 dependencies {
     api 'org.jetbrains:annotations:23.1.0'
     implementation 'com.github.ben-manes.caffeine:caffeine:3.1.6'
+
+    compileOnly 'org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT'
     compileOnly 'org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT'
     annotationProcessor 'org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT'
+    compileOnly 'com.github.retrooper.packetevents:spigot:2.1.0'
+
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
-    compileOnly 'org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT'
-    compileOnly 'com.comphenix.protocol:ProtocolLib:5.1.0'
     testImplementation(platform('org.junit:junit5-api:5.0.0-ALPHA'))
     testImplementation 'org.mockito:mockito-core:5.4.0'
-    testImplementation 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
+    testImplementation 'org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT'
+    testImplementation 'com.github.retrooper.packetevents:spigot:2.1.0' // remove later
 }
 
 group = 'me.squidxtv'
 version = '1.0-SNAPSHOT'
 description = 'FrameUI'
 
-java.sourceCompatibility = JavaVersion.VERSION_19
+java.sourceCompatibility = JavaVersion.VERSION_21
 
 java {
     withJavadocJar()

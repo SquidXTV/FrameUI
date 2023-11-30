@@ -47,4 +47,5 @@ public class ImageCacheImpl implements ImageCache {
     public void put(@NotNull Path path, BufferedImage image) {
         cache.put(path, image);
     }
+
 }
