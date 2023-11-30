@@ -1,13 +1,5 @@
 package me.squidxtv.frameui;
 
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.event.PacketListener;
-import com.github.retrooper.packetevents.event.PacketListenerPriority;
-import com.github.retrooper.packetevents.event.PacketSendEvent;
-import com.github.retrooper.packetevents.protocol.entity.type.EntityType;
-import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
-import com.github.retrooper.packetevents.protocol.packettype.PacketType;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSpawnEntity;
 import me.squidxtv.frameui.api.FrameAPI;
 import me.squidxtv.frameui.api.FrameAPIImpl;
 import me.squidxtv.frameui.api.cache.ImageCache;
@@ -68,21 +60,6 @@ public class FrameUI extends JavaPlugin {
 
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new ClickListener(), this);
-        PacketEvents.getAPI().getEventManager().registerListener(new PacketSendListener(),
-                PacketListenerPriority.NORMAL);
-    }
-
-    private static class PacketSendListener implements PacketListener {
-        @Override
-        public void onPacketSend(PacketSendEvent event) {
-            if (event.getPacketType() == PacketType.Play.Server.SPAWN_ENTITY) {
-                WrapperPlayServerSpawnEntity packet = new WrapperPlayServerSpawnEntity(event);
-                if (packet.getEntityType() != EntityTypes.ITEM_FRAME) {
-                    return;
-                }
-                System.out.println(packet.getEntityId());
-            }
-        }
     }
 
 }

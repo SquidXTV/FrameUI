@@ -6,7 +6,6 @@ import com.github.retrooper.packetevents.manager.protocol.ProtocolManager;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
-import com.github.retrooper.packetevents.protocol.player.User;
 import com.github.retrooper.packetevents.util.Vector3d;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerDestroyEntities;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerEntityMetadata;
@@ -28,7 +27,6 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class VirtualMap extends AbstractMap {
@@ -112,7 +110,6 @@ public class VirtualMap extends AbstractMap {
                 PLAYER_MANAGER.sendPacket(player, metadata);
                 player.sendMap(view);
             }
-            LOGGER.log(Level.INFO, "Map ({0}, {1}) got send.", new Object[]{entityId, frame.getPosition()});
         }
 
         public void send(@NotNull Player player) {
@@ -146,7 +143,7 @@ public class VirtualMap extends AbstractMap {
 
             public ItemFrameSpawnPacket(int entityID, @NotNull Location loc, @NotNull Direction direction) {
                 super(entityID,
-                        Optional.empty(),
+                        Optional.of(UUID.randomUUID()),
                         EntityTypes.ITEM_FRAME,
                         new Vector3d(loc.getX(), loc.getY(), loc.getZ()),
                         direction.getPitch(),
