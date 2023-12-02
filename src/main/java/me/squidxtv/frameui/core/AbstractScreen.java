@@ -170,10 +170,4 @@ public abstract class AbstractScreen<G extends AbstractGraphics<?>> implements S
         this.state = state;
     }
 
-    public enum State {
-        OPEN,
-        CLOSED,
-        REMOVED
-    }
-
 }

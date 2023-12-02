@@ -38,4 +38,5 @@ public final class PathUtils {
 
         throw new IllegalArgumentException("Invalid path format: " + path);
     }
+
 }

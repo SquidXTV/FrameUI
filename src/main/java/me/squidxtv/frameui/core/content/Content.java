@@ -30,7 +30,7 @@ public interface Content extends Clickable, Scrollable {
             return new ArrayList<>();
         }
 
-        List<Content> sub = new ArrayList<>(children.getLength());
+        List<Content> sub = new ArrayList<>();
         for (int i = 0; i < children.getLength(); i++) {
             Node current = children.item(i);
 

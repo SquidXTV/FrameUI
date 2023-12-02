@@ -25,4 +25,10 @@ public interface Screen<G extends Graphics<?>> {
     @NotNull ScreenModel getModel();
     void setModel(@NotNull ScreenModel model);
 
+    enum State {
+        OPEN,
+        CLOSED,
+        REMOVED
+    }
+
 }

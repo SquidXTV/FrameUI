@@ -1,17 +1,23 @@
 package me.squidxtv.frameui.core.map;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.manager.player.PlayerManager;
+import com.github.retrooper.packetevents.manager.protocol.ProtocolManager;
+import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
+import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
+import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
+import com.github.retrooper.packetevents.util.Vector3d;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerDestroyEntities;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerEntityMetadata;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSpawnEntity;
+import io.github.retrooper.packetevents.util.SpigotConversionUtil;
+import io.github.retrooper.packetevents.util.SpigotReflectionUtil;
 import me.squidxtv.frameui.api.FrameAPI;
 import me.squidxtv.frameui.core.math.Direction;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.MapMeta;
@@ -19,24 +25,19 @@ import org.bukkit.map.MapView;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class VirtualMap extends AbstractMap {
 
     private static final @NotNull Logger LOGGER = Objects.requireNonNull(Bukkit.getServicesManager().load(FrameAPI.class)).getLogger();
 
-    private final @NotNull Location location;
-    private final @NotNull Direction direction;
     private final @NotNull Packet packet;
 
     public VirtualMap(@NotNull World world, @NotNull Location location, @NotNull Direction direction) {
         super(world);
-        this.location = location;
-        this.direction = direction;
-        this.packet = new Packet();
-        packet.data.setInvisible(true);
+        this.packet = new Packet(item, location, direction);
     }
 
     @Override
@@ -44,71 +45,38 @@ public class VirtualMap extends AbstractMap {
         renderer.setPixel(pixel, x, y);
     }
 
-    public @NotNull Location getLocation() {
-        return location;
-    }
-
-    public @NotNull Direction getDirection() {
-        return direction;
-    }
-
     public @NotNull Packet getPacket() {
         return packet;
     }
 
-    public class Packet {
-
-        /**
-         * An array representing the yaw of each direction of the item frame.
-         */
-        private static final byte[] YAW;
-
-        /**
-         * An array representing the pitch of each direction of the item frame.
-         */
-        private static final byte[] PITCH;
+    public static class Packet {
 
         /**
          * The ProtocolManager instance used for sending packets to players.
          */
-        private static final @NotNull ProtocolManager PROTOCOL_MANAGER = ProtocolLibrary.getProtocolManager();
+        private static final @NotNull ProtocolManager PROTOCOL_MANAGER = PacketEvents.getAPI().getProtocolManager();
 
-        static {
-            YAW = new byte[6];
-            PITCH = new byte[6];
+        private static final @NotNull PlayerManager PLAYER_MANAGER = PacketEvents.getAPI().getPlayerManager();
 
-            int[] yawInRadiant  = {0, 0, 180, 0, 90, 270};
-            for (int i = 0; i < yawInRadiant.length; i++) {
-                YAW[i] = (byte) (yawInRadiant[i] * 256.0F / 360.0F);
-            }
+        private final @NotNull WrapperPlayServerSpawnEntity frame;
+        private final @NotNull WrapperPlayServerEntityMetadata metadata;
 
-            int[] pitchInRadiant = {90, -90, 0, 0, 0, 0};
-            for (int i = 0; i < pitchInRadiant.length; i++) {
-                PITCH[i] = (byte) (pitchInRadiant[i] * 256.0F / 360.0F);
-            }
-        }
-
-
-        private final @NotNull ItemFramePacket frame;
-        private final @NotNull ItemFrameDataPacket data;
         private final int entityId;
+        private final @NotNull ItemStack map;
 
-        public Packet() {
-            this.entityId = UUID.randomUUID().hashCode();
-            this.frame = new ItemFramePacket(entityId);
-            this.data = new ItemFrameDataPacket(entityId);
-
-            frame.setLocation(location);
-            frame.setDirection(direction);
-            data.setMap(item);
+        public Packet(@NotNull ItemStack map, @NotNull Location location, @NotNull Direction direction) {
+            this.entityId = SpigotReflectionUtil.generateEntityId();
+            this.map = map;
+            this.frame = new ItemFrameSpawnPacket(entityId, location, direction);
+            this.metadata = new ItemFrameMetadataPacket(entityId, this.map, false);
         }
 
-        public @NotNull ItemFramePacket getFrame() {
+        public @NotNull WrapperPlayServerSpawnEntity getSpawnEntity() {
             return frame;
         }
 
-        public @NotNull ItemFrameDataPacket getData() {
-            return data;
+        public @NotNull WrapperPlayServerEntityMetadata getMetadata() {
+            return metadata;
         }
 
         public int getEntityId() {
@@ -116,17 +84,17 @@ public class VirtualMap extends AbstractMap {
         }
 
         public void send(@NotNull Collection<Player> players) {
-            if (item.getType() != Material.FILLED_MAP) {
+            if (map.getType() != Material.FILLED_MAP) {
                 LOGGER.fine("Item type is not FILLED_MAP. Cancel packet send.");
                 return;
             }
 
-            if (item.getItemMeta() == null) {
+            if (map.getItemMeta() == null) {
                 LOGGER.fine("Item meta is null. Cancel packet send.");
                 return;
             }
 
-            if (!(item.getItemMeta() instanceof MapMeta meta)) {
+            if (!(map.getItemMeta() instanceof MapMeta meta)) {
                 LOGGER.fine("Item meta is not an instance of MapMeta. Cancel packet send.");
                 return;
             }
@@ -138,8 +106,8 @@ public class VirtualMap extends AbstractMap {
             }
 
             for (Player player : players) {
-                PROTOCOL_MANAGER.sendServerPacket(player, frame);
-                PROTOCOL_MANAGER.sendServerPacket(player, data);
+                PLAYER_MANAGER.sendPacket(player, frame);
+                PLAYER_MANAGER.sendPacket(player, metadata);
                 player.sendMap(view);
             }
         }
@@ -149,98 +117,59 @@ public class VirtualMap extends AbstractMap {
         }
 
         public void destroy(@NotNull Collection<Player> players) {
-            PacketContainer destroy = PROTOCOL_MANAGER.createPacket(PacketType.Play.Server.ENTITY_DESTROY);
-            destroy.getIntLists().write(0, List.of(entityId));
+            WrapperPlayServerDestroyEntities destroy = new WrapperPlayServerDestroyEntities(entityId);
             for (Player player : players) {
-                PROTOCOL_MANAGER.sendServerPacket(player, destroy);
+                PROTOCOL_MANAGER.sendPacket(PLAYER_MANAGER.getChannel(player), destroy);
             }
         }
 
         public void destroy(@NotNull Player player) {
             destroy(List.of(player));
         }
-        
+
         public static void destroy(@NotNull VirtualMap[] maps, @NotNull Collection<Player> players) {
-            List<Integer> ids = Arrays.stream(maps).map(virtualMap -> virtualMap.packet.entityId).toList();
-            PacketContainer destroy = PROTOCOL_MANAGER.createPacket(PacketType.Play.Server.ENTITY_DESTROY);
-            destroy.getIntegers().write(0, ids.size());
-            destroy.getIntLists().write(0, ids);
+            int[] ids = Arrays.stream(maps).mapToInt(virtualMap -> virtualMap.packet.entityId).toArray();
+            WrapperPlayServerDestroyEntities destroy = new WrapperPlayServerDestroyEntities(ids);
             for (Player player : players) {
-                PROTOCOL_MANAGER.sendServerPacket(player, destroy);
+                PROTOCOL_MANAGER.sendPacket(PLAYER_MANAGER.getChannel(player), destroy);
             }
         }
 
         public static void destroy(@NotNull VirtualMap[] maps, @NotNull Player player) {
             destroy(maps, List.of(player));
         }
-        
-        public static class ItemFramePacket extends PacketContainer {
 
-            public ItemFramePacket(int entityId) {
-                super(PacketType.Play.Server.SPAWN_ENTITY);
-                getModifier().writeDefaults();
+        public static class ItemFrameSpawnPacket extends WrapperPlayServerSpawnEntity {
 
-                getIntegers().write(0, entityId);
-                getEntityTypeModifier().write(0, EntityType.ITEM_FRAME);
-                getUUIDs().write(0, UUID.randomUUID());
+            public ItemFrameSpawnPacket(int entityID, @NotNull Location loc, @NotNull Direction direction) {
+                super(entityID,
+                        Optional.of(UUID.randomUUID()),
+                        EntityTypes.ITEM_FRAME,
+                        new Vector3d(loc.getX(), loc.getY(), loc.getZ()),
+                        direction.getPitch(),
+                        direction.getYaw(),
+                        0,
+                        direction.getPacketValue(),
+                        Optional.empty());
             }
 
-            public void setLocation(@NotNull Location location) {
-                setX(location.getX());
-                setY(location.getY());
-                setZ(location.getZ());
-            }
-
-            public void setX(double x) {
-                getDoubles().write(0, x);
-            }
-
-            public void setY(double y) {
-                getDoubles().write(1, y);
-            }
-
-            public void setZ(double z) {
-                getDoubles().write(2, z);
-            }
-
-            public void setDirection(@NotNull Direction direction) {
-                int index = direction.getPacketDirection();
-                getBytes().write(0, PITCH[index]);
-                getBytes().write(1, YAW[index]);
-                getIntegers().write(4, index);
-            }
         }
 
-        public static class ItemFrameDataPacket extends PacketContainer {
+        public static class ItemFrameMetadataPacket extends WrapperPlayServerEntityMetadata {
 
-            public ItemFrameDataPacket(int entityId) {
-                super(PacketType.Play.Server.ENTITY_METADATA);
-                getModifier().writeDefaults();
-
-                getIntegers().write(0, entityId);
+            public ItemFrameMetadataPacket(int entityID, @NotNull ItemStack map, boolean invisible) {
+                super(entityID, List.of(setInvisible(invisible), setMap(map)));
             }
 
-            public void setInvisible(boolean invisible) {
-                WrappedDataWatcher dataWatcher = new WrappedDataWatcher(getWatchableCollectionModifier().read(0));
 
-                if (invisible) {
-                    dataWatcher.setObject(0, WrappedDataWatcher.Registry.get(Byte.class), (byte) 0x20);
-                } else {
-                    dataWatcher.setObject(0, WrappedDataWatcher.Registry.get(Byte.class), (byte) 0);
-                }
-
-                getWatchableCollectionModifier().write(0, dataWatcher.getWatchableObjects());
+            private static EntityData setInvisible(boolean invisible) {
+                return new EntityData(0, EntityDataTypes.BYTE, (byte) (invisible ? 0x20 : 0));
             }
 
-            public void setMap(@NotNull ItemStack map) {
-                if (map.getType() != Material.FILLED_MAP) {
-                    throw new IllegalArgumentException("ItemStack must be of type FILLED_MAP.");
-                }
-
-                WrappedDataWatcher dataWatcher = new WrappedDataWatcher(getWatchableCollectionModifier().read(0));
-                dataWatcher.setObject(8, WrappedDataWatcher.Registry.getItemStackSerializer(false), map);
-                getWatchableCollectionModifier().write(0, dataWatcher.getWatchableObjects());
+            private static EntityData setMap(@NotNull ItemStack map) {
+                return new EntityData(8, EntityDataTypes.ITEMSTACK, SpigotConversionUtil.fromBukkitItemStack(map));
             }
+
         }
         
     }
