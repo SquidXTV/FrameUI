@@ -14,7 +14,6 @@ import java.awt.*;
 
 public class ClickListener implements Listener {
 
-
     @EventHandler
     public void onClick(@NotNull PlayerInteractEvent event) {
         Player player = event.getPlayer();

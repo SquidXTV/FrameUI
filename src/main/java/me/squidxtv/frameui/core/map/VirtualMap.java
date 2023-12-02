@@ -68,7 +68,7 @@ public class VirtualMap extends AbstractMap {
             this.entityId = SpigotReflectionUtil.generateEntityId();
             this.map = map;
             this.frame = new ItemFrameSpawnPacket(entityId, location, direction);
-            this.metadata = new ItemFrameMetadataPacket(entityId, map, false);
+            this.metadata = new ItemFrameMetadataPacket(entityId, this.map, false);
         }
 
         public @NotNull WrapperPlayServerSpawnEntity getSpawnEntity() {
