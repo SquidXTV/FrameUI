@@ -39,7 +39,7 @@ public class VirtualScreen extends AbstractScreen<VirtualGraphics> {
         this.world = world;
         this.topLeftFrameLocation = new Location(topLeftFrameLocation.getWorld(), topLeftFrameLocation.getBlockX(), topLeftFrameLocation.getBlockY(), topLeftFrameLocation.getBlockZ());
         this.direction = direction;
-        this.topLeftPixelPosition = topLeftFrameLocation.toVector().add(direction.getTopLeftPixelOffset());
+        this.topLeftPixelPosition = this.topLeftFrameLocation.toVector().add(direction.getTopLeftPixelOffset());
         this.topLeftPixelPosition.add(direction.getNormal().multiply(IntersectionHelper.PIXEL_LENGTH));
     }
 

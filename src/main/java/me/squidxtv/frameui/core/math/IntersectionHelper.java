@@ -42,10 +42,10 @@ public final class IntersectionHelper {
                 });
     }
 
-
+    // check top left pixel location
     private static Optional<Intersection> getIntersection(VirtualScreen screen, ActionType type, Vector eye, Vector lookDirection) {
-        Vector topLeftPixelLocation = screen.getTopLeftPixelPosition();
-        Vector intersection = calculateIntersection(screen.getDirection(), topLeftPixelLocation.clone(), eye.clone(), lookDirection.clone());
+        Vector topLeftPixelPosition = screen.getTopLeftPixelPosition();
+        Vector intersection = calculateIntersection(screen.getDirection(), topLeftPixelPosition.clone(), eye.clone(), lookDirection.clone());
         if (intersection == null) {
             return Optional.empty();
         }
@@ -57,11 +57,11 @@ public final class IntersectionHelper {
         };
 
 
-        if (distanceSquared > (maxIntersectionRadius * maxIntersectionRadius) /*|| distanceSquared > nearestDistance*/) {
+        if (distanceSquared > (maxIntersectionRadius * maxIntersectionRadius)) {
             return Optional.empty();
         }
 
-        Point pixel = getPixel(screen.getDirection(), intersection.clone(), topLeftPixelLocation.clone());
+        Point pixel = getPixel(screen.getDirection(), intersection.clone(), topLeftPixelPosition.clone());
         if (pixel.x < 0 || pixel.y < 0 || pixel.x >= screen.getGraphics().getPixelWidth() || pixel.y >= screen.getGraphics().getPixelHeight()) {
             return Optional.empty();
         }
