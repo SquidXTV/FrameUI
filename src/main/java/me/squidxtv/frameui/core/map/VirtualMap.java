@@ -36,12 +36,19 @@ public class VirtualMap implements Map {
             meta.setMapView(view);
             item.setItemMeta(meta);
         }
+
+        if (view == null) {
+            throw new IllegalStateException("MapView of newly created Map is null.");
+        }
+
         view.getRenderers().forEach(view::removeRenderer);
         this.id = view.getId();
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void update(@NotNull Color pixel, int x, int y) {
+        // ToDo: store furthest column updated
         int index = x + y * WIDTH;
         byte change = MapPalette.matchColor(pixel);
         if (data[index] != change) {

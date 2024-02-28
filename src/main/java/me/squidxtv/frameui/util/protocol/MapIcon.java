@@ -87,7 +87,7 @@ public class MapIcon implements Cloneable {
         return Objects.hash(type, x, y, rotation, name);
     }
 
-    public static enum Type {
+    public enum Type {
         WHITE_POINTER(0),
         GREEN_POINTER(1),
         RED_POINTER(2),
@@ -119,7 +119,7 @@ public class MapIcon implements Cloneable {
         private static final Type[] VALUES = values();
         private final byte id;
 
-        private Type(int value) {
+        Type(int value) {
             this.id = (byte) value;
         }
 

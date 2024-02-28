@@ -98,7 +98,7 @@ public class ScreenModel extends AbstractContent implements Parent {
         for (Content child : children) {
             child.click(initiator, clickX, clickY, absolutePosition);
         }
-        getClickAction().get().perform(initiator, clickX, clickY);
+        getClickAction().ifPresent(action -> action.perform(initiator, clickX, clickY));
     }
 
     @Override
@@ -120,7 +120,7 @@ public class ScreenModel extends AbstractContent implements Parent {
         for (Content child : children) {
             child.scroll(initiator, direction, scrollX, scrollY, absolutePosition);
         }
-        getScrollAction().get().perform(initiator, direction, scrollX, scrollY);
+        getScrollAction().ifPresent(action -> action.perform(initiator, direction, scrollX, scrollY));
     }
 
     @Override

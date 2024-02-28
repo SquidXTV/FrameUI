@@ -12,24 +12,24 @@ import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerEn
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSpawnEntity;
 import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import io.github.retrooper.packetevents.util.SpigotReflectionUtil;
-import me.squidxtv.frameui.api.FrameAPI;
 import me.squidxtv.frameui.core.map.VirtualMap;
 import me.squidxtv.frameui.core.math.Direction;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
-import java.util.logging.Logger;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public class VirtualItemFrame extends AbstractItemFrame<VirtualMap> {
 
     private static final ProtocolManager PROTOCOL_MANAGER = PacketEvents.getAPI().getProtocolManager();
     private static final @NotNull PlayerManager PLAYER_MANAGER = PacketEvents.getAPI().getPlayerManager();
-    private static final @NotNull Logger LOGGER = Objects.requireNonNull(Bukkit.getServicesManager().load(FrameAPI.class)).getLogger();
 
     private final int entityId = SpigotReflectionUtil.generateEntityId();
     private final SpawnPacket spawn;
@@ -105,6 +105,7 @@ public class VirtualItemFrame extends AbstractItemFrame<VirtualMap> {
         }
     }
 
+    @Override
     public void setLocation(@NotNull Location location) {
         Vector3d pos = new Vector3d(location.getX(), location.getY(), location.getZ());
         spawn.setPosition(pos);
@@ -126,7 +127,7 @@ public class VirtualItemFrame extends AbstractItemFrame<VirtualMap> {
         }
     }
 
-
+    // ToDo: move packets into util/protocol
     public static class SpawnPacket extends WrapperPlayServerSpawnEntity {
 
         public SpawnPacket(int entityID, @NotNull Location loc, @NotNull Direction direction) {
@@ -165,6 +166,7 @@ public class VirtualItemFrame extends AbstractItemFrame<VirtualMap> {
         int[] ids = Arrays.stream(frames).mapToInt(VirtualItemFrame::getEntityId).toArray();
         WrapperPlayServerDestroyEntities destroy = new WrapperPlayServerDestroyEntities(ids);
         for (Player player : players) {
+            // ToDo: test this
 //            PROTOCOL_MANAGER.sendPacket(PLAYER_MANAGER.getChannel(player), destroy);
             PLAYER_MANAGER.sendPacket(player, destroy);
         }

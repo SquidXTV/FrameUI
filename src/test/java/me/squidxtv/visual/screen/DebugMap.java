@@ -22,7 +22,7 @@ public class DebugMap implements Map {
 
     @Override
     public @NotNull ItemStack getAsItemStack() {
-        return null;
+        throw new UnsupportedOperationException("ItemStack is not existing in Debug environment.");
     }
 
     public BufferedImage getImage() {

@@ -1,7 +1,6 @@
 package me.squidxtv.frameui.core.graphics;
 
 import me.squidxtv.frameui.core.itemframe.ItemFrame;
-import me.squidxtv.frameui.core.map.Map;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;

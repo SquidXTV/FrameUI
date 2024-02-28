@@ -38,7 +38,7 @@ class ParentTest {
         assertNotNull(model);
         List<Content> children = model.getChildrenById("to-search-for");
         assertEquals(1, children.size());
-        assertInstanceOf(Div.class, children.get(0));
+        assertInstanceOf(Div.class, children.getFirst());
         assertTrue(model.getChildrenById("not-to-search-for").isEmpty());
     }
 

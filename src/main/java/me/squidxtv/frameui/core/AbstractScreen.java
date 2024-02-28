@@ -6,7 +6,6 @@ import me.squidxtv.frameui.core.actions.initiator.PlayerInitiator;
 import me.squidxtv.frameui.core.actions.scroll.ScrollDirection;
 import me.squidxtv.frameui.core.content.ScreenModel;
 import me.squidxtv.frameui.core.graphics.Graphics;
-import me.squidxtv.frameui.core.math.BoundingBox;
 import me.squidxtv.frameui.exceptions.ScreenRemovedException;
 import org.bukkit.Bukkit;
 import org.bukkit.permissions.Permission;

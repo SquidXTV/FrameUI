@@ -20,7 +20,7 @@ public class DebugScreen implements Screen<DebugGraphics> {
     private @NotNull DebugGraphics graphics;
     private @NotNull State state = State.CLOSED;
 
-    public DebugScreen(ScreenModel model) {
+    public DebugScreen(@NotNull ScreenModel model) {
         this.model = model;
         graphics = new DebugGraphics(model, model.getBlockWidth(), model.getBlockHeight());
     }
@@ -105,11 +105,12 @@ public class DebugScreen implements Screen<DebugGraphics> {
 
     @Override
     public @NotNull World getWorld() {
-        return null;
+        throw new UnsupportedOperationException("World is not existing in Debug environment.");
     }
 
     @Override
     public void setWorld(@NotNull World world) {
+        throw new UnsupportedOperationException("World is not existing in Debug environment.");
     }
 
 
@@ -125,7 +126,7 @@ public class DebugScreen implements Screen<DebugGraphics> {
 
     @Override
     public @NotNull JavaPlugin getPlugin() {
-        return null;
+        throw new UnsupportedOperationException("Plugin is not existing in Debug environment.");
     }
 
     @Override

@@ -74,52 +74,56 @@ public final class ScreenUtil {
             private final Map<Class<?>, Object> registered = new HashMap<>();
 
             @Override
-            public <T> void register(Class<T> aClass, T t, Plugin plugin, ServicePriority servicePriority) {
+            public <T> void register(@NotNull Class<T> aClass, @NotNull T t, @NotNull Plugin plugin, @NotNull ServicePriority servicePriority) {
                 registered.put(aClass, t);
             }
 
             @Override
-            public void unregisterAll(Plugin plugin) {
+            public void unregisterAll(@NotNull Plugin plugin) {
+                throw new UnsupportedOperationException("Functionality not used in debug environment.");
             }
 
             @Override
-            public void unregister(Class<?> aClass, Object o) {
+            public void unregister(@NotNull Class<?> aClass, @NotNull Object o) {
+                throw new UnsupportedOperationException("Functionality not used in debug environment.");
             }
 
             @Override
-            public void unregister(Object o) {
+            public void unregister(@NotNull Object o) {
+                throw new UnsupportedOperationException("Functionality not used in debug environment.");
             }
 
             @Override
             @SuppressWarnings("unchecked")
-            public <T> T load(Class<T> aClass) {
+            public <T> T load(@NotNull Class<T> aClass) {
                 return (T) registered.get(aClass);
             }
 
             @Override
-            public <T> RegisteredServiceProvider<T> getRegistration(Class<T> aClass) {
-                return null;
+            public <T> @NotNull RegisteredServiceProvider<T> getRegistration(@NotNull Class<T> aClass) {
+                throw new UnsupportedOperationException("Functionality not used in debug environment.");
             }
 
             @Override
-            public List<RegisteredServiceProvider<?>> getRegistrations(Plugin plugin) {
-                return null;
+            public @NotNull List<RegisteredServiceProvider<?>> getRegistrations(@NotNull Plugin plugin) {
+                throw new UnsupportedOperationException("Functionality not used in debug environment.");
             }
 
             @Override
-            public <T> Collection<RegisteredServiceProvider<T>> getRegistrations(Class<T> aClass) {
-                return null;
+            public <T> @NotNull Collection<RegisteredServiceProvider<T>> getRegistrations(@NotNull Class<T> aClass) {
+                throw new UnsupportedOperationException("Functionality not used in debug environment.");
             }
 
             @Override
-            public Collection<Class<?>> getKnownServices() {
-                return null;
+            public @NotNull Collection<Class<?>> getKnownServices() {
+                throw new UnsupportedOperationException("Functionality not used in debug environment.");
             }
 
             @Override
-            public <T> boolean isProvidedFor(Class<T> aClass) {
-                return false;
+            public <T> boolean isProvidedFor(@NotNull Class<T> aClass) {
+                throw new UnsupportedOperationException("Functionality not used in debug environment.");
             }
+
         };
 
         FileConfiguration config = YamlConfiguration.loadConfiguration(Files.newBufferedReader(Path.of(Main.class.getResource("/me/squidxtv/plugin-config.yml").toURI())));
