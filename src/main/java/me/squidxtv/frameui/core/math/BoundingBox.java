@@ -7,7 +7,7 @@ public record BoundingBox(int x, int y, int width, int height) {
             return true;
         }
 
-        return otherX < y || otherY > (y + height);
+        return otherY < y || otherY > (y + height);
     }
 
 }
