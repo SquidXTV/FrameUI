@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class ScreenRegistryImpl implements ScreenRegistry {
 
@@ -24,39 +25,34 @@ public class ScreenRegistryImpl implements ScreenRegistry {
     }
 
     @Override
-    public @NotNull List<Screen<?>> get(@NotNull JavaPlugin plugin) {
+    public @NotNull Stream<Screen<?>> get(@NotNull JavaPlugin plugin) {
         return registered.stream()
-                .filter(screen -> screen.getPlugin().equals(plugin))
-                .toList();
+                .filter(screen -> screen.getPlugin().equals(plugin));
     }
 
     @Override
-    public @NotNull List<VirtualScreen> get(@NotNull JavaPlugin plugin, @NotNull Player viewer) {
-        return registered.stream()
-                .filter(screen -> screen instanceof VirtualScreen virtualScreen && virtualScreen.getPlugin().equals(plugin) && virtualScreen.containsViewer(viewer))
-                .map(VirtualScreen.class::cast)
-                .toList();
+    public @NotNull Stream<VirtualScreen> get(@NotNull JavaPlugin plugin, @NotNull Player viewer) {
+        return get(plugin)
+                .filter(screen -> screen instanceof VirtualScreen virtualScreen && virtualScreen.containsViewer(viewer))
+                .map(VirtualScreen.class::cast);
     }
 
     @Override
-    public @NotNull List<VirtualScreen> get(@NotNull Player viewer) {
+    public @NotNull Stream<VirtualScreen> get(@NotNull Player viewer) {
         return registered.stream()
                 .filter(screen -> screen instanceof VirtualScreen virtualScreen && virtualScreen.containsViewer(viewer))
-                .map(VirtualScreen.class::cast)
-                .toList();
+                .map(VirtualScreen.class::cast);
     }
 
     @Override
-    public @NotNull List<Screen<?>> get(@NotNull JavaPlugin plugin, @NotNull String id) {
-        return registered.stream()
-                .filter(screen -> screen.getPlugin().equals(plugin) && screen.getModel().getId().equals(id))
-                .toList();
+    public @NotNull Stream<Screen<?>> get(@NotNull JavaPlugin plugin, @NotNull String id) {
+        return get(plugin).filter(screen -> screen.getModel().getId().equals(id));
     }
 
+    // ToDo: might be removing while iterating
     @Override
     public void clear(@NotNull JavaPlugin plugin) {
-        registered.stream()
-                .filter(screen -> screen.getPlugin().equals(plugin))
-                .forEach(Screen::close);
+        get(plugin).forEach(Screen::terminate);
     }
+
 }

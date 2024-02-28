@@ -6,8 +6,13 @@ import me.squidxtv.frameui.core.actions.scroll.ScrollDirection;
 import me.squidxtv.frameui.core.content.ScreenModel;
 import me.squidxtv.frameui.core.math.BoundingBox;
 import me.squidxtv.frameui.exceptions.ScreenRemovedException;
+import org.bukkit.World;
+import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class DebugScreen implements Screen<DebugGraphics> {
 
@@ -17,7 +22,7 @@ public class DebugScreen implements Screen<DebugGraphics> {
 
     public DebugScreen(ScreenModel model) {
         this.model = model;
-        graphics = new DebugGraphics(model.getBlockWidth(), model.getBlockHeight());
+        graphics = new DebugGraphics(model, model.getBlockWidth(), model.getBlockHeight());
     }
 
     @Override
@@ -43,11 +48,11 @@ public class DebugScreen implements Screen<DebugGraphics> {
     }
 
     @Override
-    public void remove() {
+    public void terminate() {
         throwIfRemoved();
         close();
-        graphics.remove();
-        state = State.REMOVED;
+        graphics.terminate();
+        state = State.TERMINATED;
     }
 
     @Override
@@ -57,7 +62,7 @@ public class DebugScreen implements Screen<DebugGraphics> {
     }
 
     protected void throwIfRemoved() {
-        if (state == State.REMOVED) {
+        if (state == State.TERMINATED) {
             throw new ScreenRemovedException(this);
         }
     }
@@ -65,7 +70,7 @@ public class DebugScreen implements Screen<DebugGraphics> {
     public enum State {
         OPEN,
         CLOSED,
-        REMOVED
+        TERMINATED
     }
 
     @Override
@@ -78,6 +83,33 @@ public class DebugScreen implements Screen<DebugGraphics> {
     public boolean scroll(@NotNull ActionInitiator<?> initiator, @NotNull ScrollDirection direction, int x, int y) {
         model.scroll(initiator, direction, x, y, new BoundingBox(0, 0, graphics.getPixelWidth(), graphics.getPixelHeight()));
         return true;
+    }
+
+    @Override
+    public @NotNull Optional<Permission> getClickPermission() {
+        return Optional.empty();
+    }
+
+    @Override
+    public @NotNull Optional<Permission> getScrollPermission() {
+        return Optional.empty();
+    }
+
+    @Override
+    public void setClickPermission(@Nullable Permission clickPermission) {
+    }
+
+    @Override
+    public void setScrollPermission(@Nullable Permission scrollPermission) {
+    }
+
+    @Override
+    public @NotNull World getWorld() {
+        return null;
+    }
+
+    @Override
+    public void setWorld(@NotNull World world) {
     }
 
 

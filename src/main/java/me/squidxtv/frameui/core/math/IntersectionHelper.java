@@ -17,10 +17,8 @@ import java.util.Optional;
 
 public final class IntersectionHelper {
 
+    public static final double PIXEL_LENGTH = 0.0078125;
     private static final ScreenRegistry SCREEN_REGISTRY = Objects.requireNonNull(Bukkit.getServicesManager().load(ScreenRegistry.class));
-    private static final double PIXEL_LENGTH = 0.0078125;
-    private static final double ITEM_FRAME_BLOCK_WIDTH = 0.0625;
-
 
     private IntersectionHelper() {
         throw new UnsupportedOperationException("Helper class, construction not supported.");
@@ -31,89 +29,72 @@ public final class IntersectionHelper {
         Vector eye = playerEye.toVector();
         Vector lookDirection = playerEye.getDirection();
 
-        Intersection nearestIntersection = null;
-        double nearestDistance = Double.POSITIVE_INFINITY;
+        return SCREEN_REGISTRY.get(player)
+                .filter(screen -> screen.getState() == Screen.State.OPEN)
+                .map(screen -> getIntersection(screen, type, eye, lookDirection))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .reduce((i1, i2) -> {
+                    if (i1.distanceSquared < i2.distanceSquared) {
+                        return i1;
+                    }
+                    return i2;
+                });
+    }
 
-        for (VirtualScreen screen : SCREEN_REGISTRY.get(player)) {
-            if (screen.getState() != Screen.State.OPEN) {
-                continue;
-            }
 
-            Vector topLeftPixelLocation = getTopLeftPixelLocation(screen);
-            Vector intersection = calculateIntersection(screen, topLeftPixelLocation, eye.clone(), lookDirection.clone());
-            if (intersection == null) {
-                continue;
-            }
-
-            double distance = intersection.distanceSquared(eye);
-            int maxIntersectionRadiusSquared = switch (type) {
-                case CLICK -> screen.getModel().getClickRadius();
-                case SCROLL -> screen.getModel().getScrollRadius();
-            };
-
-            if (distance > maxIntersectionRadiusSquared || distance > nearestDistance) {
-                continue;
-            }
-
-            Point pixel = getPixel(screen, intersection, topLeftPixelLocation);
-            if (pixel.x < 0 || pixel.y < 0) {
-                continue;
-            }
-
-            if (pixel.x >= screen.getGraphics().getPixelWidth() || pixel.y >= screen.getGraphics().getPixelHeight()) {
-                continue;
-            }
-
-            nearestDistance = distance;
-            nearestIntersection = new Intersection(screen, pixel);
+    private static Optional<Intersection> getIntersection(VirtualScreen screen, ActionType type, Vector eye, Vector lookDirection) {
+        Vector topLeftPixelLocation = screen.getTopLeftPixelPosition();
+        Vector intersection = calculateIntersection(screen.getDirection(), topLeftPixelLocation.clone(), eye.clone(), lookDirection.clone());
+        if (intersection == null) {
+            return Optional.empty();
         }
 
-        return Optional.ofNullable(nearestIntersection);
-    }
-
-
-    private static @NotNull Vector getTopLeftPixelLocation(@NotNull VirtualScreen screen) {
-        Location location = screen.getTopLeftFrameLocation();
-        Direction direction = screen.getDirection();
-
-        Vector offset = switch (direction) {
-            case NORTH -> new Vector(1, 1, 1);
-            case SOUTH -> new Vector(0, 1, 0);
-            case WEST -> new Vector(1, 1, 0);
-            case EAST -> new Vector(0, 1, 1);
+        double distanceSquared = intersection.distanceSquared(eye);
+        int maxIntersectionRadius = switch (type) {
+            case CLICK -> screen.getModel().getClickRadius();
+            case SCROLL -> screen.getModel().getScrollRadius();
         };
 
-        Vector topLeftPixelLocation = location.toVector().add(offset);
-        topLeftPixelLocation.add(direction.getNormal().multiply(ITEM_FRAME_BLOCK_WIDTH));
-        topLeftPixelLocation.add(direction.getNormal().multiply(ITEM_FRAME_BLOCK_WIDTH / 8.0)); // why this
-        return topLeftPixelLocation;
+
+        if (distanceSquared > (maxIntersectionRadius * maxIntersectionRadius) /*|| distanceSquared > nearestDistance*/) {
+            return Optional.empty();
+        }
+
+        Point pixel = getPixel(screen.getDirection(), intersection.clone(), topLeftPixelLocation.clone());
+        if (pixel.x < 0 || pixel.y < 0 || pixel.x >= screen.getGraphics().getPixelWidth() || pixel.y >= screen.getGraphics().getPixelHeight()) {
+            return Optional.empty();
+        }
+        return Optional.of(new Intersection(screen, pixel, distanceSquared));
     }
 
-    private static @Nullable Vector calculateIntersection(@NotNull VirtualScreen screen, @NotNull Vector topLeftPixelLocation, @NotNull Vector eye, @NotNull Vector lookDirection) {
-        Vector planeNormal = screen.getDirection().getNormal();
+    private static @Nullable Vector calculateIntersection(@NotNull Direction direction, @NotNull Vector topLeftPixelLocation, @NotNull Vector eye, @NotNull Vector lookDirection) {
+        Vector planeNormal = direction.getNormal();
 
         double parallel = lookDirection.dot(planeNormal);
-        if (parallel >= 0.0) { // this seems arbitrary. I think this was only for North, testing needed
+        if (parallel >= 0) {
             return null;
         }
 
-        double t = planeNormal.dot(topLeftPixelLocation) - planeNormal.dot(eye);
-        t /= planeNormal.dot(lookDirection);
-        return eye.add(lookDirection.multiply(t));
+        double d = planeNormal.dot(topLeftPixelLocation.subtract(eye));
+        d /= parallel;
+        return eye.add(lookDirection.multiply(d));
     }
 
-    private static @NotNull Point getPixel(@NotNull VirtualScreen screen, @NotNull Vector intersection, @NotNull Vector topLeftPixelLocation) {
+    private static @NotNull Point getPixel(@NotNull Direction direction, @NotNull Vector intersection, @NotNull Vector topLeftPixelLocation) {
         double y = Math.floor((topLeftPixelLocation.getY() - intersection.getY()) / PIXEL_LENGTH);
 
-        int multiplierX = screen.getDirection().getMultiplierX();
-        int multiplierZ = screen.getDirection().getMultiplierZ();
-        double xz = multiplierX * (intersection.getX() - topLeftPixelLocation.getX()) + multiplierZ * (intersection.getZ() - topLeftPixelLocation.getZ());
+        int multiplierX = direction.getMultiplierX();
+        int multiplierZ = direction.getMultiplierZ();
+
+        double xz = multiplierX * (intersection.getX() - topLeftPixelLocation.getX());
+        xz += multiplierZ * (intersection.getZ() - topLeftPixelLocation.getZ());
         xz = Math.floor(xz / PIXEL_LENGTH);
 
         return new Point((int) xz, (int) y);
     }
 
-    public record Intersection(@NotNull Screen<?> screen, @NotNull Point pixel) {
+    public record Intersection(@NotNull Screen<?> screen, @NotNull Point pixel, double distanceSquared) {
     }
 
 }

@@ -1,6 +1,7 @@
 package me.squidxtv.frameui.core.graphics;
 
-import me.squidxtv.frameui.core.map.VirtualMap;
+import me.squidxtv.frameui.core.content.ScreenModel;
+import me.squidxtv.frameui.core.itemframe.VirtualItemFrame;
 import me.squidxtv.frameui.core.math.Direction;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -8,14 +9,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
-public class VirtualGraphics extends AbstractGraphics<VirtualMap> {
+public class VirtualGraphics extends AbstractGraphics<VirtualItemFrame> {
 
     private @NotNull World world;
     private @NotNull Location location;
     private @NotNull Direction direction;
 
-    public VirtualGraphics(@NotNull World world, @NotNull Location location, @NotNull Direction direction, int width, int height) {
-        super(new VirtualMap[width * height], width, height);
+    public VirtualGraphics(@NotNull ScreenModel model, @NotNull World world, @NotNull Location location, @NotNull Direction direction, int width, int height) {
+        super(model, new VirtualItemFrame[width * height], width, height);
         this.world = world;
         this.location = location;
         this.direction = direction;
@@ -24,38 +25,38 @@ public class VirtualGraphics extends AbstractGraphics<VirtualMap> {
     @Override
     public void open() {
         super.open();
-        initializeMaps();
+        initializeFrames();
     }
 
     @Override
     public void close() {
         super.close();
-        closeMaps();
+        closeFrames();
     }
+
 
     @Override
-    public void remove() {
-        super.remove();
-        closeMaps();
+    public void terminate() {
+        super.terminate();
+        closeFrames();
     }
 
-    private void initializeMaps() {
-        VirtualMap[] maps = getMaps();
-        for (int i = 0; i < getWidth(); i++) {
-            for (int j = 0; j < getHeight(); j++) {
-                int x = location.getBlockX() + (i * direction.getMultiplierX());
-                int y = location.getBlockY() - j;
-                int z = location.getBlockZ() + (i * direction.getMultiplierZ());
+    private void initializeFrames() {
+        VirtualItemFrame[] frames = getItemFrames();
+        for (int i = 0; i < getHeight(); i++) {
+            for (int j = 0; j < getWidth(); j++) {
+                int x = location.getBlockX() + (j * direction.getMultiplierX());
+                int y = location.getBlockY() - i;
+                int z = location.getBlockZ() + (j * direction.getMultiplierZ());
 
-                int index = i + j * getWidth();
-                maps[index] = new VirtualMap(world, new Location(world, x, y, z), direction);
+                int index = j + i * getWidth();
+                frames[index] = new VirtualItemFrame(world, new Location(world, x, y, z), direction);
             }
         }
     }
 
-    private void closeMaps() {
-        VirtualMap[] maps = getMaps();
-        Arrays.fill(maps, null);
+    private void closeFrames() {
+        Arrays.fill(getItemFrames(), null);
     }
 
     public @NotNull World getWorld() {
@@ -72,6 +73,17 @@ public class VirtualGraphics extends AbstractGraphics<VirtualMap> {
 
     public void setLocation(@NotNull Location location) {
         this.location = location;
+        VirtualItemFrame[] frames = getItemFrames();
+        for (int i = 0; i < getWidth(); i++) {
+            for (int j = 0; j < getHeight(); j++) {
+                int x = location.getBlockX() + (i * direction.getMultiplierX());
+                int y = location.getBlockY() - j;
+                int z = location.getBlockZ() + (i * direction.getMultiplierZ());
+
+                int index = i + j * getWidth();
+                frames[index].setLocation(new Location(world, x, y, z));
+            }
+        }
     }
 
     public @NotNull Direction getDirection() {
@@ -80,6 +92,9 @@ public class VirtualGraphics extends AbstractGraphics<VirtualMap> {
 
     public void setDirection(@NotNull Direction direction) {
         this.direction = direction;
+        for (VirtualItemFrame frame : getItemFrames()) {
+            frame.setDirection(direction);
+        }
     }
 
 }

@@ -1,16 +1,18 @@
 package me.squidxtv.frameui.core.graphics;
 
+import me.squidxtv.frameui.core.itemframe.ItemFrame;
 import me.squidxtv.frameui.core.map.Map;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public interface Graphics<M extends Map> {
+public interface Graphics<I extends ItemFrame<?>> {
 
     void open();
     void close();
-    void remove();
+    void terminate();
+    void update();
 
     void draw(@NotNull BufferedImage image);
     void draw(@NotNull BufferedImage image, int width, int height, int offsetX, int offsetY);
@@ -24,5 +26,9 @@ public interface Graphics<M extends Map> {
     void draw(int[] pixels, int width, int height, int offsetX, int offsetY);
 
 
-    @NotNull M[] getMaps();
+    @NotNull I[] getItemFrames();
+
+    int getPixelWidth();
+    int getPixelHeight();
+
 }

@@ -5,7 +5,7 @@ import me.squidxtv.frameui.core.actions.initiator.ActionInitiator;
 import me.squidxtv.frameui.core.actions.initiator.PlayerInitiator;
 import me.squidxtv.frameui.core.actions.scroll.ScrollDirection;
 import me.squidxtv.frameui.core.content.ScreenModel;
-import me.squidxtv.frameui.core.graphics.AbstractGraphics;
+import me.squidxtv.frameui.core.graphics.Graphics;
 import me.squidxtv.frameui.core.math.BoundingBox;
 import me.squidxtv.frameui.exceptions.ScreenRemovedException;
 import org.bukkit.Bukkit;
@@ -15,8 +15,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.Optional;
 
-public abstract class AbstractScreen<G extends AbstractGraphics<?>> implements Screen<G> {
+public abstract class AbstractScreen<G extends Graphics<?>> implements Screen<G> {
 
     protected static final ScreenRegistry SCREEN_REGISTRY = Objects.requireNonNull(Bukkit.getServicesManager().load(ScreenRegistry.class));
 
@@ -31,13 +32,12 @@ public abstract class AbstractScreen<G extends AbstractGraphics<?>> implements S
         this.plugin = plugin;
         this.model = model;
         this.graphics = graphics;
-
         SCREEN_REGISTRY.add(this);
     }
 
     @Override
     public void open() {
-        throwIfRemoved();
+        throwIfTerminated();
 
         if (state == State.OPEN) {
             close();
@@ -49,7 +49,7 @@ public abstract class AbstractScreen<G extends AbstractGraphics<?>> implements S
 
     @Override
     public void close() {
-        throwIfRemoved();
+        throwIfTerminated();
 
         if (state == State.CLOSED) {
             return;
@@ -60,20 +60,19 @@ public abstract class AbstractScreen<G extends AbstractGraphics<?>> implements S
     }
 
     @Override
-    public void remove() {
-        throwIfRemoved();
+    public void terminate() {
+        throwIfTerminated();
         close();
-        graphics.remove();
+        graphics.terminate();
 
         SCREEN_REGISTRY.remove(this);
-
-        state = State.REMOVED;
+        state = State.TERMINATED;
     }
 
     @Override
     public void update() {
-        throwIfRemoved();
-        model.draw(graphics, new BoundingBox(0, 0, graphics.getPixelWidth(), graphics.getPixelHeight()));
+        throwIfTerminated();
+        graphics.update();
     }
 
     @Override
@@ -88,7 +87,7 @@ public abstract class AbstractScreen<G extends AbstractGraphics<?>> implements S
 
     @Override
     public boolean click(@NotNull ActionInitiator<?> initiator, int x, int y) {
-        throwIfRemoved();
+        throwIfTerminated();
         if (state == State.CLOSED) {
             return false;
         }
@@ -106,7 +105,7 @@ public abstract class AbstractScreen<G extends AbstractGraphics<?>> implements S
 
     @Override
     public boolean scroll(@NotNull ActionInitiator<?> initiator, @NotNull ScrollDirection direction, int x, int y) {
-        throwIfRemoved();
+        throwIfTerminated();
         if (state == State.CLOSED) {
             return false;
         }
@@ -122,8 +121,8 @@ public abstract class AbstractScreen<G extends AbstractGraphics<?>> implements S
         return true;
     }
 
-    protected void throwIfRemoved() {
-        if (state == State.REMOVED) {
+    protected void throwIfTerminated() {
+        if (state == State.TERMINATED) {
             throw new ScreenRemovedException(this);
         }
     }
@@ -146,18 +145,22 @@ public abstract class AbstractScreen<G extends AbstractGraphics<?>> implements S
         this.model = model;
     }
 
-    public @Nullable Permission getClickPermission() {
-        return clickPermission;
+    @Override
+    public @NotNull Optional<Permission> getClickPermission() {
+        return Optional.ofNullable(clickPermission);
     }
 
-    public @Nullable Permission getScrollPermission() {
-        return scrollPermission;
+    @Override
+    public @NotNull Optional<Permission> getScrollPermission() {
+        return Optional.ofNullable(scrollPermission);
     }
 
+    @Override
     public void setClickPermission(@Nullable Permission clickPermission) {
         this.clickPermission = clickPermission;
     }
 
+    @Override
     public void setScrollPermission(@Nullable Permission scrollPermission) {
         this.scrollPermission = scrollPermission;
     }

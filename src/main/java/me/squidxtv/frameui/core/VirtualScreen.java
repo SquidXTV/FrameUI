@@ -5,13 +5,15 @@ import me.squidxtv.frameui.core.actions.initiator.PlayerInitiator;
 import me.squidxtv.frameui.core.actions.scroll.ScrollDirection;
 import me.squidxtv.frameui.core.content.ScreenModel;
 import me.squidxtv.frameui.core.graphics.VirtualGraphics;
-import me.squidxtv.frameui.core.map.VirtualMap;
+import me.squidxtv.frameui.core.itemframe.VirtualItemFrame;
 import me.squidxtv.frameui.core.math.BoundingBox;
 import me.squidxtv.frameui.core.math.Direction;
+import me.squidxtv.frameui.core.math.IntersectionHelper;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnmodifiableView;
 
@@ -25,6 +27,7 @@ public class VirtualScreen extends AbstractScreen<VirtualGraphics> {
     private final Set<Player> viewer = new HashSet<>();
     private @NotNull World world;
     private @NotNull Location topLeftFrameLocation;
+    private @NotNull Vector topLeftPixelPosition;
     private @NotNull Direction direction;
 
     public VirtualScreen(@NotNull JavaPlugin plugin,
@@ -32,24 +35,42 @@ public class VirtualScreen extends AbstractScreen<VirtualGraphics> {
                          @NotNull World world,
                          @NotNull Location topLeftFrameLocation,
                          @NotNull Direction direction) {
-        super(plugin, model, new VirtualGraphics(world, topLeftFrameLocation, direction, model.getBlockWidth(), model.getBlockHeight()));
+        super(plugin, model, new VirtualGraphics(model, world, topLeftFrameLocation, direction, model.getBlockWidth(), model.getBlockHeight()));
         this.world = world;
-        this.topLeftFrameLocation = topLeftFrameLocation;
+        this.topLeftFrameLocation = new Location(topLeftFrameLocation.getWorld(), topLeftFrameLocation.getBlockX(), topLeftFrameLocation.getBlockY(), topLeftFrameLocation.getBlockZ());
         this.direction = direction;
+        setTopLeftPixelPosition();
     }
 
     @Override
     public void open() {
         super.open();
-        for (VirtualMap map : getGraphics().getMaps()) {
-            map.getPacket().send(viewer);
+        update();
+        for (VirtualItemFrame frame : getGraphics().getItemFrames()) {
+            frame.send(viewer);
         }
     }
 
     @Override
     public void close() {
+        throwIfTerminated();
+        VirtualItemFrame.destroy(getGraphics().getItemFrames(), viewer);
         super.close();
-        VirtualMap.Packet.destroy(getGraphics().getMaps(), viewer);
+    }
+
+    @Override
+    public void update() {
+        super.update();
+        for (VirtualItemFrame frame : getGraphics().getItemFrames()) {
+            frame.update(viewer);
+        }
+    }
+
+    @Override
+    public void terminate() {
+        throwIfTerminated();
+        VirtualItemFrame.destroy(getGraphics().getItemFrames(), viewer);
+        super.terminate();
     }
 
     @Override
@@ -80,22 +101,34 @@ public class VirtualScreen extends AbstractScreen<VirtualGraphics> {
         return true;
     }
 
+    @Override
     public @NotNull World getWorld() {
         return world;
     }
 
+    @Override
     public void setWorld(@NotNull World world) {
         this.world = world;
         getGraphics().setWorld(world);
     }
 
     public @NotNull Location getTopLeftFrameLocation() {
-        return topLeftFrameLocation;
+        return topLeftFrameLocation.clone();
     }
 
     public void setTopLeftFrameLocation(@NotNull Location topLeftFrameLocation) {
         this.topLeftFrameLocation = topLeftFrameLocation;
+        setTopLeftPixelPosition();
         getGraphics().setLocation(topLeftFrameLocation);
+    }
+
+    public @NotNull Vector getTopLeftPixelPosition() {
+        return topLeftPixelPosition.clone();
+    }
+
+    private void setTopLeftPixelPosition() {
+        topLeftPixelPosition = topLeftFrameLocation.toVector().add(direction.getTopLeftPixelOffset());
+        topLeftPixelPosition.add(direction.getNormal().multiply(IntersectionHelper.PIXEL_LENGTH));
     }
 
     public @NotNull Direction getDirection() {
@@ -104,6 +137,7 @@ public class VirtualScreen extends AbstractScreen<VirtualGraphics> {
 
     public void setDirection(@NotNull Direction direction) {
         this.direction = direction;
+        setTopLeftPixelPosition();
         getGraphics().setDirection(direction);
     }
 
@@ -117,7 +151,7 @@ public class VirtualScreen extends AbstractScreen<VirtualGraphics> {
     }
 
     public void addViewer(@NotNull Player player) {
-        throwIfRemoved();
+        throwIfTerminated();
 
         if (!viewer.add(player)) {
             return;
@@ -127,13 +161,13 @@ public class VirtualScreen extends AbstractScreen<VirtualGraphics> {
             return;
         }
 
-        for (VirtualMap map : getGraphics().getMaps()) {
-            map.getPacket().send(player);
+        for (VirtualItemFrame frame : getGraphics().getItemFrames()) {
+            frame.send(player);
         }
     }
 
     public void addViewer(@NotNull Collection<Player> players) {
-        throwIfRemoved();
+        throwIfTerminated();
 
         if (!viewer.addAll(players)) {
             return;
@@ -143,13 +177,13 @@ public class VirtualScreen extends AbstractScreen<VirtualGraphics> {
             return;
         }
 
-        for (VirtualMap map : getGraphics().getMaps()) {
-            map.getPacket().send(players);
+        for (VirtualItemFrame frame : getGraphics().getItemFrames()) {
+            frame.send(players);
         }
     }
 
     public void removeViewer(@NotNull Player player) {
-        throwIfRemoved();
+        throwIfTerminated();
 
         if (!viewer.remove(player)) {
             return;
@@ -159,11 +193,11 @@ public class VirtualScreen extends AbstractScreen<VirtualGraphics> {
             return;
         }
 
-        VirtualMap.Packet.destroy(getGraphics().getMaps(), player);
+        VirtualItemFrame.destroy(getGraphics().getItemFrames(), player);
     }
 
     public void removeViewer(@NotNull Collection<Player> players) {
-        throwIfRemoved();
+        throwIfTerminated();
 
         if (!viewer.removeAll(players)) {
             return;
@@ -173,16 +207,17 @@ public class VirtualScreen extends AbstractScreen<VirtualGraphics> {
             return;
         }
 
-        VirtualMap.Packet.destroy(getGraphics().getMaps(), players);
+        VirtualItemFrame.destroy(getGraphics().getItemFrames(), players);
     }
 
     public void clearViewer() {
-        throwIfRemoved();
+        throwIfTerminated();
 
         if (getState() == State.OPEN) {
-            VirtualMap.Packet.destroy(getGraphics().getMaps(), viewer);
+            VirtualItemFrame.destroy(getGraphics().getItemFrames(), viewer);
         }
 
         viewer.clear();
     }
+
 }
