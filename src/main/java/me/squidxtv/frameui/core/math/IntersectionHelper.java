@@ -29,6 +29,7 @@ public final class IntersectionHelper {
         Vector eye = playerEye.toVector();
         Vector lookDirection = playerEye.getDirection();
 
+        // ToDo: needs to check if entity exists in players world (?), remove player from viewers if switching world
         return SCREEN_REGISTRY.get(player)
                 .filter(screen -> screen.getState() == Screen.State.OPEN)
                 .map(screen -> getIntersection(screen, type, eye, lookDirection))
@@ -42,7 +43,6 @@ public final class IntersectionHelper {
                 });
     }
 
-    // check top left pixel location
     private static Optional<Intersection> getIntersection(VirtualScreen screen, ActionType type, Vector eye, Vector lookDirection) {
         Vector topLeftPixelPosition = screen.getTopLeftPixelPosition();
         Vector intersection = calculateIntersection(screen.getDirection(), topLeftPixelPosition.clone(), eye.clone(), lookDirection.clone());

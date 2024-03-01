@@ -9,6 +9,7 @@ import me.squidxtv.frameui.api.parser.ScreenParserImpl;
 import me.squidxtv.frameui.api.registry.ScreenRegistry;
 import me.squidxtv.frameui.api.registry.ScreenRegistryImpl;
 import me.squidxtv.frameui.core.actions.click.ClickListener;
+import me.squidxtv.frameui.core.actions.scroll.ScrollListener;
 import org.bukkit.plugin.PluginLoadOrder;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
@@ -60,6 +61,7 @@ public class FrameUI extends JavaPlugin {
 
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new ClickListener(), this);
+        pluginManager.registerEvents(new ScrollListener(), this);
     }
 
 }
