@@ -7,7 +7,7 @@
         <xs:complexType>
             <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:element name="text" type="TextType"/>
-                <xs:element name="image" type="ImgType" />
+                <xs:element name="image" type="ImgType"/>
                 <xs:element name="div" type="DivType"/>
             </xs:choice>
             <xs:attribute name="id" type="xs:string" use="required"/>

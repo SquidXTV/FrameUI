@@ -1,5 +1,5 @@
-<screen xmlns="http://www.squidxtv.me/schema/frameui/v1/frameui.xsd" 
-        id="screen" 
+<screen xmlns="http://www.squidxtv.me/schema/frameui/v1/frameui.xsd"
+        id="screen"
         width="5"
         height="3">
     <text id="text">Text</text>
