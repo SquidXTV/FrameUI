@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ParentTest {
+class ParentContentTest {
 
     @Test
     void childrenByType() {
@@ -95,7 +95,7 @@ class ParentTest {
 
     private static ScreenModel ofFile(String filename) {
         try {
-            Path path = Path.of(ParentTest.class.getResource("/me/squidxtv/frameui/core/parent/" + filename).toURI());
+            Path path = Path.of(ParentContentTest.class.getResource("/me/squidxtv/frameui/core/parent/" + filename).toURI());
             return ScreenUtil.getByPath(path);
         } catch (Exception e) {
             fail(e);

@@ -1,7 +1,7 @@
 package me.squidxtv.visual;
 
 import me.squidxtv.frameui.core.content.Content;
-import me.squidxtv.frameui.core.content.Parent;
+import me.squidxtv.frameui.core.content.ParentContent;
 import me.squidxtv.util.ScreenUtil;
 import me.squidxtv.visual.screen.DebugScreen;
 import me.squidxtv.visual.ui.SwingScreenRenderer;
@@ -61,7 +61,7 @@ public class Main {
     private static @NotNull MutableTreeNode toTree(Content content) {
         DefaultMutableTreeNode node = new DefaultMutableTreeNode(content);
 
-        if (content instanceof Parent parent) {
+        if (content instanceof ParentContent parent) {
             for (Content child : parent.getChildren()) {
                 node.add(toTree(child));
             }

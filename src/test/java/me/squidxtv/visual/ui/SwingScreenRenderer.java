@@ -35,9 +35,9 @@ public class SwingScreenRenderer extends JLabel {
         addMouseWheelListener(e -> {
             ScrollDirection direction;
             if (e.getWheelRotation() > 0) {
-                direction = ScrollDirection.LEFT;
+                direction = ScrollDirection.UP;
             } else if (e.getWheelRotation() < 0) {
-                direction = ScrollDirection.RIGHT;
+                direction = ScrollDirection.DOWN;
             } else {
                 throw new IllegalStateException("Illegal wheel rotation direction.");
             }

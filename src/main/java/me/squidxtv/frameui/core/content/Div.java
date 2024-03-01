@@ -1,9 +1,5 @@
 package me.squidxtv.frameui.core.content;
 
-import me.squidxtv.frameui.core.actions.click.ClickAction;
-import me.squidxtv.frameui.core.actions.initiator.ActionInitiator;
-import me.squidxtv.frameui.core.actions.scroll.ScrollAction;
-import me.squidxtv.frameui.core.actions.scroll.ScrollDirection;
 import me.squidxtv.frameui.core.attributes.Attribute;
 import me.squidxtv.frameui.core.attributes.BorderAttribute;
 import me.squidxtv.frameui.core.graphics.Graphics;
@@ -12,9 +8,8 @@ import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Element;
 
 import java.util.List;
-import java.util.Optional;
 
-public class Div extends AbstractContent implements Parent {
+public class Div extends ParentContent {
 
     private int x;
     private int y;
@@ -59,52 +54,6 @@ public class Div extends AbstractContent implements Parent {
 
         // TODO: 31/07/2023 check if visibleWidth/visibleHeight is needed instead
         border.draw(graphics, absolutePosition.x(), absolutePosition.y(), width, height, parentBoundingBox);
-    }
-
-    @Override
-    public void click(@NotNull ActionInitiator<?> initiator, int clickX, int clickY, BoundingBox parentBoundingBox) {
-        Optional<ClickAction> optionalClickAction = getClickAction();
-        if (optionalClickAction.isEmpty()) {
-            return;
-        }
-
-        BoundingBox absolutePosition = getAbsolutePosition(parentBoundingBox);
-
-        if (absolutePosition.width() <= 0 || absolutePosition.height() <= 0) {
-            return;
-        }
-
-        if(absolutePosition.isPositionOutside(clickX, clickY)) {
-            return;
-        }
-
-        for (Content child : children) {
-            child.click(initiator, clickX, clickY, absolutePosition);
-        }
-        optionalClickAction.get().perform(initiator, clickX, clickY);
-    }
-
-    @Override
-    public void scroll(@NotNull ActionInitiator<?> initiator, @NotNull ScrollDirection direction, int scrollX, int scrollY, @NotNull BoundingBox parentBoundingBox) {
-        Optional<ScrollAction> optionalScrollAction = getScrollAction();
-        if (optionalScrollAction.isEmpty()) {
-            return;
-        }
-
-        BoundingBox absolutePosition = getAbsolutePosition(parentBoundingBox);
-
-        if (absolutePosition.width() <= 0 || absolutePosition.height() <= 0) {
-            return;
-        }
-
-        if(absolutePosition.isPositionOutside(scrollX, scrollY)) {
-            return;
-        }
-
-        for (Content child : children) {
-            child.scroll(initiator, direction, scrollX, scrollY, absolutePosition);
-        }
-        optionalScrollAction.get().perform(initiator, direction, scrollX, scrollY);
     }
 
     @Override

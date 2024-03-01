@@ -1,8 +1,6 @@
 package me.squidxtv.frameui.core.content;
 
-import me.squidxtv.frameui.core.actions.click.ClickAction;
 import me.squidxtv.frameui.core.actions.initiator.ActionInitiator;
-import me.squidxtv.frameui.core.actions.scroll.ScrollAction;
 import me.squidxtv.frameui.core.actions.scroll.ScrollDirection;
 import me.squidxtv.frameui.core.math.BoundingBox;
 import org.jetbrains.annotations.NotNull;
@@ -22,9 +20,9 @@ import java.util.stream.Stream;
  * @see Div
  * @see ScreenModel
  */
-public abstract class Parent extends AbstractContent {
+public abstract class ParentContent extends AbstractContent {
 
-    protected Parent(@NotNull String id) {
+    protected ParentContent(@NotNull String id) {
         super(id);
     }
 
@@ -182,7 +180,7 @@ public abstract class Parent extends AbstractContent {
         return contents.stream()
                 .flatMap(content -> {
                     Stream<Content> byId = content.getId().equals(id) ? Stream.of(content) : Stream.empty();
-                    if (deep && content instanceof Parent parent) {
+                    if (deep && content instanceof ParentContent parent) {
                         byId = Stream.concat(byId, getContentsById(parent.getChildren(), id, true));
                     }
                     return byId;
@@ -194,7 +192,7 @@ public abstract class Parent extends AbstractContent {
         return contents.stream()
                 .flatMap(content -> {
                     Stream<T> byId = type.isInstance(content) ? Stream.of((T) content) : Stream.empty();
-                    if (deep && content instanceof Parent parent) {
+                    if (deep && content instanceof ParentContent parent) {
                         byId = Stream.concat(byId, getContentsByType(parent.getChildren(), type, true));
                     }
                     return byId;

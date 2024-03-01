@@ -1,8 +1,6 @@
 package me.squidxtv.frameui.core.content;
 
 import me.squidxtv.frameui.api.parser.ScreenParser;
-import me.squidxtv.frameui.core.actions.initiator.ActionInitiator;
-import me.squidxtv.frameui.core.actions.scroll.ScrollDirection;
 import me.squidxtv.frameui.core.attributes.Attribute;
 import me.squidxtv.frameui.core.attributes.BorderAttribute;
 import me.squidxtv.frameui.core.graphics.Graphics;
@@ -24,7 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class ScreenModel extends AbstractContent implements Parent {
+public class ScreenModel extends ParentContent {
 
     private static final ScreenParser SCREEN_PARSER = Objects.requireNonNull(Bukkit.getServicesManager().load(ScreenParser.class));
 
@@ -36,6 +34,7 @@ public class ScreenModel extends AbstractContent implements Parent {
 
     private int clickRadius;
     private int scrollRadius;
+    // todo: move into ParentContent
     private final @NotNull List<Content> children;
 
     public ScreenModel(@NotNull Element element) {
@@ -77,50 +76,6 @@ public class ScreenModel extends AbstractContent implements Parent {
         }
 
         border.draw(graphics, 0, 0, parentBoundingBox.width(), parentBoundingBox.height(), parentBoundingBox);
-    }
-
-    @Override
-    public void click(@NotNull ActionInitiator<?> initiator, int clickX, int clickY, BoundingBox parentBoundingBox) {
-        if (getClickAction().isEmpty()) {
-            return;
-        }
-
-        BoundingBox absolutePosition = getAbsolutePosition(parentBoundingBox);
-
-        if (absolutePosition.width() <= 0 || absolutePosition.height() <= 0) {
-            return;
-        }
-
-        if(absolutePosition.isPositionOutside(clickX, clickY)) {
-            return;
-        }
-
-        for (Content child : children) {
-            child.click(initiator, clickX, clickY, absolutePosition);
-        }
-        getClickAction().ifPresent(action -> action.perform(initiator, clickX, clickY));
-    }
-
-    @Override
-    public void scroll(@NotNull ActionInitiator<?> initiator, @NotNull ScrollDirection direction, int scrollX, int scrollY, @NotNull BoundingBox parentBoundingBox) {
-        if (getScrollAction().isEmpty()) {
-            return;
-        }
-
-        BoundingBox absolutePosition = getAbsolutePosition(parentBoundingBox);
-
-        if (absolutePosition.width() <= 0 || absolutePosition.height() <= 0) {
-            return;
-        }
-
-        if(absolutePosition.isPositionOutside(scrollX, scrollY)) {
-            return;
-        }
-
-        for (Content child : children) {
-            child.scroll(initiator, direction, scrollX, scrollY, absolutePosition);
-        }
-        getScrollAction().ifPresent(action -> action.perform(initiator, direction, scrollX, scrollY));
     }
 
     @Override
