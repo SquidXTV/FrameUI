@@ -74,13 +74,13 @@ public class DebugScreen implements Screen<DebugGraphics> {
     }
 
     @Override
-    public boolean click(@NotNull ActionInitiator<?> initiator, int x, int y) {
+    public boolean click(@NotNull ActionInitiator initiator, int x, int y) {
         model.click(initiator, x, y, new BoundingBox(0, 0, graphics.getPixelWidth(), graphics.getPixelHeight()));
         return true;
     }
 
     @Override
-    public boolean scroll(@NotNull ActionInitiator<?> initiator, @NotNull ScrollDirection direction, int x, int y) {
+    public boolean scroll(@NotNull ActionInitiator initiator, @NotNull ScrollDirection direction, int x, int y) {
         model.scroll(initiator, direction, x, y, new BoundingBox(0, 0, graphics.getPixelWidth(), graphics.getPixelHeight()));
         return true;
     }

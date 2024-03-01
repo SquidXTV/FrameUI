@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface Clickable {
 
-    void click(@NotNull ActionInitiator<?> initiator, int clickX, int clickY, BoundingBox parentBoundingBox);
+    void click(@NotNull ActionInitiator initiator, int clickX, int clickY, BoundingBox parentBoundingBox);
 
     void setClickAction(@Nullable ClickAction clickAction);
 

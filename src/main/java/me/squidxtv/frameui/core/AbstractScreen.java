@@ -85,7 +85,7 @@ public abstract class AbstractScreen<G extends Graphics<?>> implements Screen<G>
     }
 
     @Override
-    public boolean click(@NotNull ActionInitiator<?> initiator, int x, int y) {
+    public boolean click(@NotNull ActionInitiator initiator, int x, int y) {
         throwIfTerminated();
         if (state == State.CLOSED) {
             return false;
@@ -103,7 +103,7 @@ public abstract class AbstractScreen<G extends Graphics<?>> implements Screen<G>
     }
 
     @Override
-    public boolean scroll(@NotNull ActionInitiator<?> initiator, @NotNull ScrollDirection direction, int x, int y) {
+    public boolean scroll(@NotNull ActionInitiator initiator, @NotNull ScrollDirection direction, int x, int y) {
         throwIfTerminated();
         if (state == State.CLOSED) {
             return false;

@@ -27,9 +27,9 @@ public interface Screen<G extends Graphics<?>> {
 
     void setGraphics(@NotNull G graphics);
 
-    boolean click(@NotNull ActionInitiator<?> initiator, int x, int y);
+    boolean click(@NotNull ActionInitiator initiator, int x, int y);
 
-    boolean scroll(@NotNull ActionInitiator<?> initiator, @NotNull ScrollDirection direction, int x, int y);
+    boolean scroll(@NotNull ActionInitiator initiator, @NotNull ScrollDirection direction, int x, int y);
 
     @NotNull Optional<Permission> getClickPermission();
 

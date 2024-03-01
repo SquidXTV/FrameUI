@@ -75,7 +75,7 @@ public class VirtualScreen extends AbstractScreen<VirtualGraphics> {
     }
 
     @Override
-    public boolean click(@NotNull ActionInitiator<?> initiator, int x, int y) {
+    public boolean click(@NotNull ActionInitiator initiator, int x, int y) {
         if (!super.click(initiator, x, y)) {
             return false;
         }
@@ -89,7 +89,7 @@ public class VirtualScreen extends AbstractScreen<VirtualGraphics> {
     }
 
     @Override
-    public boolean scroll(@NotNull ActionInitiator<?> initiator, @NotNull ScrollDirection direction, int x, int y) {
+    public boolean scroll(@NotNull ActionInitiator initiator, @NotNull ScrollDirection direction, int x, int y) {
         if (!super.scroll(initiator, direction, x, y)) {
             return false;
         }

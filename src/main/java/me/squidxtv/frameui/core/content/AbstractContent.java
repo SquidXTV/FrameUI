@@ -27,7 +27,7 @@ public abstract class AbstractContent implements Content {
     }
 
     @Override
-    public void click(@NotNull ActionInitiator<?> initiator, int clickX, int clickY, BoundingBox parentBoundingBox) {
+    public void click(@NotNull ActionInitiator initiator, int clickX, int clickY, BoundingBox parentBoundingBox) {
         Optional<ClickAction> optionalClickAction = getClickAction();
         if (optionalClickAction.isEmpty()) {
             return;
@@ -47,7 +47,7 @@ public abstract class AbstractContent implements Content {
     }
 
     @Override
-    public void scroll(@NotNull ActionInitiator<?> initiator, @NotNull ScrollDirection direction, int scrollX, int scrollY, @NotNull BoundingBox parentBoundingBox) {
+    public void scroll(@NotNull ActionInitiator initiator, @NotNull ScrollDirection direction, int scrollX, int scrollY, @NotNull BoundingBox parentBoundingBox) {
         Optional<ScrollAction> optionalScrollAction = getScrollAction();
         if (optionalScrollAction.isEmpty()) {
             return;

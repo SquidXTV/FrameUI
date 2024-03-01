@@ -6,6 +6,6 @@ import org.jetbrains.annotations.NotNull;
 @FunctionalInterface
 public interface ScrollAction {
 
-    void perform(@NotNull ActionInitiator<?> initiator, @NotNull ScrollDirection direction, int scrollX, int scrollY);
+    void perform(@NotNull ActionInitiator initiator, @NotNull ScrollDirection direction, int scrollX, int scrollY);
 
 }

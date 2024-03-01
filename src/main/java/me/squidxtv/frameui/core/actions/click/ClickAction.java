@@ -6,6 +6,6 @@ import org.jetbrains.annotations.NotNull;
 @FunctionalInterface
 public interface ClickAction {
 
-    void perform(@NotNull ActionInitiator<?> initiator, int clickX, int clickY);
+    void perform(@NotNull ActionInitiator initiator, int clickX, int clickY);
 
 }

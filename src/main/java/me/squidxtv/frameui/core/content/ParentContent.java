@@ -31,7 +31,7 @@ public abstract class ParentContent extends AbstractContent {
     }
 
     @Override
-    public void click(@NotNull ActionInitiator<?> initiator, int clickX, int clickY, BoundingBox parentBoundingBox) {
+    public void click(@NotNull ActionInitiator initiator, int clickX, int clickY, BoundingBox parentBoundingBox) {
         BoundingBox absolutePosition = getAbsolutePosition(parentBoundingBox);
 
         if (absolutePosition.width() <= 0 || absolutePosition.height() <= 0) {
@@ -49,7 +49,7 @@ public abstract class ParentContent extends AbstractContent {
     }
 
     @Override
-    public void scroll(@NotNull ActionInitiator<?> initiator, @NotNull ScrollDirection direction, int scrollX, int scrollY, @NotNull BoundingBox parentBoundingBox) {
+    public void scroll(@NotNull ActionInitiator initiator, @NotNull ScrollDirection direction, int scrollX, int scrollY, @NotNull BoundingBox parentBoundingBox) {
         BoundingBox absolutePosition = getAbsolutePosition(parentBoundingBox);
 
         if (absolutePosition.width() <= 0 || absolutePosition.height() <= 0) {
