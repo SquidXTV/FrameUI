@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-public sealed interface ActionInitiator<T> permits CodeInitiator, PlayerInitiator, PluginInitiator {
+public sealed interface ActionInitiator permits CodeInitiator, PlayerInitiator, PluginInitiator {
 
     static @NotNull PlayerInitiator ofPlayer(Player player) {
         return new PlayerInitiator(player);
