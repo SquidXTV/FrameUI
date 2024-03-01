@@ -49,10 +49,4 @@ public class ScreenRegistryImpl implements ScreenRegistry {
         return get(plugin).filter(screen -> screen.getModel().getId().equals(id));
     }
 
-    // ToDo: might be removing while iterating
-    @Override
-    public void clear(@NotNull JavaPlugin plugin) {
-        get(plugin).forEach(Screen::terminate);
-    }
-
 }

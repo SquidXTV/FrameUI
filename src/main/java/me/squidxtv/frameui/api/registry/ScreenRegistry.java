@@ -19,6 +19,4 @@ public interface ScreenRegistry {
     @NotNull Stream<VirtualScreen> get(@NotNull Player viewer);
     @NotNull Stream<Screen<?>> get(@NotNull JavaPlugin plugin, @NotNull String id);
 
-    void clear(@NotNull JavaPlugin plugin);
-
 }
