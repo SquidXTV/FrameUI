@@ -14,6 +14,8 @@ import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import io.github.retrooper.packetevents.util.SpigotReflectionUtil;
 import me.squidxtv.frameui.core.map.VirtualMap;
 import me.squidxtv.frameui.core.math.Direction;
+import me.squidxtv.frameui.util.protocol.ItemFrameMetadataPacket;
+import me.squidxtv.frameui.util.protocol.ItemFrameSpawnPacket;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -32,15 +34,15 @@ public class VirtualItemFrame extends AbstractItemFrame<VirtualMap> {
     private static final @NotNull PlayerManager PLAYER_MANAGER = PacketEvents.getAPI().getPlayerManager();
 
     private final int entityId = SpigotReflectionUtil.generateEntityId();
-    private final SpawnPacket spawn;
-    private final MetadataPacket metadata;
+    private final ItemFrameSpawnPacket spawn;
+    private final ItemFrameMetadataPacket metadata;
 
     private boolean invisible = true;
 
     public VirtualItemFrame(@NotNull World world, @NotNull Location location, @NotNull Direction direction) {
         super(location, new VirtualMap(world));
-        spawn = new SpawnPacket(entityId, location, direction);
-        metadata = new MetadataPacket(entityId, map.getAsItemStack(), invisible);
+        spawn = new ItemFrameSpawnPacket(entityId, location, direction);
+        metadata = new ItemFrameMetadataPacket(entityId, map.getAsItemStack(), invisible);
     }
 
     public void send(@NotNull Collection<Player> players) {
@@ -84,11 +86,11 @@ public class VirtualItemFrame extends AbstractItemFrame<VirtualMap> {
         return entityId;
     }
 
-    public @NotNull SpawnPacket getSpawn() {
+    public @NotNull ItemFrameSpawnPacket getSpawn() {
         return spawn;
     }
 
-    public @NotNull MetadataPacket getMetadata() {
+    public @NotNull ItemFrameMetadataPacket getMetadata() {
         return metadata;
     }
 
@@ -126,41 +128,6 @@ public class VirtualItemFrame extends AbstractItemFrame<VirtualMap> {
             }
         }
     }
-
-    // ToDo: move packets into util/protocol
-    public static class SpawnPacket extends WrapperPlayServerSpawnEntity {
-
-        public SpawnPacket(int entityID, @NotNull Location loc, @NotNull Direction direction) {
-            super(entityID,
-                    Optional.of(UUID.randomUUID()),
-                    EntityTypes.ITEM_FRAME,
-                    new Vector3d(loc.getX(), loc.getY(), loc.getZ()),
-                    direction.getPitch(),
-                    direction.getYaw(),
-                    0,
-                    direction.getPacketValue(),
-                    Optional.empty());
-        }
-
-    }
-
-    public static class MetadataPacket extends WrapperPlayServerEntityMetadata {
-
-        public MetadataPacket(int entityID, @NotNull ItemStack map, boolean invisible) {
-            super(entityID, List.of(convertToEntityData(map), convertToEntityData(invisible)));
-
-        }
-
-        private static @NotNull EntityData convertToEntityData(boolean invisible) {
-            return new EntityData(0, EntityDataTypes.BYTE, (byte) (invisible ? 0x20 : 0));
-        }
-
-        private static @NotNull EntityData convertToEntityData(@NotNull ItemStack map) {
-            return new EntityData(8, EntityDataTypes.ITEMSTACK, SpigotConversionUtil.fromBukkitItemStack(map));
-        }
-
-    }
-
 
     public static void destroy(@NotNull VirtualItemFrame[] frames, @NotNull Collection<Player> players) {
         int[] ids = Arrays.stream(frames).mapToInt(VirtualItemFrame::getEntityId).toArray();
