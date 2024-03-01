@@ -17,13 +17,17 @@ import java.util.stream.Stream;
  * "Children" refers to elements directly under this parent.
  * "Descendants" refer to children of all subsequent generations
  * (i.e., Children, Grandchildren, Great Grandchildren, etc.).
+ *
  * @see Div
  * @see ScreenModel
  */
 public abstract class ParentContent extends AbstractContent {
 
-    protected ParentContent(@NotNull String id) {
+    private final @NotNull List<Content> children;
+
+    protected ParentContent(@NotNull String id, @NotNull List<Content> children) {
         super(id);
+        this.children = children;
     }
 
     @Override
@@ -34,7 +38,7 @@ public abstract class ParentContent extends AbstractContent {
             return;
         }
 
-        if(absolutePosition.isPositionOutside(clickX, clickY)) {
+        if (absolutePosition.isPositionOutside(clickX, clickY)) {
             return;
         }
 
@@ -52,7 +56,7 @@ public abstract class ParentContent extends AbstractContent {
             return;
         }
 
-        if(absolutePosition.isPositionOutside(scrollX, scrollY)) {
+        if (absolutePosition.isPositionOutside(scrollX, scrollY)) {
             return;
         }
 
@@ -62,10 +66,13 @@ public abstract class ParentContent extends AbstractContent {
         getScrollAction().ifPresent(action -> action.perform(initiator, direction, scrollX, scrollY));
     }
 
-    public abstract @NotNull List<Content> getChildren();
+    public @NotNull List<Content> getChildren() {
+        return children;
+    }
 
     /**
      * Gets all children with the given type.
+     *
      * @param type to search for
      * @return all children with the given type
      */
@@ -76,6 +83,7 @@ public abstract class ParentContent extends AbstractContent {
 
     /**
      * Gets all descendants with the given type.
+     *
      * @param type to search for
      * @return all descendants with the given type
      */
@@ -86,6 +94,7 @@ public abstract class ParentContent extends AbstractContent {
 
     /**
      * Gets the first child with the given type.
+     *
      * @param type to search for
      * @return first child found with the given type
      */
@@ -95,6 +104,7 @@ public abstract class ParentContent extends AbstractContent {
 
     /**
      * Gets the first descendant with the given type.
+     *
      * @param type to search for
      * @return the first descendant with the given type
      */
@@ -104,6 +114,7 @@ public abstract class ParentContent extends AbstractContent {
 
     /**
      * Gets any child with the given type.
+     *
      * @param type to search for
      * @return any child with the given type
      */
@@ -113,6 +124,7 @@ public abstract class ParentContent extends AbstractContent {
 
     /**
      * Gets any descendant with the given type.
+     *
      * @param type to search for
      * @return any descendant with the given type
      */
@@ -122,6 +134,7 @@ public abstract class ParentContent extends AbstractContent {
 
     /**
      * Gets all children with the given id.
+     *
      * @param id to search for
      * @return all children with the given id
      */
@@ -132,6 +145,7 @@ public abstract class ParentContent extends AbstractContent {
 
     /**
      * Gets all descendants with the given id.
+     *
      * @param id to search for
      * @return all descendants with the given id
      */
@@ -142,6 +156,7 @@ public abstract class ParentContent extends AbstractContent {
 
     /**
      * Gets the first child with given id.
+     *
      * @param id to search for
      * @return first child found with given id
      */
@@ -151,6 +166,7 @@ public abstract class ParentContent extends AbstractContent {
 
     /**
      * Gets the first descendant with given id.
+     *
      * @param id to search for
      * @return first descendant found with given id
      */
@@ -160,6 +176,7 @@ public abstract class ParentContent extends AbstractContent {
 
     /**
      * Gets any child with given id.
+     *
      * @param id to search for
      * @return any child found with given id
      */
@@ -169,6 +186,7 @@ public abstract class ParentContent extends AbstractContent {
 
     /**
      * Gets any descendant with given id.
+     *
      * @param id the id to search for
      * @return any descendant found with given id
      */

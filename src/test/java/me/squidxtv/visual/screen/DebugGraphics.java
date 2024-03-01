@@ -5,7 +5,7 @@ import me.squidxtv.frameui.core.graphics.AbstractGraphics;
 import me.squidxtv.frameui.core.map.Map;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 

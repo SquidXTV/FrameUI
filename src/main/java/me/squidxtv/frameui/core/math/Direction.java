@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 public enum Direction {
 
     NORTH(2, 0, 180, new Vector(0, 0, -1), new Vector(1, 1, 1)),
-    SOUTH(3,0, 0, new Vector(0, 0, 1), new Vector(0, 1, 0)),
+    SOUTH(3, 0, 0, new Vector(0, 0, 1), new Vector(0, 1, 0)),
     WEST(4, 0, 90, new Vector(-1, 0, 0), new Vector(1, 1, 0)),
     EAST(5, 0, 270, new Vector(1, 0, 0), new Vector(0, 1, 1));
 

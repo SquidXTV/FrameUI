@@ -3,7 +3,9 @@ package me.squidxtv.frameui.core.attributes;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Element;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+
 
 public class FontAttribute {
 

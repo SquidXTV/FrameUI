@@ -4,7 +4,7 @@ import me.squidxtv.frameui.core.map.Map;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 public class DebugMap implements Map {

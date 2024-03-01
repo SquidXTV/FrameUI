@@ -12,7 +12,9 @@ import java.nio.file.Path;
 public interface ScreenParser {
 
     @NotNull ScreenModel parse(@NotNull Path xml) throws IOException, SAXException;
+
     @NotNull ScreenModel parse(@NotNull File file) throws IOException, SAXException;
+
     @NotNull ScreenModel parse(@NotNull InputStream stream) throws IOException, SAXException;
 
 }

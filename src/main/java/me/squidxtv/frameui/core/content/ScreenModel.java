@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import java.awt.*;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -34,8 +34,7 @@ public class ScreenModel extends ParentContent {
 
     private int clickRadius;
     private int scrollRadius;
-    // todo: move into ParentContent
-    private final @NotNull List<Content> children;
+
 
     public ScreenModel(@NotNull Element element) {
         this(Attribute.ID.get(element),
@@ -50,7 +49,7 @@ public class ScreenModel extends ParentContent {
     }
 
     public ScreenModel(@NotNull String id, int width, int height, @NotNull Color backgroundColor, @Nullable BufferedImage backgroundImage, @NotNull BorderAttribute border, int clickRadius, int scrollRadius, @NotNull List<Content> children) {
-        super(id);
+        super(id, children);
         this.width = width;
         this.height = height;
         this.backgroundColor = backgroundColor;
@@ -58,7 +57,6 @@ public class ScreenModel extends ParentContent {
         this.border = border;
         this.clickRadius = clickRadius;
         this.scrollRadius = scrollRadius;
-        this.children = children;
     }
 
     @Override
@@ -71,7 +69,7 @@ public class ScreenModel extends ParentContent {
             graphics.draw(backgroundImage);
         }
 
-        for (Content child : children) {
+        for (Content child : getChildren()) {
             child.draw(graphics, parentBoundingBox);
         }
 
@@ -120,11 +118,6 @@ public class ScreenModel extends ParentContent {
 
     public int getScrollRadius() {
         return scrollRadius;
-    }
-
-    @Override
-    public @NotNull List<Content> getChildren() {
-        return children;
     }
 
     public void setWidth(int width) {

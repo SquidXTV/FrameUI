@@ -20,8 +20,11 @@ public interface Content extends Clickable, Scrollable {
     @NotNull String getId();
 
     int getX();
+
     int getY();
+
     int getWidth();
+
     int getHeight();
 
     static List<Content> getChildren(@NotNull Element root) {

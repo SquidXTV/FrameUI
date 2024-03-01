@@ -4,7 +4,7 @@ import me.squidxtv.frameui.core.map.Map;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class AbstractItemFrame<M extends Map> implements ItemFrame<M>{
+public abstract class AbstractItemFrame<M extends Map> implements ItemFrame<M> {
 
     protected @NotNull Location location;
     protected @NotNull M map;

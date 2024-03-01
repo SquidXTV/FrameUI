@@ -12,6 +12,7 @@ public interface Scrollable {
     void scroll(@NotNull ActionInitiator<?> initiator, @NotNull ScrollDirection direction, int scrollX, int scrollY, @NotNull BoundingBox parentBoundingBox);
 
     void setScrollAction(@Nullable ScrollAction action);
+
     @NotNull Optional<ScrollAction> getScrollAction();
 
 }

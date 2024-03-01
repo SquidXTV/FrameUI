@@ -8,7 +8,9 @@ import org.bukkit.plugin.ServicesManager;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Element;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URI;

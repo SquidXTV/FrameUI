@@ -96,7 +96,7 @@ public abstract class AbstractScreen<G extends Graphics<?>> implements Screen<G>
         }
 
         if (initiator instanceof PlayerInitiator playerInitiator) {
-            return playerInitiator.getInitiator().hasPermission(clickPermission);
+            return playerInitiator.player().hasPermission(clickPermission);
         }
 
         return true;
@@ -114,7 +114,7 @@ public abstract class AbstractScreen<G extends Graphics<?>> implements Screen<G>
         }
 
         if (initiator instanceof PlayerInitiator playerInitiator) {
-            return playerInitiator.getInitiator().hasPermission(scrollPermission);
+            return playerInitiator.player().hasPermission(scrollPermission);
         }
 
         return true;

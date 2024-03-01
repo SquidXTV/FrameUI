@@ -12,6 +12,7 @@ public interface Clickable {
     void click(@NotNull ActionInitiator<?> initiator, int clickX, int clickY, BoundingBox parentBoundingBox);
 
     void setClickAction(@Nullable ClickAction clickAction);
+
     @NotNull Optional<ClickAction> getClickAction();
 
 }

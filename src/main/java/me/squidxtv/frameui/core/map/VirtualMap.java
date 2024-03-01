@@ -10,7 +10,8 @@ import org.bukkit.map.MapPalette;
 import org.bukkit.map.MapView;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
+import java.awt.Color;
+
 
 public class VirtualMap implements Map {
 

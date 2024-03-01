@@ -4,7 +4,8 @@ import me.squidxtv.frameui.FrameUI;
 import me.squidxtv.frameui.exceptions.FontLoadingException;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;

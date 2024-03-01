@@ -5,7 +5,8 @@ import me.squidxtv.frameui.core.math.BoundingBox;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Element;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.util.Arrays;
 
 public class BorderAttribute {
@@ -38,7 +39,7 @@ public class BorderAttribute {
             realY = parentBoundingBox.y();
         }
 
-        if ((realY+realHeight) > (parentBoundingBox.y() + parentBoundingBox.height())) {
+        if ((realY + realHeight) > (parentBoundingBox.y() + parentBoundingBox.height())) {
             realHeight = realHeight - ((realY + realHeight) - (parentBoundingBox.y() + parentBoundingBox.height()));
         }
 
@@ -119,7 +120,7 @@ public class BorderAttribute {
             realY = parentY;
         }
 
-        if ((realY+realHeight) > (parentY + parentHeight)) {
+        if ((realY + realHeight) > (parentY + parentHeight)) {
             realHeight = realHeight - ((realY + realHeight) - (parentY + parentHeight));
         }
 
@@ -149,7 +150,7 @@ public class BorderAttribute {
             realStroke = this.width - ((y + height) - (parentY + parentHeight));
         }
         if (realStroke > 0) {
-            graphics2D.fillRect(realX, realY+realHeight - realStroke, realWidth, realStroke);
+            graphics2D.fillRect(realX, realY + realHeight - realStroke, realWidth, realStroke);
         }
 
         // left border

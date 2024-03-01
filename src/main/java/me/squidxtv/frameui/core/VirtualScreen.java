@@ -80,7 +80,7 @@ public class VirtualScreen extends AbstractScreen<VirtualGraphics> {
             return false;
         }
 
-        if (initiator instanceof PlayerInitiator playerInitiator && !containsViewer(playerInitiator.getInitiator())) {
+        if (initiator instanceof PlayerInitiator playerInitiator && !containsViewer(playerInitiator.player())) {
             return false;
         }
 
@@ -94,7 +94,7 @@ public class VirtualScreen extends AbstractScreen<VirtualGraphics> {
             return false;
         }
 
-        if (initiator instanceof PlayerInitiator playerInitiator && !containsViewer(playerInitiator.getInitiator())) {
+        if (initiator instanceof PlayerInitiator playerInitiator && !containsViewer(playerInitiator.player())) {
             return false;
         }
 

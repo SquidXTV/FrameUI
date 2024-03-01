@@ -1,6 +1,10 @@
 package me.squidxtv.frameui.core;
 
-import me.squidxtv.frameui.core.content.*;
+import me.squidxtv.frameui.core.content.Content;
+import me.squidxtv.frameui.core.content.Div;
+import me.squidxtv.frameui.core.content.Image;
+import me.squidxtv.frameui.core.content.ScreenModel;
+import me.squidxtv.frameui.core.content.Text;
 import me.squidxtv.util.ScreenUtil;
 import org.junit.jupiter.api.Test;
 
@@ -8,7 +12,13 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 
 class ParentContentTest {
 

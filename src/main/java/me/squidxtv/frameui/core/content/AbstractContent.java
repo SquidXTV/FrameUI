@@ -39,7 +39,7 @@ public abstract class AbstractContent implements Content {
             return;
         }
 
-        if(absolutePosition.isPositionOutside(clickX, clickY)) {
+        if (absolutePosition.isPositionOutside(clickX, clickY)) {
             return;
         }
 
@@ -59,7 +59,7 @@ public abstract class AbstractContent implements Content {
             return;
         }
 
-        if(absolutePosition.isPositionOutside(scrollX, scrollY)) {
+        if (absolutePosition.isPositionOutside(scrollX, scrollY)) {
             return;
         }
 

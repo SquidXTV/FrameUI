@@ -17,7 +17,6 @@ public class Div extends ParentContent {
     private int height;
 
     private @NotNull BorderAttribute border;
-    private final @NotNull List<Content> children;
 
     public Div(@NotNull Element element) {
         this(Attribute.ID.get(element),
@@ -30,13 +29,12 @@ public class Div extends ParentContent {
     }
 
     public Div(@NotNull String id, int x, int y, int width, int height, @NotNull BorderAttribute border, @NotNull List<Content> children) {
-        super(id);
+        super(id, children);
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.border = border;
-        this.children = children;
     }
 
     @Override
@@ -48,7 +46,7 @@ public class Div extends ParentContent {
         }
 
         // TODO: 31/07/2023 implement border padding for all borders / make issue for that instead
-        for (Content child : children) {
+        for (Content child : getChildren()) {
             child.draw(graphics, absolutePosition);
         }
 
@@ -64,11 +62,6 @@ public class Div extends ParentContent {
     @Override
     public int getHeight() {
         return height;
-    }
-
-    @Override
-    public @NotNull List<Content> getChildren() {
-        return children;
     }
 
     @Override

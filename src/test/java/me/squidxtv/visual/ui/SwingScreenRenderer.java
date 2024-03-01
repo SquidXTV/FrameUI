@@ -4,7 +4,8 @@ import me.squidxtv.frameui.core.actions.initiator.ActionInitiator;
 import me.squidxtv.frameui.core.actions.scroll.ScrollDirection;
 import me.squidxtv.visual.screen.DebugScreen;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 

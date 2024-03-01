@@ -1,4 +1,4 @@
-package me.squidxtv.frameui.core.actions.click;
+package me.squidxtv.frameui.listener;
 
 import me.squidxtv.frameui.api.FrameAPI;
 import me.squidxtv.frameui.core.Screen;
@@ -12,7 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.Objects;
 import java.util.logging.Logger;
 

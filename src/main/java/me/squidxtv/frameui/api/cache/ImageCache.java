@@ -10,7 +10,9 @@ import java.util.Optional;
 public interface ImageCache {
 
     @NotNull Optional<BufferedImage> get(@NotNull Path path);
+
     @NotNull BufferedImage getOrLoad(@NotNull Path path) throws IOException;
+
     void put(@NotNull Path path, BufferedImage image);
 
 }

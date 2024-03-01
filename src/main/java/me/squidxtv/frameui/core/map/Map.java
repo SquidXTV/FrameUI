@@ -3,7 +3,8 @@ package me.squidxtv.frameui.core.map;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
+import java.awt.Color;
+
 
 public interface Map {
 

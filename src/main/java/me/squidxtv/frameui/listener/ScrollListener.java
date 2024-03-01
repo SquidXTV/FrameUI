@@ -1,8 +1,9 @@
-package me.squidxtv.frameui.core.actions.scroll;
+package me.squidxtv.frameui.listener;
 
 import me.squidxtv.frameui.core.Screen;
 import me.squidxtv.frameui.core.actions.ActionType;
 import me.squidxtv.frameui.core.actions.initiator.ActionInitiator;
+import me.squidxtv.frameui.core.actions.scroll.ScrollDirection;
 import me.squidxtv.frameui.core.math.IntersectionHelper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,7 +11,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
+import java.awt.Point;
+
 
 public class ScrollListener implements Listener {
 
