@@ -13,12 +13,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.Point;
-import java.util.Objects;
-import java.util.logging.Logger;
 
 public class ClickListener implements Listener {
-
-    private static final @NotNull Logger LOGGER = Objects.requireNonNull(Bukkit.getServicesManager().load(FrameAPI.class)).getLogger();
 
     @EventHandler
     public void onClick(@NotNull PlayerInteractEvent event) {
@@ -26,7 +22,6 @@ public class ClickListener implements Listener {
         IntersectionHelper.getScreenIntersection(player, ActionType.CLICK).ifPresent(intersection -> {
             Point pixel = intersection.pixel();
             Screen<?> screen = intersection.screen();
-            LOGGER.info("Clicked successfully on " + screen + " at location " + pixel);
             screen.click(ActionInitiator.ofPlayer(player), pixel.x, pixel.y);
         });
     }
