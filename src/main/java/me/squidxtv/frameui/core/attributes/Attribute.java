@@ -18,6 +18,8 @@ import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 public class Attribute<T> {
 
@@ -32,15 +34,19 @@ public class Attribute<T> {
 
     private static final Font[] FONTS = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
 
-    // for format #rrggbb
+    private static final Predicate<String> COLOR_REGEX = Pattern.compile("#[0-9a-fA-F]{6}").asMatchPredicate();
+
     private static final AttributeSupplier<Color> COLOR_SUPPLIER = (element, hex) -> {
+        if (!COLOR_REGEX.test(hex)) {
+            throw new IllegalArgumentException("Provided color is not in hex format #rrggbb.");
+        }
+
         int red = Integer.parseInt(hex.substring(1, 3), 16);
         int green = Integer.parseInt(hex.substring(3, 5), 16);
         int blue = Integer.parseInt(hex.substring(5, 7), 16);
         return new Color(red, green, blue);
     };
 
-    // General attributes
     public static final Attribute<String> ID = new Attribute<>("id", (element, result) -> result);
     public static final Attribute<Integer> WIDTH = new Attribute<>("width", (element, result) -> Integer.parseUnsignedInt(result));
     public static final Attribute<Integer> HEIGHT = new Attribute<>("height", (element, result) -> Integer.parseUnsignedInt(result));
@@ -48,7 +54,7 @@ public class Attribute<T> {
     public static final Attribute<Integer> Y = new Attribute<>("y", (element, result) -> Integer.parseInt(result));
 
     public static final Attribute<Color> BORDER_COLOR = new Attribute<>("border-color", COLOR_SUPPLIER);
-    public static final Attribute<Integer> BORDER_WIDTH = new Attribute<>("border-width", (element, result) -> Integer.parseUnsignedInt(result));
+    public static final Attribute<Insets> BORDER_SIZE = new Attribute<>("border-size", (element, result) -> Insets.valueOf(result));
 
     public static final Attribute<Font> FONT = new Attribute<>("font", (element, fontName) -> {
         if (fontName.isEmpty()) {
@@ -56,11 +62,12 @@ public class Attribute<T> {
         }
         return getFontByName(fontName).orElse(MINECRAFT_FONT);
     });
+
     public static final Attribute<Integer> FONT_SIZE = new Attribute<>("font-size", (element, result) -> Integer.parseUnsignedInt(result));
     public static final Attribute<Color> FONT_COLOR = new Attribute<>("font-color", COLOR_SUPPLIER);
     public static final Attribute<Boolean> BOLD = new Attribute<>("bold", (element, result) -> Boolean.parseBoolean(result));
     public static final Attribute<Boolean> ITALIC = new Attribute<>("italic", (element, result) -> Boolean.parseBoolean(result));
-    public static final Attribute<Integer> BORDER_PADDING = new Attribute<>("border-padding", (element, result) -> Integer.parseInt(result));
+    public static final Attribute<Insets> PADDING = new Attribute<>("padding-size", (element, result) -> Insets.valueOf(result));
 
     public static final Attribute<Integer> CLICK_RADIUS = new Attribute<>("click-radius", (element, result) -> Integer.parseUnsignedInt(result));
     public static final Attribute<Integer> SCROLL_RADIUS = new Attribute<>("scroll-radius", (element, result) -> Integer.parseUnsignedInt(result));

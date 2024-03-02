@@ -21,26 +21,18 @@ public abstract class AbstractGraphics<I extends ItemFrame<?>> implements Graphi
 
     private final @NotNull ScreenModel model;
     private final @NotNull I[] frames;
-    private final int width;
-    private final int height;
-    private final int pixelWidth;
-    private final int pixelHeight;
 
     private @NotNull State state = State.CLOSED;
 
 
-    protected AbstractGraphics(@NotNull ScreenModel model, @NotNull I[] frames, int width, int height) {
+    protected AbstractGraphics(@NotNull ScreenModel model, @NotNull I[] frames) {
         this.model = model;
         this.frames = frames;
-        this.width = width;
-        this.height = height;
-        this.pixelWidth = this.width * Map.WIDTH;
-        this.pixelHeight = this.height * Map.HEIGHT;
     }
 
     @Override
     public void update() {
-        model.draw(this, new BoundingBox(0, 0, pixelWidth, pixelHeight));
+        model.draw(this, new BoundingBox(0, 0, model.getWidth(), model.getHeight()));
     }
 
     @Override
@@ -97,7 +89,7 @@ public abstract class AbstractGraphics<I extends ItemFrame<?>> implements Graphi
                 LOGGER.log(Level.FINE, "Skipping drawing of column at ({}) - x coordinate out of bounds", currentX);
                 continue;
             }
-            if (currentX >= this.pixelWidth) {
+            if (currentX >= model.getWidth()) {
                 LOGGER.log(Level.FINE, "Ending drawing - x coordinate out of bounds");
                 return;
             }
@@ -113,14 +105,14 @@ public abstract class AbstractGraphics<I extends ItemFrame<?>> implements Graphi
                     LOGGER.log(Level.FINE, "Skipping drawing of pixel at ({}, {}) - y coordinate out of bounds", new Object[]{currentX, currentY});
                     continue;
                 }
-                if (currentY >= this.pixelHeight) {
+                if (currentY >= model.getHeight()) {
                     LOGGER.log(Level.FINE, "Skipping drawing of column at ({}, {}) - y coordinate out of bounds", new Object[]{currentX, currentY});
                     break;
                 }
 
                 int frameX = currentX / Map.WIDTH;
                 int frameY = currentY / Map.HEIGHT;
-                int frameIndex = frameX + frameY * this.width;
+                int frameIndex = frameX + frameY * model.getBlockWidth();
 
                 int pixelX = currentX - (frameX * Map.WIDTH);
                 int pixelY = currentY - (frameY * Map.HEIGHT);
@@ -136,6 +128,10 @@ public abstract class AbstractGraphics<I extends ItemFrame<?>> implements Graphi
         if (state == State.TERMINATED) {
             throw new IllegalStateException("Graphics got removed, drawing not allowed.");
         }
+    }
+
+    protected @NotNull ScreenModel getModel() {
+        return model;
     }
 
     @Override
@@ -156,24 +152,6 @@ public abstract class AbstractGraphics<I extends ItemFrame<?>> implements Graphi
     @Override
     public @NotNull I[] getItemFrames() {
         return frames;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    @Override
-    public int getPixelWidth() {
-        return pixelWidth;
-    }
-
-    @Override
-    public int getPixelHeight() {
-        return pixelHeight;
     }
 
     public @NotNull State getState() {

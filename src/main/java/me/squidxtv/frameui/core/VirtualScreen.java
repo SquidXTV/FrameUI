@@ -35,7 +35,7 @@ public class VirtualScreen extends AbstractScreen<VirtualGraphics> {
                          @NotNull World world,
                          @NotNull Location topLeftFrameLocation,
                          @NotNull Direction direction) {
-        super(plugin, model, new VirtualGraphics(model, world, topLeftFrameLocation, direction, model.getBlockWidth(), model.getBlockHeight()));
+        super(plugin, model, new VirtualGraphics(model, world, topLeftFrameLocation, direction));
         this.world = world;
         this.topLeftFrameLocation = new Location(topLeftFrameLocation.getWorld(), topLeftFrameLocation.getBlockX(), topLeftFrameLocation.getBlockY(), topLeftFrameLocation.getBlockZ());
         this.direction = direction;
@@ -84,7 +84,7 @@ public class VirtualScreen extends AbstractScreen<VirtualGraphics> {
             return false;
         }
 
-        getModel().click(initiator, x, y, new BoundingBox(0, 0, getGraphics().getPixelWidth(), getGraphics().getPixelHeight()));
+        getModel().click(initiator, x, y, new BoundingBox(0, 0, getModel().getWidth(), getModel().getHeight()));
         return true;
     }
 
@@ -98,7 +98,7 @@ public class VirtualScreen extends AbstractScreen<VirtualGraphics> {
             return false;
         }
 
-        getModel().scroll(initiator, direction, x, y, new BoundingBox(0, 0, getGraphics().getPixelWidth(), getGraphics().getPixelHeight()));
+        getModel().scroll(initiator, direction, x, y, new BoundingBox(0, 0, getModel().getWidth(), getModel().getHeight()));
         return true;
     }
 

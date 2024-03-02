@@ -28,6 +28,7 @@
                 <xs:attributeGroup ref="position"/>
                 <xs:attributeGroup ref="font"/>
                 <xs:attributeGroup ref="border"/>
+                <xs:attribute name="padding-size" type="insets" default="1"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -49,6 +50,7 @@
         <xs:attributeGroup ref="position"/>
         <xs:attribute name="width" type="xs:positiveInteger" use="required"/>
         <xs:attribute name="height" type="xs:positiveInteger" use="required"/>
+        <xs:attribute name="background-color" type="hexType" default="#000000"/>
         <xs:attributeGroup ref="border"/>
     </xs:complexType>
 
@@ -58,12 +60,12 @@
         <xs:attribute name="font-color" type="hexType" default="#FFFFFF"/>
         <xs:attribute name="bold" type="xs:boolean" default="false"/>
         <xs:attribute name="italic" type="xs:boolean" default="false"/>
-        <xs:attribute name="border-padding" type="xs:nonNegativeInteger" default="1"/>
     </xs:attributeGroup>
 
     <xs:attributeGroup name="border">
-        <xs:attribute name="border-color" type="hexType" default="#0D0D0D"/>
+        <xs:attribute name="border-color" type="hexType" default="#000000"/>
         <xs:attribute name="border-width" type="xs:nonNegativeInteger" default="0"/>
+        <xs:attribute name="border-size" type="insets" default="0"/>
     </xs:attributeGroup>
 
     <xs:attributeGroup name="position">
@@ -77,12 +79,19 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <!--ToDo: maybe support more endings or even completely remove this check for specific type which could support web urls at the end-->
     <xs:simpleType name="pathType">
         <xs:restriction base="xs:string">
-            <xs:pattern value="@\{.*\.(png|jpg)\}|([A-Z]:)?/.*\.(png|jpg)"/>
+            <xs:pattern value="@\{.*\}|([A-Z]:)?/.*"/>
             <xs:whiteSpace value="collapse"/>
         </xs:restriction>
     </xs:simpleType>
+
+    <xs:simpleType name="insets">
+        <xs:restriction base="xs:string">
+            <!--Matches 1 (north/south/west/east) or 1,1,1,1 (north,south,west,east) or 1,1 (north/south,west/east)-->
+            <xs:pattern value="\d+|\d+,\d+,\d+,\d+|\d+,\d+"/>
+        </xs:restriction>
+    </xs:simpleType>
+
 
 </xs:schema>

@@ -12,7 +12,7 @@ public class FontAttribute {
     private @NotNull Font font;
     private @NotNull Color color;
     private int size;
-    private int borderPadding;
+    private @NotNull Insets padding;
     private boolean bold;
     private boolean italic;
 
@@ -20,16 +20,16 @@ public class FontAttribute {
         this(Attribute.FONT.get(element),
                 Attribute.FONT_COLOR.get(element),
                 Attribute.FONT_SIZE.get(element),
-                Attribute.BORDER_PADDING.get(element),
+                Attribute.PADDING.get(element),
                 Attribute.BOLD.get(element),
                 Attribute.ITALIC.get(element));
     }
 
-    public FontAttribute(@NotNull Font font, @NotNull Color color, int size, int borderPadding, boolean bold, boolean italic) {
+    public FontAttribute(@NotNull Font font, @NotNull Color color, int size, @NotNull Insets padding, boolean bold, boolean italic) {
         this.font = font;
         this.color = color;
         this.size = size;
-        this.borderPadding = borderPadding;
+        this.padding = padding;
         this.bold = bold;
         this.italic = italic;
     }
@@ -58,12 +58,12 @@ public class FontAttribute {
         this.size = size;
     }
 
-    public int getBorderPadding() {
-        return borderPadding;
+    public @NotNull Insets getPadding() {
+        return padding;
     }
 
-    public void setBorderPadding(int borderPadding) {
-        this.borderPadding = borderPadding;
+    public void setPadding(@NotNull Insets padding) {
+        this.padding = padding;
     }
 
     public boolean isBold() {

@@ -15,8 +15,8 @@ public class VirtualGraphics extends AbstractGraphics<VirtualItemFrame> {
     private @NotNull Location location;
     private @NotNull Direction direction;
 
-    public VirtualGraphics(@NotNull ScreenModel model, @NotNull World world, @NotNull Location location, @NotNull Direction direction, int width, int height) {
-        super(model, new VirtualItemFrame[width * height], width, height);
+    public VirtualGraphics(@NotNull ScreenModel model, @NotNull World world, @NotNull Location location, @NotNull Direction direction) {
+        super(model, new VirtualItemFrame[model.getBlockWidth() * model.getBlockHeight()]);
         this.world = world;
         this.location = location;
         this.direction = direction;
@@ -43,13 +43,13 @@ public class VirtualGraphics extends AbstractGraphics<VirtualItemFrame> {
 
     private void initializeFrames() {
         VirtualItemFrame[] frames = getItemFrames();
-        for (int i = 0; i < getHeight(); i++) {
-            for (int j = 0; j < getWidth(); j++) {
+        for (int i = 0; i < getModel().getBlockHeight(); i++) {
+            for (int j = 0; j < getModel().getBlockWidth(); j++) {
                 int x = location.getBlockX() + (j * direction.getMultiplierX());
                 int y = location.getBlockY() - i;
                 int z = location.getBlockZ() + (j * direction.getMultiplierZ());
 
-                int index = j + i * getWidth();
+                int index = j + i * getModel().getBlockWidth();
                 frames[index] = new VirtualItemFrame(world, new Location(world, x, y, z), direction);
             }
         }
@@ -74,13 +74,13 @@ public class VirtualGraphics extends AbstractGraphics<VirtualItemFrame> {
     public void setLocation(@NotNull Location location) {
         this.location = location;
         VirtualItemFrame[] frames = getItemFrames();
-        for (int i = 0; i < getWidth(); i++) {
-            for (int j = 0; j < getHeight(); j++) {
+        for (int i = 0; i < getModel().getBlockHeight(); i++) {
+            for (int j = 0; j < getModel().getBlockWidth(); j++) {
                 int x = location.getBlockX() + (i * direction.getMultiplierX());
                 int y = location.getBlockY() - j;
                 int z = location.getBlockZ() + (i * direction.getMultiplierZ());
 
-                int index = i + j * getWidth();
+                int index = i + j * getModel().getBlockWidth();
                 frames[index].setLocation(new Location(world, x, y, z));
             }
         }

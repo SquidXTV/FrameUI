@@ -22,7 +22,7 @@ public class DebugScreen implements Screen<DebugGraphics> {
 
     public DebugScreen(@NotNull ScreenModel model) {
         this.model = model;
-        graphics = new DebugGraphics(model, model.getBlockWidth(), model.getBlockHeight());
+        graphics = new DebugGraphics(model);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class DebugScreen implements Screen<DebugGraphics> {
     @Override
     public void update() {
         throwIfRemoved();
-        model.draw(graphics, new BoundingBox(0, 0, graphics.getPixelWidth(), graphics.getPixelHeight()));
+        model.draw(graphics, new BoundingBox(0, 0, model.getWidth(), model.getHeight()));
     }
 
     protected void throwIfRemoved() {
@@ -75,13 +75,13 @@ public class DebugScreen implements Screen<DebugGraphics> {
 
     @Override
     public boolean click(@NotNull ActionInitiator initiator, int x, int y) {
-        model.click(initiator, x, y, new BoundingBox(0, 0, graphics.getPixelWidth(), graphics.getPixelHeight()));
+        model.click(initiator, x, y, new BoundingBox(0, 0, model.getWidth(), model.getHeight()));
         return true;
     }
 
     @Override
     public boolean scroll(@NotNull ActionInitiator initiator, @NotNull ScrollDirection direction, int x, int y) {
-        model.scroll(initiator, direction, x, y, new BoundingBox(0, 0, graphics.getPixelWidth(), graphics.getPixelHeight()));
+        model.scroll(initiator, direction, x, y, new BoundingBox(0, 0, model.getWidth(), model.getHeight()));
         return true;
     }
 

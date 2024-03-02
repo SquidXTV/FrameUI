@@ -8,4 +8,8 @@ public interface ScrollAction {
 
     void perform(@NotNull ActionInitiator initiator, @NotNull ScrollDirection direction, int scrollX, int scrollY);
 
+    static @NotNull ScrollAction empty() {
+        return (initiator, direction, scrollX, scrollY) -> {};
+    }
+
 }

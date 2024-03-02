@@ -35,8 +35,4 @@ public interface Graphics<I extends ItemFrame<?>> {
 
     @NotNull I[] getItemFrames();
 
-    int getPixelWidth();
-
-    int getPixelHeight();
-
 }

@@ -18,7 +18,7 @@ public class ImageCacheImpl implements ImageCache {
     private final @NotNull Cache<Path, BufferedImage> cache;
 
     public ImageCacheImpl(FileConfiguration config) {
-        int maximumSize = config.getInt("cache.maximum-size", 100);
+        int maximumSize = config.getInt("cache.maximum-insets", 100);
         int expireDuration = config.getInt("cache.expire-duration", 10);
         TimeUnit expireUnit = TimeUnit.valueOf(config.getString("cache.expire-unit", "MINUTES"));
 

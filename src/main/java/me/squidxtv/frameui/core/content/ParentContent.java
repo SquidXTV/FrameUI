@@ -2,6 +2,7 @@ package me.squidxtv.frameui.core.content;
 
 import me.squidxtv.frameui.core.actions.initiator.ActionInitiator;
 import me.squidxtv.frameui.core.actions.scroll.ScrollDirection;
+import me.squidxtv.frameui.core.attributes.BorderAttribute;
 import me.squidxtv.frameui.core.math.BoundingBox;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -25,8 +26,8 @@ public abstract class ParentContent extends AbstractContent {
 
     private final @NotNull List<Content> children;
 
-    protected ParentContent(@NotNull String id, @NotNull List<Content> children) {
-        super(id);
+    protected ParentContent(@NotNull String id, @NotNull BorderAttribute borderAttribute, @NotNull List<Content> children) {
+        super(id, borderAttribute);
         this.children = children;
     }
 
@@ -42,10 +43,10 @@ public abstract class ParentContent extends AbstractContent {
             return;
         }
 
-        for (Content child : getChildren()) {
+        for (Content child : children) {
             child.click(initiator, clickX, clickY, absolutePosition);
         }
-        getClickAction().ifPresent(action -> action.perform(initiator, clickX, clickY));
+        getClickAction().perform(initiator, clickX, clickY);
     }
 
     @Override
@@ -60,10 +61,10 @@ public abstract class ParentContent extends AbstractContent {
             return;
         }
 
-        for (Content child : getChildren()) {
+        for (Content child : children) {
             child.scroll(initiator, direction, scrollX, scrollY, absolutePosition);
         }
-        getScrollAction().ifPresent(action -> action.perform(initiator, direction, scrollX, scrollY));
+        getScrollAction().perform(initiator, direction, scrollX, scrollY);
     }
 
     public @NotNull List<Content> getChildren() {

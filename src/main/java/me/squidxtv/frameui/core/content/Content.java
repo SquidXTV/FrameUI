@@ -15,7 +15,7 @@ import java.util.List;
 
 public interface Content extends Clickable, Scrollable {
 
-    void draw(@NotNull Graphics<?> graphics, BoundingBox parent);
+    void draw(@NotNull Graphics<?> graphics, @NotNull BoundingBox parent);
 
     @NotNull String getId();
 

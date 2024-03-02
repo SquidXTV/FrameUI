@@ -21,20 +21,18 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
-public class ScreenModel extends ParentContent {
+public class ScreenModel extends Div {
 
     private static final ScreenParser SCREEN_PARSER = Objects.requireNonNull(Bukkit.getServicesManager().load(ScreenParser.class));
 
-    private int width;
-    private int height;
-    private @NotNull Color backgroundColor;
     private @Nullable BufferedImage backgroundImage;
-    private @NotNull BorderAttribute border;
-
     private int clickRadius;
     private int scrollRadius;
 
+    private int blockWidth;
+    private int blockHeight;
 
     public ScreenModel(@NotNull Element element) {
         this(Attribute.ID.get(element),
@@ -48,13 +46,17 @@ public class ScreenModel extends ParentContent {
                 Content.getChildren(element));
     }
 
-    public ScreenModel(@NotNull String id, int width, int height, @NotNull Color backgroundColor, @Nullable BufferedImage backgroundImage, @NotNull BorderAttribute border, int clickRadius, int scrollRadius, @NotNull List<Content> children) {
-        super(id, children);
-        this.width = width;
-        this.height = height;
-        this.backgroundColor = backgroundColor;
+    public ScreenModel(@NotNull String id,
+                       int blockWidth, int blockHeight,
+                       @NotNull Color backgroundColor,
+                       @Nullable BufferedImage backgroundImage,
+                       @NotNull BorderAttribute border,
+                       int clickRadius, int scrollRadius,
+                       @NotNull List<Content> children) {
+        super(id, 0, 0, blockWidth * Map.WIDTH, blockHeight * Map.HEIGHT, backgroundColor, border, children);
+        this.blockWidth = blockWidth;
+        this.blockHeight = blockHeight;
         this.backgroundImage = backgroundImage;
-        this.border = border;
         this.clickRadius = clickRadius;
         this.scrollRadius = scrollRadius;
     }
@@ -62,7 +64,7 @@ public class ScreenModel extends ParentContent {
     @Override
     public void draw(@NotNull Graphics<?> graphics, @NotNull BoundingBox parentBoundingBox) {
         Color[] background = new Color[parentBoundingBox.width() * parentBoundingBox.height()];
-        Arrays.fill(background, backgroundColor);
+        Arrays.fill(background, getBackgroundColor());
         graphics.draw(background, parentBoundingBox.width(), parentBoundingBox.height(), parentBoundingBox.x(), parentBoundingBox.y());
 
         if (backgroundImage != null) {
@@ -73,43 +75,11 @@ public class ScreenModel extends ParentContent {
             child.draw(graphics, parentBoundingBox);
         }
 
-        border.draw(graphics, 0, 0, parentBoundingBox.width(), parentBoundingBox.height(), parentBoundingBox);
+        drawBorder(graphics, 0, 0, parentBoundingBox.width(), parentBoundingBox.height(), parentBoundingBox);
     }
 
-    @Override
-    public int getX() {
-        return 0;
-    }
-
-    @Override
-    public int getY() {
-        return 0;
-    }
-
-    @Override
-    public int getWidth() {
-        return width * Map.WIDTH;
-    }
-
-    @Override
-    public int getHeight() {
-        return height * Map.HEIGHT;
-    }
-
-    public int getBlockWidth() {
-        return width;
-    }
-
-    public int getBlockHeight() {
-        return height;
-    }
-
-    public @NotNull Color getBackgroundColor() {
-        return backgroundColor;
-    }
-
-    public @Nullable BufferedImage getBackgroundImage() {
-        return backgroundImage;
+    public @NotNull Optional<BufferedImage> getBackgroundImage() {
+        return Optional.ofNullable(backgroundImage);
     }
 
     public int getClickRadius() {
@@ -120,28 +90,8 @@ public class ScreenModel extends ParentContent {
         return scrollRadius;
     }
 
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public void setBackgroundColor(@NotNull Color backgroundColor) {
-        this.backgroundColor = backgroundColor;
-    }
-
     public void setBackgroundImage(@Nullable BufferedImage backgroundImage) {
         this.backgroundImage = backgroundImage;
-    }
-
-    public @NotNull BorderAttribute getBorder() {
-        return border;
-    }
-
-    public void setBorder(@NotNull BorderAttribute border) {
-        this.border = border;
     }
 
     public void setClickRadius(int clickRadius) {
@@ -152,9 +102,46 @@ public class ScreenModel extends ParentContent {
         this.scrollRadius = scrollRadius;
     }
 
+    public int getBlockWidth() {
+        return blockWidth;
+    }
+
+    public void setBlockWidth(int blockWidth) {
+        this.blockWidth = blockWidth;
+        setWidth(this.blockWidth * Map.WIDTH);
+    }
+
+    public int getBlockHeight() {
+        return blockHeight;
+    }
+
+    public void setBlockHeight(int blockHeight) {
+        this.blockHeight = blockHeight;
+        setHeight(this.blockHeight * Map.HEIGHT);
+    }
+
+    @Override
+    public void setX(int x) {
+        throw new UnsupportedOperationException("");
+    }
+
+    @Override
+    public void setY(int y) {
+        throw new UnsupportedOperationException("");
+    }
+
     @Override
     public String toString() {
-        return "Screen(%s, %d, %d, %s, %s, %s, %d, %d)".formatted(getId(), width, height, backgroundColor, backgroundImage, border, clickRadius, scrollRadius);
+        return "ScreenModel{" +
+                "id=" + getId() +
+                ", x=" + getX() +
+                ", y=" + getY() +
+                ", width=" + getWidth() +
+                ", height=" + getHeight() +
+                ", backgroundColor=" + getBackgroundColor() +
+                ", border=" + getBorderAttribute() +
+                ", backgroundImage=" + backgroundImage +
+                '}';
     }
 
     public static @NotNull ScreenModel of(@NotNull Path xml) throws IOException, SAXException {

@@ -24,9 +24,6 @@ public class Image extends AbstractContent {
     private @NotNull Path path;
     private @NotNull BufferedImage visual;
 
-    private @NotNull BorderAttribute border;
-
-
     public Image(@NotNull Element element) throws IOException {
         this(Attribute.ID.get(element),
                 Attribute.X.get(element),
@@ -36,16 +33,15 @@ public class Image extends AbstractContent {
     }
 
     public Image(@NotNull String id, int x, int y, @NotNull Path path, @NotNull BorderAttribute border) throws IOException {
-        super(id);
+        super(id, border);
         this.x = x;
         this.y = y;
         this.path = path;
         this.visual = IMAGE_CACHE.getOrLoad(path);
-        this.border = border;
     }
 
     @Override
-    public void draw(@NotNull Graphics<?> graphics, BoundingBox parentBoundingBox) {
+    public void draw(@NotNull Graphics<?> graphics, @NotNull BoundingBox parentBoundingBox) {
         BoundingBox absolutePosition = getAbsolutePosition(parentBoundingBox);
 
         if (absolutePosition.width() <= 0 || absolutePosition.height() <= 0) {
@@ -53,9 +49,7 @@ public class Image extends AbstractContent {
         }
 
         graphics.draw(visual, absolutePosition.width(), absolutePosition.height(), absolutePosition.x(), absolutePosition.y());
-
-        // TODO: 31/07/2023 check if visibleWidth/visibleHeight is needed instead
-        border.draw(graphics, absolutePosition.x(), absolutePosition.y(), getWidth(), getHeight(), parentBoundingBox);
+        drawBorder(graphics, absolutePosition.x(), absolutePosition.y(), getWidth(), getHeight(), parentBoundingBox);
     }
 
     @Override
@@ -86,10 +80,6 @@ public class Image extends AbstractContent {
         return visual;
     }
 
-    public @NotNull BorderAttribute getBorder() {
-        return border;
-    }
-
     public void setX(int x) {
         this.x = x;
     }
@@ -104,15 +94,6 @@ public class Image extends AbstractContent {
 
     public void setVisual(@NotNull BufferedImage visual) {
         this.visual = visual;
-    }
-
-    public void setBorder(@NotNull BorderAttribute border) {
-        this.border = border;
-    }
-
-    @Override
-    public String toString() {
-        return "Image(%s, %d, %d, %s, %s, %s)".formatted(getId(), x, y, path, visual, border);
     }
 
 }

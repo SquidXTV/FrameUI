@@ -62,7 +62,7 @@ public final class IntersectionHelper {
         }
 
         Point pixel = getPixel(screen.getDirection(), intersection.clone(), topLeftPixelPosition.clone());
-        if (pixel.x < 0 || pixel.y < 0 || pixel.x >= screen.getGraphics().getPixelWidth() || pixel.y >= screen.getGraphics().getPixelHeight()) {
+        if (pixel.x < 0 || pixel.y < 0 || pixel.x >= screen.getModel().getWidth() || pixel.y >= screen.getModel().getHeight()) {
             return Optional.empty();
         }
         return Optional.of(new Intersection(screen, pixel, distanceSquared));

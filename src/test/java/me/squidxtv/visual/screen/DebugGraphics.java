@@ -11,10 +11,11 @@ import java.util.Arrays;
 
 public class DebugGraphics extends AbstractGraphics<DebugItemFrame> {
 
-    private final BufferedImage image = new BufferedImage(getPixelWidth(), getPixelHeight(), BufferedImage.TYPE_INT_RGB);
+    private final BufferedImage image;
 
-    public DebugGraphics(ScreenModel model, int width, int height) {
-        super(model, new DebugItemFrame[width * height], width, height);
+    public DebugGraphics(ScreenModel model) {
+        super(model, new DebugItemFrame[model.getBlockWidth() * model.getBlockHeight()]);
+        this.image = new BufferedImage(model.getWidth(), model.getHeight(), BufferedImage.TYPE_INT_RGB);
     }
 
     @Override
@@ -45,8 +46,8 @@ public class DebugGraphics extends AbstractGraphics<DebugItemFrame> {
         for (int i = 0; i < frames.length; i++) {
             DebugItemFrame frame = frames[i];
             // https://softwareengineering.stackexchange.com/a/212813
-            int x = i % getWidth();
-            int y = i / getWidth();
+            int x = i % getModel().getBlockWidth();
+            int y = i / getModel().getBlockWidth();
             graphics.drawImage(frame.getMap().getImage(), x * Map.WIDTH, y * Map.HEIGHT, null);
         }
 

@@ -8,4 +8,8 @@ public interface ClickAction {
 
     void perform(@NotNull ActionInitiator initiator, int clickX, int clickY);
 
+    static @NotNull ClickAction empty() {
+        return (initiator, clickX, clickY) -> {};
+    }
+
 }

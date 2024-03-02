@@ -7,6 +7,8 @@ import me.squidxtv.frameui.core.math.BoundingBox;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Element;
 
+import java.awt.Color;
+import java.util.Arrays;
 import java.util.List;
 
 public class Div extends ParentContent {
@@ -16,7 +18,7 @@ public class Div extends ParentContent {
     private int width;
     private int height;
 
-    private @NotNull BorderAttribute border;
+    private @NotNull Color backgroundColor;
 
     public Div(@NotNull Element element) {
         this(Attribute.ID.get(element),
@@ -24,34 +26,42 @@ public class Div extends ParentContent {
                 Attribute.Y.get(element),
                 Attribute.WIDTH.get(element),
                 Attribute.HEIGHT.get(element),
+                Attribute.BACKGROUND_COLOR.get(element),
                 new BorderAttribute(element),
                 Content.getChildren(element));
     }
 
-    public Div(@NotNull String id, int x, int y, int width, int height, @NotNull BorderAttribute border, @NotNull List<Content> children) {
-        super(id, children);
+    public Div(@NotNull String id,
+               int x, int y,
+               int width, int height,
+               @NotNull Color backgroundColor,
+               @NotNull BorderAttribute border,
+               @NotNull List<Content> children) {
+        super(id, border, children);
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.border = border;
+        this.backgroundColor = backgroundColor;
     }
 
     @Override
-    public void draw(@NotNull Graphics<?> graphics, BoundingBox parentBoundingBox) {
+    public void draw(@NotNull Graphics<?> graphics, @NotNull BoundingBox parentBoundingBox) {
         BoundingBox absolutePosition = getAbsolutePosition(parentBoundingBox);
 
         if (absolutePosition.width() <= 0 || absolutePosition.height() <= 0) {
             return;
         }
 
-        // TODO: 31/07/2023 implement border padding for all borders / make issue for that instead
+        Color[] background = new Color[absolutePosition.width() * absolutePosition.height()];
+        Arrays.fill(background, backgroundColor);
+        graphics.draw(background, absolutePosition.width(), absolutePosition.height(), absolutePosition.x(), absolutePosition.y());
+
         for (Content child : getChildren()) {
             child.draw(graphics, absolutePosition);
         }
 
-        // TODO: 31/07/2023 check if visibleWidth/visibleHeight is needed instead
-        border.draw(graphics, absolutePosition.x(), absolutePosition.y(), width, height, parentBoundingBox);
+        drawBorder(graphics, absolutePosition.x(), absolutePosition.y(), width, height, parentBoundingBox);
     }
 
     @Override
@@ -74,8 +84,8 @@ public class Div extends ParentContent {
         return y;
     }
 
-    public @NotNull BorderAttribute getBorder() {
-        return border;
+    public @NotNull Color getBackgroundColor() {
+        return backgroundColor;
     }
 
     public void setX(int x) {
@@ -94,12 +104,20 @@ public class Div extends ParentContent {
         this.height = height;
     }
 
-    public void setBorder(@NotNull BorderAttribute border) {
-        this.border = border;
+    public void setBackgroundColor(@NotNull Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
     }
 
     @Override
     public String toString() {
-        return "Div(%s, %d, %d, %d, %d, %s)".formatted(getId(), x, y, width, height, border);
+        return "Div{" +
+                "id=" + getId() +
+                ", x=" + x +
+                ", y=" + y +
+                ", width=" + width +
+                ", height=" + height +
+                ", backgroundColor=" + backgroundColor +
+                ", border=" + getBorderAttribute() +
+                '}';
     }
 }

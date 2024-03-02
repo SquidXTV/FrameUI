@@ -17,6 +17,9 @@ public class DebugMap implements Map {
 
     @Override
     public void update(@NotNull Color pixel, int x, int y) {
+        if (pixel.getRGB() == Color.BLACK.getRGB()) {
+            return;
+        }
         image.setRGB(x, y, pixel.getRGB());
     }
 

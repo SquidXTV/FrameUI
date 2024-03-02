@@ -39,13 +39,12 @@ public class Main {
         JPanel panel = new JPanel(new BorderLayout());
         JTree components = new JTree(toTree(screen.getModel()));
         JScrollPane scroll = new JScrollPane(components);
-        scroll.setPreferredSize(new Dimension(500, screen.getGraphics().getPixelHeight()));
+        scroll.setPreferredSize(new Dimension(500, screen.getModel().getHeight()));
         panel.add(scroll, BorderLayout.NORTH);
 
         window.add(render, BorderLayout.WEST);
         window.add(panel, BorderLayout.EAST);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setLocationRelativeTo(null);
         window.setResizable(false);
         window.pack();
         window.setVisible(true);
