@@ -4,7 +4,7 @@
         width="5"
         height="3"
         background-image="@{bgmarker.png}">
-    <div id="first-div" width="500" height="100" x="100" y="100" border-color="#FFFFFF" border-width="1">
+    <div id="first-div" width="500" height="100" x="100" y="100" border-color="#FFFFFF" border-size="1">
         <text id="first-test" x="100" y="50" border-color="#FFFFFF" border-size="1" font-size="24">Test Text</text>
     </div>
 </screen>

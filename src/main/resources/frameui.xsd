@@ -13,8 +13,8 @@
             <xs:attribute name="id" type="xs:string" use="required"/>
             <xs:attribute name="width" type="xs:positiveInteger" use="required"/>
             <xs:attribute name="height" type="xs:positiveInteger" use="required"/>
-            <xs:attribute name="background-color" type="hexType" default="#0D0D0D"/>
-            <xs:attribute name="background-image" type="pathType"/>
+            <xs:attribute name="background-color" type="hex" default="#0D0D0D"/>
+            <xs:attribute name="background-image" type="path"/>
             <xs:attributeGroup ref="border"/>
             <xs:attribute name="click-radius" type="xs:positiveInteger" default="6"/>
             <xs:attribute name="scroll-radius" type="xs:positiveInteger" default="6"/>
@@ -36,7 +36,7 @@
     <xs:complexType name="ImgType">
         <xs:attribute name="id" type="xs:string" use="required"/>
         <xs:attributeGroup ref="position"/>
-        <xs:attribute name="path" type="pathType" use="required"/>
+        <xs:attribute name="path" type="path" use="required"/>
         <xs:attributeGroup ref="border"/>
     </xs:complexType>
 
@@ -50,21 +50,20 @@
         <xs:attributeGroup ref="position"/>
         <xs:attribute name="width" type="xs:positiveInteger" use="required"/>
         <xs:attribute name="height" type="xs:positiveInteger" use="required"/>
-        <xs:attribute name="background-color" type="hexType" default="#000000"/>
+        <xs:attribute name="background-color" type="hex" default="#000000"/>
         <xs:attributeGroup ref="border"/>
     </xs:complexType>
 
     <xs:attributeGroup name="font">
         <xs:attribute name="font" type="xs:string" default=""/>
         <xs:attribute name="font-size" type="xs:positiveInteger" default="12"/>
-        <xs:attribute name="font-color" type="hexType" default="#FFFFFF"/>
+        <xs:attribute name="font-color" type="hex" default="#FFFFFF"/>
         <xs:attribute name="bold" type="xs:boolean" default="false"/>
         <xs:attribute name="italic" type="xs:boolean" default="false"/>
     </xs:attributeGroup>
 
     <xs:attributeGroup name="border">
-        <xs:attribute name="border-color" type="hexType" default="#000000"/>
-        <xs:attribute name="border-width" type="xs:nonNegativeInteger" default="0"/>
+        <xs:attribute name="border-color" type="hex" default="#000000"/>
         <xs:attribute name="border-size" type="insets" default="0"/>
     </xs:attributeGroup>
 
@@ -73,13 +72,13 @@
         <xs:attribute name="y" type="xs:integer" default="0"/>
     </xs:attributeGroup>
 
-    <xs:simpleType name="hexType">
+    <xs:simpleType name="hex">
         <xs:restriction base="xs:string">
             <xs:pattern value="#[0-9a-fA-F]{6}"/>
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="pathType">
+    <xs:simpleType name="path">
         <xs:restriction base="xs:string">
             <xs:pattern value="@\{.*\}|([A-Z]:)?/.*"/>
             <xs:whiteSpace value="collapse"/>
