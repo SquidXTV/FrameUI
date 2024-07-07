@@ -1,27 +1,25 @@
-package me.squidxtv.frameui.virtual;
+package me.squidxtv.frameui.core.impl;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.manager.player.PlayerManager;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerDestroyEntities;
-import io.github.retrooper.packetevents.util.SpigotReflectionUtil;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerMapData;
 import me.squidxtv.frameui.core.ItemFrame;
+import me.squidxtv.frameui.core.MapItem;
 import me.squidxtv.frameui.core.Screen;
 import me.squidxtv.frameui.core.ScreenSpawner;
 import me.squidxtv.frameui.packets.ItemFrameMetadataPacket;
 import me.squidxtv.frameui.packets.ItemFrameSpawnPacket;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.List;
 
-public class VirtualScreenSpawner implements ScreenSpawner {
+public class PacketScreenSpawner implements ScreenSpawner {
 
     private static final PlayerManager PLAYER_MANAGER = PacketEvents.getAPI().getPlayerManager();
-
-    private final Map<ItemFrame, Integer> entityIds = new HashMap<>();
 
     @Override
     public void spawn(Screen screen, Collection<Player> viewers) {
@@ -29,9 +27,8 @@ public class VirtualScreenSpawner implements ScreenSpawner {
 
         for (ItemFrame[] row : itemFrames) {
             for (ItemFrame frame : row) {
-                int id = entityIds.computeIfAbsent(frame, _ -> SpigotReflectionUtil.generateEntityId());
-                ItemFrameSpawnPacket spawn = new ItemFrameSpawnPacket(id, frame.getLocation(), frame.getDirection());
-                ItemFrameMetadataPacket metadata = new ItemFrameMetadataPacket(id, frame.getMapItem().getAsItemStack(), frame.isInvisible());
+                ItemFrameSpawnPacket spawn = new ItemFrameSpawnPacket(frame.getEntityId(), frame.getLocation(), frame.getDirection());
+                ItemFrameMetadataPacket metadata = new ItemFrameMetadataPacket(frame.getEntityId(), frame.getMapItem().getAsItemStack(), frame.isInvisible());
 
                 for (Player viewer : viewers) {
                     PLAYER_MANAGER.sendPacket(viewer, spawn);
@@ -46,9 +43,7 @@ public class VirtualScreenSpawner implements ScreenSpawner {
         ItemFrame[][] frames = screen.getItemFrames();
         int[] ids = Arrays.stream(frames)
                 .flatMap(Arrays::stream)
-                .map(entityIds::get)
-                .filter(Objects::nonNull)
-                .mapToInt(value -> value)
+                .mapToInt(ItemFrame::getEntityId)
                 .toArray();
 
         WrapperPlayServerDestroyEntities destroy = new WrapperPlayServerDestroyEntities(ids);
@@ -58,18 +53,22 @@ public class VirtualScreenSpawner implements ScreenSpawner {
     }
 
     @Override
-    public void despawn(Screen screen) {
+    public void update(Screen screen) {
+        List<Player> viewers = screen.getViewers().stream().map(Bukkit::getPlayer).toList();
         ItemFrame[][] frames = screen.getItemFrames();
-        int[] ids = Arrays.stream(frames)
-                .flatMap(Arrays::stream)
-                .map(entityIds::remove)
-                .filter(Objects::nonNull)
-                .mapToInt(value -> value)
-                .toArray();
+        for (ItemFrame[] row : frames) {
+            for (ItemFrame frame : row) {
+                MapItem map = frame.getMapItem();
+                if (!map.isChanged()) {
+                    continue;
+                }
 
-        WrapperPlayServerDestroyEntities destroy = new WrapperPlayServerDestroyEntities(ids);
-        for (Player viewer : screen.getViewers()) {
-            PLAYER_MANAGER.sendPacket(viewer, destroy);
+                WrapperPlayServerMapData update = new WrapperPlayServerMapData(map.getId(), (byte) 0, false, false, null, MapItem.WIDTH, MapItem.HEIGHT, 0, 0, map.getData());
+                for (Player viewer : viewers) {
+                    PLAYER_MANAGER.sendPacket(viewer, update);
+                }
+                map.resetChanged();
+            }
         }
     }
 

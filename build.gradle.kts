@@ -12,13 +12,24 @@ repositories {
         url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     }
 
+    maven {
+        url = uri("https://repo.codemc.io/repository/maven-releases/")
+    }
 }
 
-dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.20.6-R0.1-SNAPSHOT")
+val spigotVersion = "1.20.6-R0.1-SNAPSHOT"
+val packetEventsVersion = "2.4.0"
+val mockitoVersion = "5.12.0"
 
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+dependencies {
+    compileOnly("org.spigotmc:spigot-api:$spigotVersion")
+    compileOnly("com.github.retrooper:packetevents-spigot:$packetEventsVersion")
+
+    testImplementation("org.spigotmc:spigot-api:$spigotVersion")
+    testImplementation(platform("org.junit:junit-bom:5.10.3"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.mockito:mockito-core:$mockitoVersion")
+    testImplementation("org.mockito:mockito-junit-jupiter:$mockitoVersion")
 }
 
 java {
