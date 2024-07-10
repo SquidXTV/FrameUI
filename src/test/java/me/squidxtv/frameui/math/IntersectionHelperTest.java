@@ -66,8 +66,13 @@ class IntersectionHelperTest {
 
         eyeLocation = new Location(mock(), IntersectionHelper.PIXEL_LENGTH, IntersectionHelper.PIXEL_LENGTH, 0, 0, 0);
         when(player.getEyeLocation()).thenReturn(eyeLocation);
-
         testIntersection(screen, player, new Point(127, 127));
+
+        // from behind
+        eyeLocation = new Location(mock(), 1, 1, 2, 180, 0);
+        when(player.getEyeLocation()).thenReturn(eyeLocation);
+        Optional<Intersection> intersection = IntersectionHelper.getIntersection(screen, player, Double.POSITIVE_INFINITY);
+        assertTrue(intersection.isEmpty());
     }
 
     @Test
@@ -87,8 +92,13 @@ class IntersectionHelperTest {
 
         eyeLocation = new Location(mock(), 1 - IntersectionHelper.PIXEL_LENGTH, IntersectionHelper.PIXEL_LENGTH, 0, 180, 0);
         when(player.getEyeLocation()).thenReturn(eyeLocation);
-
         testIntersection(screen, player, new Point(127, 127));
+
+        // from behind
+        eyeLocation = new Location(mock(), 0, 1, -1, 0, 0);
+        when(player.getEyeLocation()).thenReturn(eyeLocation);
+        Optional<Intersection> intersection = IntersectionHelper.getIntersection(screen, player, Double.POSITIVE_INFINITY);
+        assertTrue(intersection.isEmpty());
     }
 
     @Test
@@ -108,8 +118,13 @@ class IntersectionHelperTest {
 
         eyeLocation = new Location(mock(), 0, IntersectionHelper.PIXEL_LENGTH, 1 - IntersectionHelper.PIXEL_LENGTH, -90, 0);
         when(player.getEyeLocation()).thenReturn(eyeLocation);
-
         testIntersection(screen, player, new Point(127, 127));
+
+        // from behind
+        eyeLocation = new Location(mock(), 2, 1, 0, 90, 0);
+        when(player.getEyeLocation()).thenReturn(eyeLocation);
+        Optional<Intersection> intersection = IntersectionHelper.getIntersection(screen, player, Double.POSITIVE_INFINITY);
+        assertTrue(intersection.isEmpty());
     }
 
     @Test
@@ -123,14 +138,19 @@ class IntersectionHelperTest {
 
         Player player = mock(Player.class);
 
-        Location eyeLocation = new Location(mock(), 0, 1, 1, 90, 0);
+        Location eyeLocation = new Location(mock(), 1, 1, 1, 90, 0);
         when(player.getEyeLocation()).thenReturn(eyeLocation);
         testIntersection(screen, player, new Point(0, 0));
 
         eyeLocation = new Location(mock(), 0, IntersectionHelper.PIXEL_LENGTH, IntersectionHelper.PIXEL_LENGTH, 90, 0);
         when(player.getEyeLocation()).thenReturn(eyeLocation);
-
         testIntersection(screen, player, new Point(127, 127));
+
+        // from behind
+        eyeLocation = new Location(mock(), -1, 1, 1, -90, 0);
+        when(player.getEyeLocation()).thenReturn(eyeLocation);
+        Optional<Intersection> intersection = IntersectionHelper.getIntersection(screen, player, Double.POSITIVE_INFINITY);
+        assertTrue(intersection.isEmpty());
     }
 
     @Test
