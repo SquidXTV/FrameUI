@@ -9,32 +9,35 @@ import org.bukkit.entity.Player;
 
 import java.util.Collection;
 
+
 /**
  * Builder class for creating and configuring instances of {@link Screen}.
  * This builder uses a fluent API style, enabling method chaining for ease of use.
- *
  */
 public interface ScreenBuilder {
 
     /**
-     * Sets width of the screen
+     * Sets the width of the screen.
      *
      * @param width the number of horizontal item frames
+     * @return this builder instance for method chaining
      */
     ScreenBuilder withWidth(int width);
 
     /**
-     * Sets height of the screen
+     * Sets the height of the screen.
      *
      * @param height the number of vertical item frames
+     * @return this builder instance for method chaining
      */
     ScreenBuilder withHeight(int height);
 
     /**
-     * Sets size of the screen in item frames number
+     * Sets the size of the screen in item frames.
      *
      * @param width  the number of horizontal item frames
      * @param height the number of vertical item frames
+     * @return this builder instance for method chaining
      */
     ScreenBuilder withSize(int width, int height);
 
@@ -42,52 +45,56 @@ public interface ScreenBuilder {
      * Sets the name of the screen. The name can be used as a screen identifier.
      *
      * @param name the name of the screen
+     * @return this builder instance for method chaining
      */
     ScreenBuilder withName(String name);
 
     /**
-     * Sets minimal distance from with player can interact with screen
+     * Sets the minimal distance from which a player can interact with the screen.
      *
-     * @param radios value of the radios
-     * @return
+     * @param radius the interaction radius
+     * @return this builder instance for method chaining
      */
-    ScreenBuilder withClickRadius(double radios);
+    ScreenBuilder withClickRadius(double radius);
 
     /**
-     * Sets value of the scrollRadios
+     * Sets the scroll radius for the screen.
      *
-     * @param scrollRadios value of the scrollRadios
-     * @return
+     * @param scrollRadius the scroll radius
+     * @return this builder instance for method chaining
      */
-    ScreenBuilder withScrollRadius(double scrollRadios);
+    ScreenBuilder withScrollRadius(double scrollRadius);
 
     /**
      * Adds a viewer to the screen. Multiple viewers can be added by calling this method multiple times.
-     * When screen location haven't set yet, then sets screen location as player location
+     * If the screen location has not been set yet, it sets the screen location as the player's location.
      *
      * @param player the player to add as a viewer
+     * @return this builder instance for method chaining
      */
     ScreenBuilder withViewer(Player player);
 
     /**
-     * Perform withViewer method for multiple players
+     * Adds multiple viewers to the screen.
      *
-     * @param players array of players
+     * @param players an array of players
+     * @return this builder instance for method chaining
      */
     ScreenBuilder withViewer(Player... players);
 
     /**
-     * Perform withViewer method for multiple players
+     * Adds multiple viewers to the screen.
      *
-     * @param players collection of players
+     * @param players a collection of players
+     * @return this builder instance for method chaining
      */
     ScreenBuilder withViewer(Collection<Player> players);
-
 
     /**
      * Sets the location of the screen.
      *
      * @param location the location of the screen
+     * @return this builder instance for method chaining
      */
     ScreenBuilder withLocation(Location location);
 
@@ -96,6 +103,7 @@ public interface ScreenBuilder {
      *
      * @param location  the location of the screen
      * @param direction the direction in which the screen is facing
+     * @return this builder instance for method chaining
      */
     ScreenBuilder withLocation(Location location, Direction direction);
 
@@ -103,17 +111,19 @@ public interface ScreenBuilder {
      * Sets the renderer for the screen.
      *
      * @param renderer the renderer to be used for the screen
+     * @return this builder instance for method chaining
+     * @see Renderer
      */
     ScreenBuilder withRenderer(Renderer renderer);
-
 
     /**
      * Sets the ScreenSpawner for the screen.
      *
      * @param spawner used to perform spawning screen to players
+     * @return this builder instance for method chaining
+     * @see ScreenSpawner
      */
     ScreenBuilder withSpawner(ScreenSpawner spawner);
-
 
     /**
      * Builds a new instance of {@link Screen} based on the current configuration of the builder.
