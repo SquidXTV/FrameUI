@@ -20,9 +20,14 @@ public class ScreenRegistryImpl implements ScreenRegistry {
         this.plugin = plugin;
     }
 
+
+    public ScreenBuilder newScreen(Plugin plugin) {
+        return new ScreenBuilderImpl(plugin, this);
+    }
+
     @Override
     public ScreenBuilder newScreen() {
-        return new ScreenBuilderImpl(plugin, this);
+        return newScreen(plugin);
     }
 
     @Override

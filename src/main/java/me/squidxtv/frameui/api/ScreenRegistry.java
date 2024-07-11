@@ -9,12 +9,23 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The {@code ScreenRegistry} interface is used to manage {@link Screen} instances across the entire server.
+ * The {@link  ScreenRegistry} interface is used to manage {@link Screen} instances across the entire server.
  */
 public interface ScreenRegistry {
 
     /**
-     * @return {@link ScreenBuilder} a class for easy and fluent creating of a new screen
+     * Creates a new instance of {@link ScreenBuilder} for easy and fluent creation of a new screen.
+     * This method allows specifying the plugin context.
+     *
+     * @param plugin the plugin instance that is creating the screen
+     * @return a {@link ScreenBuilder} instance for creating a new screen
+     */
+    ScreenBuilder newScreen(Plugin plugin);
+
+    /**
+     * Creates a new instance of {@link ScreenBuilder} for easy and fluent creation of a new screen.
+     *
+     * @return a {@link ScreenBuilder} instance for creating a new screen
      */
     ScreenBuilder newScreen();
 

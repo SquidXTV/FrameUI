@@ -20,7 +20,7 @@ public interface FramesApi {
     }
 
     /**
-     * Creates a new {@link ScreenBuilder} instance, which is a flexible creator for new {@link me.squidxtv.frameui.core.Screen} objects.
+     * Creates a new {@link ScreenBuilder} instance, which is a flexible creator for new {@link me.squidxtv.frameui.core.Screen} object.
      * <p>
      * Example usage:
      * <pre>
@@ -39,7 +39,7 @@ public interface FramesApi {
      * }
      * </pre>
      *
-     * @return a new instance of ScreenBuilder.
+     * @return a new instance of {@link ScreenBuilder}.
      * @throws FramesApiException if the library has not been initialized.
      * @see ScreenBuilder
      */
