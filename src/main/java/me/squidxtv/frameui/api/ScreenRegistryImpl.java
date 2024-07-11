@@ -14,8 +14,14 @@ public class ScreenRegistryImpl implements ScreenRegistry {
 
     private final List<Screen> registered = new ArrayList<>();
 
+    private final Plugin plugin;
+
+    public ScreenRegistryImpl(Plugin plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
-    public ScreenBuilder create(Plugin plugin) {
+    public ScreenBuilder newScreen() {
         return new ScreenBuilderImpl(plugin, this);
     }
 

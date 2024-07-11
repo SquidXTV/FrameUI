@@ -14,10 +14,9 @@ import java.util.UUID;
 public interface ScreenRegistry {
 
     /**
-     * @param plugin the screen's plugin
      * @return {@link ScreenBuilder} a class for easy and fluent creating of a new screen
      */
-    ScreenBuilder create(Plugin plugin);
+    ScreenBuilder newScreen();
 
     /**
      * Adds a {@link Screen} to the registry.

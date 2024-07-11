@@ -1,5 +1,6 @@
 package me.squidxtv.frameui;
 
+import me.squidxtv.frameui.api.FramesApi;
 import me.squidxtv.frameui.api.ScreenRegistry;
 import me.squidxtv.frameui.api.ScreenRegistryImpl;
 import me.squidxtv.frameui.listener.ClickListener;
@@ -19,7 +20,7 @@ public class FrameUI extends JavaPlugin {
         saveDefaultConfig();
         Server server = getServer();
 
-        ScreenRegistry registry = new ScreenRegistryImpl();
+        ScreenRegistry registry = new ScreenRegistryImpl(this);
         ServicesManager services = server.getServicesManager();
         services.register(ScreenRegistry.class, registry, this, ServicePriority.Normal);
 
