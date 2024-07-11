@@ -1,7 +1,9 @@
 package me.squidxtv.frameui.api.exceptions;
 
-public class FramesApiException extends RuntimeException
-{
+/**
+ * General exception for all errors related to Frames Api
+ */
+public class FramesApiException extends RuntimeException {
     public FramesApiException() {
     }
 

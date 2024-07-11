@@ -13,37 +13,26 @@ import java.util.Collection;
  * Builder class for creating and configuring instances of {@link Screen}.
  * This builder uses a fluent API style, enabling method chaining for ease of use.
  *
- * <p>Example usage:</p>
- *
- * <pre>
- * {@code
- * public void example(ScreenRegistry registry) {
- *     var player = Bukkit.getPlayer("mike");
- *     var screen = FramesApi.newScreen()
- *             .withSize(10, 10)
- *             .withViewer(player)
- *             .withName("Main Menu Screen")
- *             .withLocation(player.getLocation())
- *             .build();
- *
- *     screen.open();
- * }
- * }
- * </pre>
  */
 public interface ScreenBuilder {
 
     /**
+     * Sets width of the screen
+     *
      * @param width the number of horizontal item frames
      */
     ScreenBuilder withWidth(int width);
 
     /**
+     * Sets height of the screen
+     *
      * @param height the number of vertical item frames
      */
     ScreenBuilder withHeight(int height);
 
     /**
+     * Sets size of the screen in item frames number
+     *
      * @param width  the number of horizontal item frames
      * @param height the number of vertical item frames
      */
@@ -65,6 +54,8 @@ public interface ScreenBuilder {
     ScreenBuilder withClickRadius(double radios);
 
     /**
+     * Sets value of the scrollRadios
+     *
      * @param scrollRadios value of the scrollRadios
      * @return
      */

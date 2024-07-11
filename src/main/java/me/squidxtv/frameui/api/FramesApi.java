@@ -5,30 +5,42 @@ import me.squidxtv.frameui.api.exceptions.FramesApiException;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicesManager;
 
-
+/**
+ * FramesApi provides methods to interact with the screen management system within the plugin.
+ * It allows for the creation and management of screen objects.
+ */
 public interface FramesApi {
     /**
-     * @return true if library has been initialed
+     * Checks if the Frames API library has been initialized.
+     *
+     * @return true if the library has been initialized, false otherwise.
      */
     static boolean isInitialized() {
         return getServices().isProvidedFor(ScreenRegistry.class);
     }
 
     /**
-     * Use this method to create new screen
+     * Creates a new ScreenBuilder instance, which is a flexible creator for new screen objects.
      * <p>
-     * code```
-     * <p>
-     * var screen = FramesApi
-     * .newScreen()
-     * .withName("Default screen!")
-     * .withSize(10, 10)
-     * .build();
-     * <p>
-     * screen.open();
-     * ```
+     * Example usage:
+     * <pre>
+     * {@code
+     * public void example(ScreenRegistry registry) {
+     *     var player = Bukkit.getPlayer("mike");
+     *     var screen = FramesApi.newScreen()
+     *             .withSize(10, 10)
+     *             .withViewer(player)
+     *             .withName("Main Menu Screen")
+     *             .withLocation(player.getLocation())
+     *             .build();
      *
-     * @return screen creator
+     *     screen.open();
+     * }
+     * }
+     * </pre>
+     *
+     * @return a new instance of ScreenBuilder.
+     * @throws FramesApiException if the library has not been initialized.
      * @see ScreenBuilder
      */
     static ScreenBuilder newScreen() {
@@ -37,8 +49,10 @@ public interface FramesApi {
 
 
     /**
-     * @return ScreenRegistry object that manage all screens
-     * @throws FramesApiException when library has not been initialized
+     * Returns the ScreenRegistry instance that manages all screens.
+     *
+     * @return the ScreenRegistry instance that manages all screens.
+     * @throws FramesApiException if the library has not been initialized.
      * @see ScreenRegistry
      */
     static ScreenRegistry screens() {
