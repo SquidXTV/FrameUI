@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * The {@code ScreenRegistryImpl} class implements the {@link ScreenRegistry} using a simple {@link ArrayList} to store a {@link Screen}.
+ */
 public class ScreenRegistryImpl implements ScreenRegistry {
 
     private final List<Screen> registered = new ArrayList<>();

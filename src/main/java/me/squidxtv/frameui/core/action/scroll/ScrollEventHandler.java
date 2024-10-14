@@ -5,14 +5,14 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import java.util.Objects;
 
 /**
- * Functional interface representing a handler for scroll interactions.
+ * A functional interface representing a handler for scroll events.
  */
 public interface ScrollEventHandler {
 
     /**
      * Performs the scroll interaction.
      * @param event the event that causes this scroll interaction
-     * @param direction
+     * @param direction the direction of the scroll interaction
      * @param scrollX the x-coordinate on the element
      * @param scrollY the y-coordinate on the element
      */

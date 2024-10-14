@@ -12,6 +12,9 @@ import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * The {@code FrameUI} class is the main plugin class for the FrameUI plugin library.
+ */
 public class FrameUI extends JavaPlugin {
 
     @Override

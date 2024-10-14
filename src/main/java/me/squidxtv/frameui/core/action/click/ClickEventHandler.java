@@ -5,7 +5,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import java.util.Objects;
 
 /**
- * Functional interface representing a handler for click interactions.
+ * A functional interface representing a handler for click events.
  */
 @FunctionalInterface
 public interface ClickEventHandler {

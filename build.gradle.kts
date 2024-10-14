@@ -39,6 +39,17 @@ java {
     }
 }
 
+tasks.jar {
+    destinationDirectory.set(file("$rootDir/server/plugins"))
+}
+
+tasks.javadoc {
+    (options as StandardJavadocDocletOptions)
+        .tags("apiNote:a:API Note:", "implNote:a:Implementation Note:")
+        .links("https://hub.spigotmc.org/javadocs/spigot/", "https://javadocs.packetevents.com/")
+        .overview(file("$rootDir/src/main/resources/javadoc-overview.html").toString())
+}
+
 tasks.test {
     useJUnitPlatform()
 }

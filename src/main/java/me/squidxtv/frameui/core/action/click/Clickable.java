@@ -2,6 +2,9 @@ package me.squidxtv.frameui.core.action.click;
 
 import org.bukkit.event.player.PlayerInteractEvent;
 
+/**
+ * Represents an element that can be clicked.
+ */
 public interface Clickable {
 
     /**

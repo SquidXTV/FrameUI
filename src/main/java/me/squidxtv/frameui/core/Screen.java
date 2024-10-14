@@ -56,7 +56,13 @@ public class Screen implements Clickable, Scrollable {
      * The {@code State} represents the possible states of a screen.
      */
     public enum State {
+        /**
+         * Indicates that the {@link Screen} is open and displayed to the viewers.
+         */
         OPEN,
+        /**
+         * Indicates that the {@link Screen} is closed and currently not visible.
+         */
         CLOSED
     }
 
@@ -72,10 +78,10 @@ public class Screen implements Clickable, Scrollable {
      * @throws NullPointerException if {@code plugin}, {@code location}, {@code spawner}, or {@code renderer} is null
      */
     public Screen(Plugin plugin, int width, int height, ScreenLocation location, ScreenSpawner spawner, Renderer renderer) {
-        Objects.requireNonNull(plugin);
-        Objects.requireNonNull(location);
-        Objects.requireNonNull(spawner);
-        Objects.requireNonNull(renderer);
+        Objects.requireNonNull(plugin, "Plugin cannot be null");
+        Objects.requireNonNull(location, "Location cannot be null");
+        Objects.requireNonNull(spawner, "Spawner cannot be null");
+        Objects.requireNonNull(renderer, "Renderer cannot be null");
         this.plugin = plugin;
         this.itemFrames = new ItemFrame[height][width];
 
@@ -118,7 +124,7 @@ public class Screen implements Clickable, Scrollable {
     }
 
     /**
-     * Opens the screen with invisible item frames.
+     * Opens the screen with <strong>invisible</strong> item frames.
      */
     public void open() {
         open(true);
@@ -173,7 +179,7 @@ public class Screen implements Clickable, Scrollable {
      * @throws NullPointerException if {@code player} is null
      */
     public boolean addViewer(Player player) {
-        Objects.requireNonNull(player);
+        Objects.requireNonNull(player, "Player cannot be null");
         boolean added = viewers.add(player.getUniqueId());
 
         if (added && state == State.OPEN) {
@@ -190,8 +196,8 @@ public class Screen implements Clickable, Scrollable {
      * @throws NullPointerException if {@code players} is null
      */
     public Set<Player> addViewer(Collection<Player> players) {
-        Objects.requireNonNull(players);
-        Set<Player> added = new HashSet<>(players);
+        Objects.requireNonNull(players, "Collection of players cannot be null");
+        Set<Player> added = new HashSet<>();
         for (Player player : players) {
             if (viewers.add(player.getUniqueId())) {
                 added.add(player);
@@ -209,7 +215,7 @@ public class Screen implements Clickable, Scrollable {
      * @throws NullPointerException if {@code player} is null
      */
     public boolean removeViewer(Player player) {
-        Objects.requireNonNull(player);
+        Objects.requireNonNull(player, "Player cannot be null");
         boolean removed = viewers.remove(player.getUniqueId());
 
         if (removed && state == State.OPEN) {
@@ -222,12 +228,12 @@ public class Screen implements Clickable, Scrollable {
     /**
      * Removes a collection of players from the screen's viewers.
      * @param players the players to remove
-     * @return the set including the players that actually got removed based on {@link Set#add(Object)}
+     * @return the set including the players that actually got removed based on {@link Set#remove(Object)}
      * @throws NullPointerException if {@code players} is null
      */
     public Set<Player> removeViewer(Collection<Player> players) {
-        Objects.requireNonNull(players);
-        Set<Player> removed = new HashSet<>(players);
+        Objects.requireNonNull(players, "Collection of players cannot be null");
+        Set<Player> removed = new HashSet<>();
         for (Player player : players) {
             if (viewers.remove(player.getUniqueId())) {
                 removed.add(player);
@@ -242,27 +248,29 @@ public class Screen implements Clickable, Scrollable {
      * Clears all viewers from the screen.
      */
     public void clearViewer() {
-        spawner.despawn(this, viewers.stream().map(Bukkit::getPlayer).toList());
+        spawner.despawn(this);
         viewers.clear();
     }
 
     /**
      * Checks if a player is a viewer of the screen.
-     * @param viewer the viewer to check
+     * @param player the player to check
      * @return {@code true} if the player is a viewer of this screen, {@code false} otherwise
-     * @throws NullPointerException if {@code viewer} is null
+     * @throws NullPointerException if {@code player} is null
      */
-    public boolean hasViewer(Player viewer) {
-        Objects.requireNonNull(viewer);
-        return viewers.contains(viewer.getUniqueId());
+    public boolean hasViewer(Player player) {
+        Objects.requireNonNull(player, "Player cannot be null");
+        return viewers.contains(player.getUniqueId());
     }
 
     /**
      * Checks if a player is a viewer of the screen.
      * @param uuid uuid to check
      * @return {@code true} if the player is a viewer of this screen, {@code false} otherwise
+     * @throws NullPointerException if {@code uuid} is null
      */
     public boolean hasViewer(UUID uuid) {
+        Objects.requireNonNull(uuid, "UUID cannot be null");
         return viewers.contains(uuid);
     }
 
@@ -308,7 +316,7 @@ public class Screen implements Clickable, Scrollable {
 
     /**
      * Returns the location of the screen.
-     * @return the screen location of the screen
+     * @return the location of the screen
      */
     public ScreenLocation getLocation() {
         return location;
@@ -353,8 +361,7 @@ public class Screen implements Clickable, Scrollable {
 
     @Override
     public void setOnClick(ClickEventHandler clickEventHandler) {
-        Objects.requireNonNull(clickEventHandler);
-        this.clickEventHandler = clickEventHandler;
+        this.clickEventHandler = Objects.requireNonNullElse(clickEventHandler, ClickEventHandler.empty());
     }
 
     @Override
@@ -364,21 +371,20 @@ public class Screen implements Clickable, Scrollable {
 
     @Override
     public void setOnScroll(ScrollEventHandler scrollEventHandler) {
-        Objects.requireNonNull(scrollEventHandler);
-        this.scrollEventHandler = scrollEventHandler;
+        this.scrollEventHandler = Objects.requireNonNullElse(scrollEventHandler, ScrollEventHandler.empty());
     }
 
     /**
-     * Returns the click radius of the screen.
-     * @return the click radius of the screen
+     * Returns the max allowed click radius of the screen.
+     * @return the max allowed click radius of the screen
      */
     public double getClickRadius() {
         return clickRadius;
     }
 
     /**
-     * Sets the click radius of the screen.
-     * @param clickRadius the new click radius
+     * Sets the max allowed click radius of the screen.
+     * @param clickRadius the new max allowed click radius
      * @throws IllegalArgumentException if {@code clickRadius < 0}
      */
     public void setClickRadius(double clickRadius) {
@@ -389,16 +395,16 @@ public class Screen implements Clickable, Scrollable {
     }
 
     /**
-     * Returns the scroll radius of the screen.
-     * @return the scroll radius of the screen
+     * Returns the max allowed scroll radius of the screen.
+     * @return the max allowed scroll radius of the screen
      */
     public double getScrollRadius() {
         return scrollRadius;
     }
 
     /**
-     * Sets the scroll radius of the screen
-     * @param scrollRadius the new scroll radius
+     * Sets the max allowed scroll radius of the screen
+     * @param scrollRadius the new max allowed scroll radius
      * @throws IllegalArgumentException if {@code scrollRadius < 0}
      */
     public void setScrollRadius(double scrollRadius) {

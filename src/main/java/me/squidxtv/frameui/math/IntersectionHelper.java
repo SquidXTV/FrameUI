@@ -36,6 +36,7 @@ public final class IntersectionHelper {
      */
     public static Optional<Intersection> getNearestIntersection(List<Screen> screens, Player player, ToDoubleFunction<Screen> maxRadius) {
         return screens.stream()
+                .filter(screen -> screen.getState() == Screen.State.OPEN)
                 .map(screen -> getIntersection(screen, player, NumberConversions.square(maxRadius.applyAsDouble(screen))))
                 .filter(Optional::isPresent)
                 .map(Optional::get)

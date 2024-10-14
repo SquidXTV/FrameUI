@@ -11,16 +11,32 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 
 import java.awt.Point;
+import java.util.List;
 import java.util.Optional;
 
+/**
+ * The {@code ScrollListener} is responsible for handling scrolls for interacting with a {@link Screen}.
+ */
 public class ScrollListener implements Listener {
 
     private final ScreenRegistry registry;
 
+    /**
+     * Creates the {@code ScrollListener}.
+     * @param registry the screen registry
+     */
     public ScrollListener(ScreenRegistry registry) {
         this.registry = registry;
     }
 
+    /**
+     * Handles the {@link PlayerItemHeldEvent}.
+     * @param event the {@link PlayerItemHeldEvent}
+     * @implNote The implementation assumes the item changed by a scroll on the client.
+     * A scroll action is only considered valid if the item is changed by a single position.
+     * If the change is by more than one position, it is ambiguous which direction the player scrolled,
+     * and therefore no scroll event is triggered.
+     */
     @EventHandler
     public void onScroll(PlayerItemHeldEvent event) {
         int previous = event.getPreviousSlot();
@@ -34,7 +50,8 @@ public class ScrollListener implements Listener {
         }
 
         Player player = event.getPlayer();
-        Optional<Intersection> nearest = IntersectionHelper.getNearestIntersection(registry.getByViewer(player), player, Screen::getScrollRadius);
+        List<Screen> screens = registry.getByViewer(player);
+        Optional<Intersection> nearest = IntersectionHelper.getNearestIntersection(screens, player, Screen::getScrollRadius);
         nearest.ifPresent(intersection -> {
             Point pixel = intersection.pixel();
             intersection.screen().scroll(event, ScrollDirection.getDirection(direction), pixel.x, pixel.y);

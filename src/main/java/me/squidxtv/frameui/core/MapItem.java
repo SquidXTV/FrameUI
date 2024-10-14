@@ -123,7 +123,7 @@ public class MapItem {
 
     /**
      * Checks if the map data has been changed.
-     * @return {@code true} if the map data has been changed, {@code false otherwise}
+     * @return {@code true} if the map data has been changed, {@code false} otherwise
      */
     public boolean isChanged() {
         return changed;

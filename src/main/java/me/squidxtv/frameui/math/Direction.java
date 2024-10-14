@@ -9,9 +9,21 @@ import org.bukkit.util.Vector;
  */
 public enum Direction {
 
+    /**
+     * Represents the north direction in a Minecraft World.
+     */
     NORTH(2, 0, 180, new Vector(0, 0, -1), new Vector(1, 1, 1)),
+    /**
+     * Represents the south direction in a Minecraft World.
+     */
     SOUTH(3, 0, 0, new Vector(0, 0, 1), new Vector(0, 1, 0)),
+    /**
+     * Represents the west direction in a Minecraft World.
+     */
     WEST(4, 0, 90, new Vector(-1, 0, 0), new Vector(1, 1, 0)),
+    /**
+     * Represents the east direction in a Minecraft World.
+     */
     EAST(5, 0, 270, new Vector(1, 0, 0), new Vector(0, 1, 1)),;
 
     private final int packetId;

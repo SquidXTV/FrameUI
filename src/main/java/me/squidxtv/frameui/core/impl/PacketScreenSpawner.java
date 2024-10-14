@@ -16,7 +16,11 @@ import org.bukkit.entity.Player;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
+/**
+ * The {@code PacketScreenSpawner} uses packets to spawn, despawn and update the {@link Screen}.
+ */
 public class PacketScreenSpawner implements ScreenSpawner {
 
     private static final PlayerManager PLAYER_MANAGER = PacketEvents.getAPI().getPlayerManager();
@@ -54,7 +58,7 @@ public class PacketScreenSpawner implements ScreenSpawner {
 
     @Override
     public void update(Screen screen) {
-        List<Player> viewers = screen.getViewers().stream().map(Bukkit::getPlayer).toList();
+        List<Player> viewers = screen.getViewers().stream().map(Bukkit::getPlayer).filter(Objects::nonNull).toList();
         ItemFrame[][] frames = screen.getItemFrames();
         for (ItemFrame[] row : frames) {
             for (ItemFrame frame : row) {

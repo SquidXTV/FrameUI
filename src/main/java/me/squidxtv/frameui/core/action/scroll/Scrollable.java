@@ -2,6 +2,9 @@ package me.squidxtv.frameui.core.action.scroll;
 
 import org.bukkit.event.player.PlayerItemHeldEvent;
 
+/**
+ * Represents an element that can be scrolled.
+ */
 public interface Scrollable {
 
     /**

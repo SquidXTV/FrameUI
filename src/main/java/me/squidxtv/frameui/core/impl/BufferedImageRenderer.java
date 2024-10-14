@@ -8,12 +8,21 @@ import me.squidxtv.frameui.core.Screen;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 
+/**
+ * The {@code BufferedImageRenderer} uses a {@link BufferedImage} to display an image
+ * onto a {@link Screen}.
+ */
 public class BufferedImageRenderer implements Renderer {
 
     private BufferedImage image;
 
+    /**
+     * Creates a new {@code BufferedImageRenderer} with the specified image.
+     * @param image the {@link BufferedImage} to render
+     * @throws NullPointerException if {@code image} is null
+     */
     public BufferedImageRenderer(BufferedImage image) {
-        Objects.requireNonNull(image);
+        Objects.requireNonNull(image, "Image cannot be null");
         this.image = image;
     }
 
@@ -22,7 +31,7 @@ public class BufferedImageRenderer implements Renderer {
         ItemFrame[][] frames = screen.getItemFrames();
         for (int i = 0; i < frames.length; i++) {
             for (int j = 0; j < frames[i].length; j++) {
-                BufferedImage sub = image.getSubimage(128 * j, 128 * i, MapItem.WIDTH, MapItem.HEIGHT);
+                BufferedImage sub = image.getSubimage(j * MapItem.WIDTH, i * MapItem.HEIGHT, MapItem.WIDTH, MapItem.HEIGHT);
                 MapItem map = frames[i][j].getMapItem();
                 int[] rgb = sub.getRGB(0, 0, MapItem.WIDTH, MapItem.HEIGHT, null, 0, MapItem.WIDTH);
                 map.draw(rgb);
@@ -44,7 +53,7 @@ public class BufferedImageRenderer implements Renderer {
      * @throws NullPointerException if {@code image} is null
      */
     public void setImage(BufferedImage image) {
-        Objects.requireNonNull(image);
+        Objects.requireNonNull(image, "Image cannot be null");
         this.image = image;
     }
 
