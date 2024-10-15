@@ -1,21 +1,23 @@
 package me.squidxtv.frameui.listener;
 
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerItemHeldEvent;
+
 import me.squidxtv.frameui.api.ScreenRegistry;
 import me.squidxtv.frameui.core.Screen;
 import me.squidxtv.frameui.core.action.scroll.ScrollDirection;
 import me.squidxtv.frameui.math.Intersection;
 import me.squidxtv.frameui.math.IntersectionHelper;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerItemHeldEvent;
 
 import java.awt.Point;
 import java.util.List;
 import java.util.Optional;
 
 /**
- * The {@code ScrollListener} is responsible for handling scrolls for interacting with a {@link Screen}.
+ * The {@code ScrollListener} is responsible for handling scrolls for
+ * interacting with a {@link Screen}.
  */
 public class ScrollListener implements Listener {
 
@@ -23,6 +25,7 @@ public class ScrollListener implements Listener {
 
     /**
      * Creates the {@code ScrollListener}.
+     * 
      * @param registry the screen registry
      */
     public ScrollListener(ScreenRegistry registry) {
@@ -31,11 +34,13 @@ public class ScrollListener implements Listener {
 
     /**
      * Handles the {@link PlayerItemHeldEvent}.
+     * 
      * @param event the {@link PlayerItemHeldEvent}
-     * @implNote The implementation assumes the item changed by a scroll on the client.
-     * A scroll action is only considered valid if the item is changed by a single position.
-     * If the change is by more than one position, it is ambiguous which direction the player scrolled,
-     * and therefore no scroll event is triggered.
+     * @implNote The implementation assumes the item changed by a scroll on the
+     *           client. A scroll action is only considered valid if the item is
+     *           changed by a single position. If the change is by more than one
+     *           position, it is ambiguous which direction the player scrolled, and
+     *           therefore no scroll event is triggered.
      */
     @EventHandler
     public void onScroll(PlayerItemHeldEvent event) {

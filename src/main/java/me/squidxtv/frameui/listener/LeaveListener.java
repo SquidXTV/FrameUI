@@ -1,18 +1,19 @@
 package me.squidxtv.frameui.listener;
 
-import me.squidxtv.frameui.api.ScreenRegistry;
-import me.squidxtv.frameui.core.Screen;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import me.squidxtv.frameui.api.ScreenRegistry;
+import me.squidxtv.frameui.core.Screen;
+
 import java.util.List;
 import java.util.UUID;
 
 /**
- * The {@code LeaveListener} is responsible for removing players from all the screens
- * they are viewing when they leave.
+ * The {@code LeaveListener} is responsible for removing players from all the
+ * screens they are viewing when they leave.
  */
 public class LeaveListener implements Listener {
 
@@ -20,6 +21,7 @@ public class LeaveListener implements Listener {
 
     /**
      * Creates the {@code LeaveListener}.
+     * 
      * @param registry the screen registry
      */
     public LeaveListener(ScreenRegistry registry) {
@@ -28,6 +30,7 @@ public class LeaveListener implements Listener {
 
     /**
      * Handles the {@link PlayerQuitEvent}.
+     * 
      * @param event the {@link PlayerQuitEvent} triggered by leaving the server
      */
     @EventHandler

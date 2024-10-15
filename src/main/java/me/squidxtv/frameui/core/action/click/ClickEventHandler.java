@@ -12,15 +12,17 @@ public interface ClickEventHandler {
 
     /**
      * Performs the click interaction.
-     * @param event the event that causes this click interaction
+     * 
+     * @param event  the event that causes this click interaction
      * @param clickX the x-coordinate on the element
      * @param clickY the y-coordinate on the element
      */
     void perform(PlayerInteractEvent event, int clickX, int clickY);
 
     /**
-     * Returns a composed {@code ClickEventHandler} that performs, in sequence, this handler followed
-     * by the provided {@code after} handler.
+     * Returns a composed {@code ClickEventHandler} that performs, in sequence, this
+     * handler followed by the provided {@code after} handler.
+     * 
      * @param after the handler to perform after this one
      * @return a composed {@code ClickEventHandler}
      * @throws NullPointerException if the provided {@code after} handler is null
@@ -35,6 +37,7 @@ public interface ClickEventHandler {
 
     /**
      * Returns an empty {@code ClickEventHandler} that performs no action.
+     * 
      * @return an empty click event handler
      */
     static ClickEventHandler empty() {

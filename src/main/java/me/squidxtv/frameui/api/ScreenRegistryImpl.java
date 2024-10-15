@@ -1,15 +1,17 @@
 package me.squidxtv.frameui.api;
 
-import me.squidxtv.frameui.core.Screen;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+
+import me.squidxtv.frameui.core.Screen;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 /**
- * The {@code ScreenRegistryImpl} class implements the {@link ScreenRegistry} using a simple {@link ArrayList} to store a {@link Screen}.
+ * The {@code ScreenRegistryImpl} class implements the {@link ScreenRegistry}
+ * using a simple {@link ArrayList} to store a {@link Screen}.
  */
 public class ScreenRegistryImpl implements ScreenRegistry {
 
@@ -44,4 +46,5 @@ public class ScreenRegistryImpl implements ScreenRegistry {
     public List<Screen> getByViewer(UUID uuid) {
         return registered.stream().filter(screen -> screen.hasViewer(uuid)).toList();
     }
+
 }

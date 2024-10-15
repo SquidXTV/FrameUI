@@ -11,10 +11,12 @@ import org.bukkit.map.MapView;
 import java.awt.Color;
 
 /**
- * The {@code MapItem} represents a custom map item in Minecraft.
- * It stores the displayed pixel data and allows for drawing on the map.
- * Uses {@link MapPalette#matchColor(Color)} to convert a pixel to the limited color palette.
+ * The {@code MapItem} represents a custom map item in Minecraft. It stores the
+ * displayed pixel data and allows for drawing on the map. Uses
+ * {@link MapPalette#matchColor(Color)} to convert a pixel to the limited color
+ * palette.
  */
+@SuppressWarnings("deprecation")
 public class MapItem {
 
     /**
@@ -35,6 +37,7 @@ public class MapItem {
 
     /**
      * Creates a new {@link MapItem} in the given World.
+     * 
      * @param world the world in which the map is created
      * @throws IllegalStateException if the {@link MapMeta} after creation is null
      */
@@ -56,9 +59,10 @@ public class MapItem {
 
     /**
      * Draws a pixel on the map at the specified coordinate.
+     * 
      * @param pixel the color of the pixel to draw
-     * @param x the x-coordinate of the pixel
-     * @param y the y-coordinate of the pixel
+     * @param x     the x-coordinate of the pixel
+     * @param y     the y-coordinate of the pixel
      */
     public void draw(Color pixel, int x, int y) {
         draw(pixel, x + y * WIDTH);
@@ -66,6 +70,7 @@ public class MapItem {
 
     /**
      * Draws a pixel on the map at the specified index.
+     * 
      * @param pixel the color of the pixel to draw
      * @param index the index location of the pixel
      */
@@ -79,7 +84,8 @@ public class MapItem {
 
     /**
      * Draws multiple pixels on the map with an offset location.
-     * @param rgb an array of RGB color values
+     * 
+     * @param rgb    an array of RGB color values
      * @param offset the offset on the data array
      */
     public void draw(int[] rgb, int offset) {
@@ -90,6 +96,7 @@ public class MapItem {
 
     /**
      * Draws multiple pixels on the map.
+     * 
      * @param rgb an array of RGB color values
      */
     public void draw(int[] rgb) {
@@ -98,6 +105,7 @@ public class MapItem {
 
     /**
      * Returns the id of the map.
+     * 
      * @return the id of the map
      */
     public int getId() {
@@ -106,8 +114,10 @@ public class MapItem {
 
     /**
      * Returns the map data byte array.
+     * 
      * @return the byte array representing the map data
-     * @implNote The stored bytes are magic values based on {@link MapPalette#matchColor(Color)}.
+     * @implNote The stored bytes are magic values based on
+     *           {@link MapPalette#matchColor(Color)}.
      */
     public byte[] getData() {
         return data;
@@ -115,6 +125,7 @@ public class MapItem {
 
     /**
      * Returns the map as an {@link ItemStack}.
+     * 
      * @return the {@code ItemStack} representing the map
      */
     public ItemStack getAsItemStack() {
@@ -123,7 +134,9 @@ public class MapItem {
 
     /**
      * Checks if the map data has been changed.
-     * @return {@code true} if the map data has been changed, {@code false} otherwise
+     * 
+     * @return {@code true} if the map data has been changed, {@code false}
+     *         otherwise
      */
     public boolean isChanged() {
         return changed;

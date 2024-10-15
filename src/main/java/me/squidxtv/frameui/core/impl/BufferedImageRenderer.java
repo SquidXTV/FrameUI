@@ -9,8 +9,8 @@ import java.awt.image.BufferedImage;
 import java.util.Objects;
 
 /**
- * The {@code BufferedImageRenderer} uses a {@link BufferedImage} to display an image
- * onto a {@link Screen}.
+ * The {@code BufferedImageRenderer} uses a {@link BufferedImage} to display an
+ * image onto a {@link Screen}.
  */
 public class BufferedImageRenderer implements Renderer {
 
@@ -18,6 +18,7 @@ public class BufferedImageRenderer implements Renderer {
 
     /**
      * Creates a new {@code BufferedImageRenderer} with the specified image.
+     * 
      * @param image the {@link BufferedImage} to render
      * @throws NullPointerException if {@code image} is null
      */
@@ -41,6 +42,7 @@ public class BufferedImageRenderer implements Renderer {
 
     /**
      * Returns the image of this renderer.
+     * 
      * @return the image of this renderer
      */
     public BufferedImage getImage() {
@@ -49,6 +51,7 @@ public class BufferedImageRenderer implements Renderer {
 
     /**
      * Sets the image of this renderer.
+     * 
      * @param image the new image
      * @throws NullPointerException if {@code image} is null
      */

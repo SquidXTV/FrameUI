@@ -1,5 +1,6 @@
 plugins {
     id("java")
+    id("com.diffplug.spotless") version "7.0.0.BETA3"
     `maven-publish`
 }
 
@@ -68,6 +69,16 @@ tasks {
 
     compileTestJava {
         options.encoding = "UTF-8"
+    }
+}
+
+spotless {
+    java {
+        endWithNewline()
+        removeUnusedImports()
+
+        importOrder("", "me.squidxtv", "java", "\\#")
+        eclipse().configFile("${rootProject.rootDir}/config/custom-eclipse-style.xml")
     }
 }
 

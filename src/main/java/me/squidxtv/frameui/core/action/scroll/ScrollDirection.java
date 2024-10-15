@@ -1,8 +1,9 @@
 package me.squidxtv.frameui.core.action.scroll;
 
 /**
- * The {@code ScrollDirection} enum represents the two possible scroll directions, {@code UP} and {@code DOWN}.
- * Each is associated with an integer value.
+ * The {@code ScrollDirection} enum represents the two possible scroll
+ * directions, {@code UP} and {@code DOWN}. Each is associated with an integer
+ * value.
  */
 public enum ScrollDirection {
 

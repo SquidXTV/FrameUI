@@ -3,9 +3,13 @@ package me.squidxtv.frameui.math;
 import org.bukkit.util.Vector;
 
 /**
- * The {@code Direction} enum represents the four possible cardinal directions in a Minecraft world.
+ * The {@code Direction} enum represents the four possible cardinal directions
+ * in a Minecraft world.
+ * 
  * @see <a href="https://wiki.vg/Protocol#Spawn_Entity">Spawn Entity Packet</a>
- * @see <a href="https://wiki.vg/Entity_metadata#Metadata_type:Direction">Direction ids</a>
+ * @see <a href=
+ *      "https://wiki.vg/Entity_metadata#Metadata_type:Direction">Direction
+ *      ids</a>
  */
 public enum Direction {
 
@@ -50,8 +54,11 @@ public enum Direction {
 
     /**
      * Returns the id used by packets to identify a direction.
+     * 
      * @return the packet id
-     * @see <a href="https://wiki.vg/Entity_metadata#Metadata_type:Direction">Direction ids</a>
+     * @see <a href=
+     *      "https://wiki.vg/Entity_metadata#Metadata_type:Direction">Direction
+     *      ids</a>
      */
     public int getPacketId() {
         return packetId;
@@ -59,6 +66,7 @@ public enum Direction {
 
     /**
      * Returns a copy of the normal vector representing the direction
+     * 
      * @return the normal vector
      */
     public Vector getNormal() {
@@ -67,6 +75,7 @@ public enum Direction {
 
     /**
      * Returns a copy of the vector offset for the top-left pixel.
+     * 
      * @return the top-left pixel offset vector
      */
     public Vector getTopLeftPixelOffset() {
@@ -75,6 +84,7 @@ public enum Direction {
 
     /**
      * Returns the X-axis multiplier for this direction.
+     * 
      * @return the X-axis multiplier
      */
     public int getMultiplierX() {
@@ -83,6 +93,7 @@ public enum Direction {
 
     /**
      * Returns the Z-axis multiplier for this direction.
+     * 
      * @return the Z-axis multiplier
      */
     public int getMultiplierZ() {
@@ -91,6 +102,7 @@ public enum Direction {
 
     /**
      * Returns the pitch angle for this direction.
+     * 
      * @return the pitch angle
      * @see <a href="https://wiki.vg/Protocol#Spawn_Entity">Spawn Entity Packet</a>
      */
@@ -100,6 +112,7 @@ public enum Direction {
 
     /**
      * Returns the yaw angle for this direction.
+     * 
      * @return the yaw angle
      * @see <a href="https://wiki.vg/Protocol#Spawn_Entity">Spawn Entity Packet</a>
      */

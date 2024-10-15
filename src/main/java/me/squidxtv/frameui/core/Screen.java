@@ -1,5 +1,11 @@
 package me.squidxtv.frameui.core;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+
 import me.squidxtv.frameui.api.ScreenRegistry;
 import me.squidxtv.frameui.core.action.click.ClickEventHandler;
 import me.squidxtv.frameui.core.action.click.Clickable;
@@ -8,11 +14,6 @@ import me.squidxtv.frameui.core.action.scroll.Scrollable;
 import me.squidxtv.frameui.core.impl.BufferedImageRenderer;
 import me.squidxtv.frameui.core.impl.PacketScreenSpawner;
 import me.squidxtv.frameui.math.Direction;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -25,12 +26,15 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * The {@code Screen} is a 2d plane of multiple {@link ItemFrame} instances in the Minecraft World. Together they make up a bigger image.
- * Each {@code ItemFrame} hold a {@link MapItem} that display a custom image which is limited to 128x128 pixels.
+ * The {@code Screen} is a 2d plane of multiple {@link ItemFrame} instances in
+ * the Minecraft World. Together they make up a bigger image. Each
+ * {@code ItemFrame} hold a {@link MapItem} that display a custom image which is
+ * limited to 128x128 pixels.
  */
 public class Screen implements Clickable, Scrollable {
 
-    private static final ScreenRegistry REGISTRY = Objects.requireNonNull(Bukkit.getServicesManager().load(ScreenRegistry.class), "Couldn't properly load ScreenRegistry from the ServicesManager.");
+    private static final ScreenRegistry REGISTRY = Objects.requireNonNull(Bukkit.getServicesManager().load(ScreenRegistry.class),
+            "Couldn't properly load ScreenRegistry from the ServicesManager.");
 
     private final Plugin plugin;
     private final Set<UUID> viewers = new HashSet<>();
@@ -67,15 +71,17 @@ public class Screen implements Clickable, Scrollable {
     }
 
     /**
-     * Creates a new screen with the specified plugin, dimensions, location, spawner and renderer.
+     * Creates a new screen with the specified plugin, dimensions, location, spawner
+     * and renderer.
      *
-     * @param plugin the plugin associated with this screen
-     * @param width the block width of the screen
-     * @param height the block height of the screen
+     * @param plugin   the plugin associated with this screen
+     * @param width    the block width of the screen
+     * @param height   the block height of the screen
      * @param location the location of the screen
-     * @param spawner the spawner responsible for spawning the screen's item frames
+     * @param spawner  the spawner responsible for spawning the screen's item frames
      * @param renderer the renderer responsible for rendering the screen's content
-     * @throws NullPointerException if {@code plugin}, {@code location}, {@code spawner}, or {@code renderer} is null
+     * @throws NullPointerException if {@code plugin}, {@code location},
+     *                              {@code spawner}, or {@code renderer} is null
      */
     public Screen(Plugin plugin, int width, int height, ScreenLocation location, ScreenSpawner spawner, Renderer renderer) {
         Objects.requireNonNull(plugin, "Plugin cannot be null");
@@ -93,29 +99,29 @@ public class Screen implements Clickable, Scrollable {
         this.renderer = renderer;
     }
 
-
     /**
-     * Creates a new screen with the specified plugin, dimensions and location.
-     * Uses packets for spawning and a {@link BufferedImage} for rendering.
+     * Creates a new screen with the specified plugin, dimensions and location. Uses
+     * packets for spawning and a {@link BufferedImage} for rendering.
      *
-     * @param plugin the plugin associated with this screen
-     * @param width the block width of the screen
-     * @param height the block height of the screen
+     * @param plugin   the plugin associated with this screen
+     * @param width    the block width of the screen
+     * @param height   the block height of the screen
      * @param location the location of the screen
-     * @param image the image rendered on the image
-     * @throws NullPointerException if {@code plugin}, {@code location} or {@code image} is null
+     * @param image    the image rendered on the image
+     * @throws NullPointerException if {@code plugin}, {@code location} or
+     *                              {@code image} is null
      */
     public Screen(Plugin plugin, int width, int height, ScreenLocation location, BufferedImage image) {
         this(plugin, width, height, location, new PacketScreenSpawner(), new BufferedImageRenderer(image));
     }
 
     /**
-     * Creates a new screen with the specified plugin, dimensions and location.
-     * Uses packets for spawning and a default image for rendering.
+     * Creates a new screen with the specified plugin, dimensions and location. Uses
+     * packets for spawning and a default image for rendering.
      *
-     * @param plugin the plugin associated with this screen
-     * @param width the block width of the screen
-     * @param height the block height of the screen
+     * @param plugin   the plugin associated with this screen
+     * @param width    the block width of the screen
+     * @param height   the block height of the screen
      * @param location the location of the screen
      * @throws NullPointerException if {@code plugin} or {@code location} is null
      */
@@ -132,6 +138,7 @@ public class Screen implements Clickable, Scrollable {
 
     /**
      * Opens the screen.
+     * 
      * @param invisible sets the visibility of the item frames
      */
     public void open(boolean invisible) {
@@ -174,8 +181,10 @@ public class Screen implements Clickable, Scrollable {
 
     /**
      * Adds a player to the screen's viewers.
+     * 
      * @param player the player to add
-     * @return {@code true} if player was added based on {@link Set#add(Object)}, {@code false} otherwise
+     * @return {@code true} if player was added based on {@link Set#add(Object)},
+     *         {@code false} otherwise
      * @throws NullPointerException if {@code player} is null
      */
     public boolean addViewer(Player player) {
@@ -191,8 +200,10 @@ public class Screen implements Clickable, Scrollable {
 
     /**
      * Adds a collection of players to the screen's viewers.
+     * 
      * @param players the players to add
-     * @return the set including the players that actually got added based on {@link Set#add(Object)}
+     * @return the set including the players that actually got added based on
+     *         {@link Set#add(Object)}
      * @throws NullPointerException if {@code players} is null
      */
     public Set<Player> addViewer(Collection<Player> players) {
@@ -210,6 +221,7 @@ public class Screen implements Clickable, Scrollable {
 
     /**
      * Removes a player form the screen's viewers.
+     * 
      * @param player the player to remove
      * @return {@code true} if the player was removed, {@code false} otherwise
      * @throws NullPointerException if {@code player} is null
@@ -227,8 +239,10 @@ public class Screen implements Clickable, Scrollable {
 
     /**
      * Removes a collection of players from the screen's viewers.
+     * 
      * @param players the players to remove
-     * @return the set including the players that actually got removed based on {@link Set#remove(Object)}
+     * @return the set including the players that actually got removed based on
+     *         {@link Set#remove(Object)}
      * @throws NullPointerException if {@code players} is null
      */
     public Set<Player> removeViewer(Collection<Player> players) {
@@ -254,8 +268,10 @@ public class Screen implements Clickable, Scrollable {
 
     /**
      * Checks if a player is a viewer of the screen.
+     * 
      * @param player the player to check
-     * @return {@code true} if the player is a viewer of this screen, {@code false} otherwise
+     * @return {@code true} if the player is a viewer of this screen, {@code false}
+     *         otherwise
      * @throws NullPointerException if {@code player} is null
      */
     public boolean hasViewer(Player player) {
@@ -265,8 +281,10 @@ public class Screen implements Clickable, Scrollable {
 
     /**
      * Checks if a player is a viewer of the screen.
+     * 
      * @param uuid uuid to check
-     * @return {@code true} if the player is a viewer of this screen, {@code false} otherwise
+     * @return {@code true} if the player is a viewer of this screen, {@code false}
+     *         otherwise
      * @throws NullPointerException if {@code uuid} is null
      */
     public boolean hasViewer(UUID uuid) {
@@ -276,6 +294,7 @@ public class Screen implements Clickable, Scrollable {
 
     /**
      * Returns the plugin associated with this screen.
+     * 
      * @return the plugin associated with this screen
      */
     public Plugin getPlugin() {
@@ -284,6 +303,7 @@ public class Screen implements Clickable, Scrollable {
 
     /**
      * Returns the viewers of the screen.
+     * 
      * @return a copy of the viewers
      */
     public Set<UUID> getViewers() {
@@ -292,6 +312,7 @@ public class Screen implements Clickable, Scrollable {
 
     /**
      * Returns the item frames that make up the screen.
+     * 
      * @return a copy of the 2d array of the item frames
      */
     public ItemFrame[][] getItemFrames() {
@@ -300,6 +321,7 @@ public class Screen implements Clickable, Scrollable {
 
     /**
      * Returns the renderer of the screen.
+     * 
      * @return the renderer of the screen
      */
     public Renderer getRenderer() {
@@ -308,6 +330,7 @@ public class Screen implements Clickable, Scrollable {
 
     /**
      * Returns the spawner of the screen.
+     * 
      * @return the spawner of the screen
      */
     public ScreenSpawner getSpawner() {
@@ -316,6 +339,7 @@ public class Screen implements Clickable, Scrollable {
 
     /**
      * Returns the location of the screen.
+     * 
      * @return the location of the screen
      */
     public ScreenLocation getLocation() {
@@ -324,6 +348,7 @@ public class Screen implements Clickable, Scrollable {
 
     /**
      * Returns the block width of the screen.
+     * 
      * @return the block width of the screen
      */
     public int getWidth() {
@@ -332,6 +357,7 @@ public class Screen implements Clickable, Scrollable {
 
     /**
      * Returns the block height of the screen.
+     * 
      * @return the block height of the screen
      */
     public int getHeight() {
@@ -340,6 +366,7 @@ public class Screen implements Clickable, Scrollable {
 
     /**
      * Returns the pixel width of the screen.
+     * 
      * @return the pixel width of the screen
      */
     public int getPixelWidth() {
@@ -348,6 +375,7 @@ public class Screen implements Clickable, Scrollable {
 
     /**
      * Returns the pixel height of the screen.
+     * 
      * @return the pixel height of the screen
      */
     public int getPixelHeight() {
@@ -376,6 +404,7 @@ public class Screen implements Clickable, Scrollable {
 
     /**
      * Returns the max allowed click radius of the screen.
+     * 
      * @return the max allowed click radius of the screen
      */
     public double getClickRadius() {
@@ -384,6 +413,7 @@ public class Screen implements Clickable, Scrollable {
 
     /**
      * Sets the max allowed click radius of the screen.
+     * 
      * @param clickRadius the new max allowed click radius
      * @throws IllegalArgumentException if {@code clickRadius < 0}
      */
@@ -396,6 +426,7 @@ public class Screen implements Clickable, Scrollable {
 
     /**
      * Returns the max allowed scroll radius of the screen.
+     * 
      * @return the max allowed scroll radius of the screen
      */
     public double getScrollRadius() {
@@ -404,6 +435,7 @@ public class Screen implements Clickable, Scrollable {
 
     /**
      * Sets the max allowed scroll radius of the screen
+     * 
      * @param scrollRadius the new max allowed scroll radius
      * @throws IllegalArgumentException if {@code scrollRadius < 0}
      */
@@ -416,6 +448,7 @@ public class Screen implements Clickable, Scrollable {
 
     /**
      * Returns the current state of the screen.
+     * 
      * @return the current state of the screen
      */
     public State getState() {

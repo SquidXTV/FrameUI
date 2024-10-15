@@ -9,7 +9,8 @@ public interface Clickable {
 
     /**
      * Performs a click on the element.
-     * @param event the event that causes this click interaction
+     * 
+     * @param event  the event that causes this click interaction
      * @param clickX the x-coordinate on the element
      * @param clickY the y-coordinate on the element
      */
@@ -19,12 +20,14 @@ public interface Clickable {
 
     /**
      * Returns the current {@link ClickEventHandler} for this element.
+     * 
      * @return the current {@link ClickEventHandler} for this element
      */
     ClickEventHandler getOnClick();
 
     /**
      * Sets the current {@link ClickEventHandler} for this element
+     * 
      * @param clickEventHandler the new click event handler
      */
     void setOnClick(ClickEventHandler clickEventHandler);

@@ -1,11 +1,12 @@
 package me.squidxtv.frameui.math;
 
-import me.squidxtv.frameui.core.Screen;
-import me.squidxtv.frameui.core.ScreenLocation;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
+
+import me.squidxtv.frameui.core.Screen;
+import me.squidxtv.frameui.core.ScreenLocation;
 
 import java.awt.Point;
 import java.util.List;
@@ -29,18 +30,16 @@ public final class IntersectionHelper {
     /**
      * Calculates the nearest intersection between a player and multiple screens.
      * Returns the closest interaction from all screens.
-     * @param screens the list of screens to check for intersections
-     * @param player the player of the interaction
+     * 
+     * @param screens   the list of screens to check for intersections
+     * @param player    the player of the interaction
      * @param maxRadius function to gather the maximum radius from the screen
      * @return the closest intersection from all
      */
     public static Optional<Intersection> getNearestIntersection(List<Screen> screens, Player player, ToDoubleFunction<Screen> maxRadius) {
-        return screens.stream()
-                .filter(screen -> screen.getState() == Screen.State.OPEN)
-                .map(screen -> getIntersection(screen, player, NumberConversions.square(maxRadius.applyAsDouble(screen))))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .reduce((intersection, intersection2) -> {
+        return screens.stream().filter(screen -> screen.getState() == Screen.State.OPEN)
+                .map(screen -> getIntersection(screen, player, NumberConversions.square(maxRadius.applyAsDouble(screen)))).filter(Optional::isPresent)
+                .map(Optional::get).reduce((intersection, intersection2) -> {
                     if (intersection.distanceSquared() < intersection2.distanceSquared()) {
                         return intersection;
                     }
@@ -50,8 +49,9 @@ public final class IntersectionHelper {
 
     /**
      * Calculates the possible intersection between a player and a {@link Screen}.
-     * @param screen the screen to check for an intersection
-     * @param player the player of the interaction
+     * 
+     * @param screen             the screen to check for an intersection
+     * @param player             the player of the interaction
      * @param maxDistanceSquared the maximum squared distance
      * @return a possible intersection
      */
@@ -109,7 +109,9 @@ public final class IntersectionHelper {
     }
 
     /**
-     * Represents a line in three-dimensional space defined by a point and a direction.
+     * Represents a line in three-dimensional space defined by a point and a
+     * direction.
+     * 
      * @param point     point on the line
      * @param direction direction of the line
      */
@@ -131,9 +133,11 @@ public final class IntersectionHelper {
     }
 
     /**
-     * Represents a plane in three-dimensional space defined by a normal vector and a point on the plane.
+     * Represents a plane in three-dimensional space defined by a normal vector and
+     * a point on the plane.
+     * 
      * @param normal normal vector of plane
-     * @param point point on the plane
+     * @param point  point on the plane
      */
     private record Plane(Vector normal, Vector point) {
 
