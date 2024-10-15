@@ -442,7 +442,7 @@ public class Screen implements Clickable, Scrollable {
     }
 
     private static BufferedImage getDefaultImage(int width, int height) {
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        BufferedImage image = new BufferedImage(width * MapItem.WIDTH, height * MapItem.HEIGHT, BufferedImage.TYPE_INT_RGB);
         Graphics graphics = image.getGraphics();
         graphics.setColor(new Color(13, 13, 13));
         graphics.fillRect(0, 0, image.getWidth(), image.getHeight());

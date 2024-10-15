@@ -1,5 +1,6 @@
 plugins {
     id("java")
+    `maven-publish`
 }
 
 group = "me.squidxtv"
@@ -37,27 +38,44 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(22)
     }
+    withSourcesJar()
+    withJavadocJar()
 }
 
-tasks.jar {
-    destinationDirectory.set(file("$rootDir/server/plugins"))
+tasks {
+    jar {
+        destinationDirectory.set(file("$rootDir/server/plugins"))
+        exclude("javadoc-overview.html")
+    }
+
+    javadoc {
+        (options as StandardJavadocDocletOptions)
+            .tags("apiNote:a:API Note:", "implNote:a:Implementation Note:")
+            .links("https://hub.spigotmc.org/javadocs/spigot/", "https://javadocs.packetevents.com/")
+            .overview(file("$rootDir/src/main/resources/javadoc-overview.html").toString())
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    compileJava {
+        options.encoding = "UTF-8"
+    }
+
+    compileTestJava {
+        options.encoding = "UTF-8"
+    }
 }
 
-tasks.javadoc {
-    (options as StandardJavadocDocletOptions)
-        .tags("apiNote:a:API Note:", "implNote:a:Implementation Note:")
-        .links("https://hub.spigotmc.org/javadocs/spigot/", "https://javadocs.packetevents.com/")
-        .overview(file("$rootDir/src/main/resources/javadoc-overview.html").toString())
-}
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            group = "me.squidxtv"
+            artifactId = "FrameUI"
+            version = version
 
-tasks.test {
-    useJUnitPlatform()
-}
-
-tasks.compileJava {
-    options.encoding = "UTF-8"
-}
-
-tasks.compileTestJava {
-    options.encoding = "UTF-8"
+            from(components["java"])
+        }
+    }
 }
