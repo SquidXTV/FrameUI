@@ -20,18 +20,19 @@ repositories {
 
 val spigotVersion = "1.21.1-R0.1-SNAPSHOT"
 val packetEventsVersion = "2.5.0"
+val junitVersion = "5.11.2"
 val mockitoVersion = "5.14.2"
+
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:$spigotVersion")
     compileOnly("com.github.retrooper:packetevents-spigot:$packetEventsVersion")
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation("org.junit.jupiter.junit-jupiter:5.11.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
     testImplementation("org.mockito:mockito-core:$mockitoVersion")
     testImplementation("org.mockito:mockito-junit-jupiter:$mockitoVersion")
     testImplementation("org.spigotmc:spigot-api:$spigotVersion")
-
 }
 
 java {
@@ -44,7 +45,9 @@ java {
 
 tasks {
     jar {
-        destinationDirectory.set(file("$rootDir/server/plugins"))
+        if (file("$rootDir/server/plugins").exists()) {
+            destinationDirectory.set(file("$rootDir/server/plugins"))
+        }
         exclude("javadoc-overview.html")
     }
 
