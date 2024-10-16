@@ -34,7 +34,8 @@ public class PacketScreenSpawner implements ScreenSpawner {
         for (ItemFrame[] row : itemFrames) {
             for (ItemFrame frame : row) {
                 ItemFrameSpawnPacket spawn = new ItemFrameSpawnPacket(frame.getEntityId(), frame.getLocation(), frame.getDirection());
-                ItemFrameMetadataPacket metadata = new ItemFrameMetadataPacket(frame.getEntityId(), frame.getMapItem().getAsItemStack(), frame.isInvisible());
+                ItemFrameMetadataPacket metadata = new ItemFrameMetadataPacket(frame.getEntityId(), frame.getMapItem().getAsItemStack(),
+                        frame.isInvisible());
 
                 for (Player viewer : viewers) {
                     PLAYER_MANAGER.sendPacket(viewer, spawn);
@@ -66,8 +67,8 @@ public class PacketScreenSpawner implements ScreenSpawner {
                     continue;
                 }
 
-                WrapperPlayServerMapData update = new WrapperPlayServerMapData(map.getId(), (byte) 0, false, false, null, MapItem.WIDTH, MapItem.HEIGHT, 0, 0,
-                        map.getData());
+                WrapperPlayServerMapData update = new WrapperPlayServerMapData(map.getId(), (byte) 0, false, false, null, MapItem.WIDTH,
+                        MapItem.HEIGHT, 0, 0, map.getData());
                 for (Player viewer : viewers) {
                     PLAYER_MANAGER.sendPacket(viewer, update);
                 }

@@ -25,8 +25,8 @@ public final class ItemFrameSpawnPacket extends WrapperPlayServerSpawnEntity {
      * @param direction the {@link Direction} the item frame should face
      */
     public ItemFrameSpawnPacket(int entityId, Location location, Direction direction) {
-        super(entityId, Optional.of(UUID.randomUUID()), EntityTypes.ITEM_FRAME, toVector3d(location), direction.getPitch(), direction.getYaw(), 0,
-                direction.getPacketId(), Optional.empty());
+        super(entityId, Optional.of(UUID.randomUUID()), EntityTypes.ITEM_FRAME, toVector3d(location), direction.getPitch(),
+                direction.getYaw(), 0, direction.getPacketId(), Optional.empty());
     }
 
     private static Vector3d toVector3d(Location location) {

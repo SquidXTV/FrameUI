@@ -45,7 +45,9 @@ public record ScreenLocation(Location origin, Vector originPixel, Direction dire
     }
 
     private static Vector calculateOriginPixel(Location origin, Direction direction) {
-        return toBlockLocation(origin).toVector().add(direction.getTopLeftPixelOffset()).add(direction.getNormal().multiply(IntersectionHelper.PIXEL_LENGTH));
+        return toBlockLocation(origin).toVector()
+                .add(direction.getTopLeftPixelOffset())
+                .add(direction.getNormal().multiply(IntersectionHelper.PIXEL_LENGTH));
     }
 
     private static Location toBlockLocation(Location loc) {
