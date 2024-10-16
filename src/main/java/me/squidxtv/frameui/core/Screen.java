@@ -458,7 +458,7 @@ public class Screen implements Clickable, Scrollable {
     private void initializeItemFrames(boolean invisible) {
         Direction direction = location.direction();
         int multiplierX = direction.getMultiplierX();
-        int multiplierZ = -direction.getMultiplierZ();
+        int multiplierZ = direction.getMultiplierZ();
 
         Location origin = location.origin();
         World world = origin.getWorld();

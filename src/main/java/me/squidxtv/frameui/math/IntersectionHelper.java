@@ -101,11 +101,11 @@ public final class IntersectionHelper {
         return line.evaluate(scalar);
     }
 
-    private static Point getPixel(Vector intersection, Vector originPixel, Direction direction) {
-        double y = Math.floor((originPixel.getY() - intersection.getY()) / PIXEL_LENGTH);
+    private static Point getPixel(Vector intersection, Vector origin, Direction direction) {
+        double y = Math.floor((origin.getY() - intersection.getY()) / PIXEL_LENGTH);
 
-        double xz = direction.getMultiplierX() * (intersection.getX() - originPixel.getX());
-        xz += direction.getMultiplierZ() * (intersection.getZ() - originPixel.getZ());
+        double xz = direction.getMultiplierX() * (intersection.getX() - origin.getX());
+        xz += direction.getMultiplierZ() * (intersection.getZ() - origin.getZ());
         xz = Math.floor(xz / PIXEL_LENGTH);
 
         return new Point((int) xz, (int) y);
