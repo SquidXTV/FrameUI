@@ -211,6 +211,7 @@ class IntersectionHelperTest {
         Screen first = mock(Screen.class);
         Location firstOrigin = new Location(mock(), 0, 0, 0);
         ScreenLocation firstLocation = new ScreenLocation(firstOrigin, Direction.NORTH);
+        when(first.getState()).thenReturn(Screen.State.OPEN);
         when(first.getLocation()).thenReturn(firstLocation);
         when(first.getPixelWidth()).thenReturn(128);
         when(first.getPixelHeight()).thenReturn(128);
@@ -218,6 +219,7 @@ class IntersectionHelperTest {
         Screen second = mock(Screen.class);
         Location secondOrigin = new Location(mock(), 0, 0, 1);
         ScreenLocation secondLocation = new ScreenLocation(secondOrigin, Direction.NORTH);
+        when(second.getState()).thenReturn(Screen.State.OPEN);
         when(second.getLocation()).thenReturn(secondLocation);
         when(second.getPixelWidth()).thenReturn(128);
         when(second.getPixelHeight()).thenReturn(128);
