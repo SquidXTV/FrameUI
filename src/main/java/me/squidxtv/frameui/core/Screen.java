@@ -51,8 +51,8 @@ public class Screen implements Clickable, Scrollable {
     private ClickEventHandler clickEventHandler = ClickEventHandler.empty();
     private ScrollEventHandler scrollEventHandler = ScrollEventHandler.empty();
 
-    private double clickRadius = 20;
-    private double scrollRadius = 20;
+    private double clickRadius = 15;
+    private double scrollRadius = 15;
 
     private State state = State.CLOSED;
 
@@ -403,17 +403,18 @@ public class Screen implements Clickable, Scrollable {
     }
 
     /**
-     * Returns the max allowed click radius of the screen.
+     * Returns the max allowed click radius (in blocks) of the screen.
      * 
-     * @return the max allowed click radius of the screen
+     * @return the max allowed click radius (in blocks) of the screen
      */
     public double getClickRadius() {
         return clickRadius;
     }
 
     /**
-     * Sets the max allowed click radius of the screen.
-     * 
+     * Sets the max allowed click radius (in blocks) of the screen.
+     * It is recommended to keep this value small.
+     *
      * @param clickRadius the new max allowed click radius
      * @throws IllegalArgumentException if {@code clickRadius < 0}
      */
@@ -425,16 +426,17 @@ public class Screen implements Clickable, Scrollable {
     }
 
     /**
-     * Returns the max allowed scroll radius of the screen.
+     * Returns the max allowed scroll radius (in blocks) of the screen.
      * 
-     * @return the max allowed scroll radius of the screen
+     * @return the max allowed scroll radius (in blocks) of the screen
      */
     public double getScrollRadius() {
         return scrollRadius;
     }
 
     /**
-     * Sets the max allowed scroll radius of the screen
+     * Sets the max allowed scroll radius (in blocks) of the screen.
+     * It is recommended to keep this value small.
      * 
      * @param scrollRadius the new max allowed scroll radius
      * @throws IllegalArgumentException if {@code scrollRadius < 0}
