@@ -412,8 +412,8 @@ public class Screen implements Clickable, Scrollable {
     }
 
     /**
-     * Sets the max allowed click radius (in blocks) of the screen.
-     * It is recommended to keep this value small.
+     * Sets the max allowed click radius (in blocks) of the screen. It is
+     * recommended to keep this value small.
      *
      * @param clickRadius the new max allowed click radius
      * @throws IllegalArgumentException if {@code clickRadius < 0}
@@ -435,8 +435,8 @@ public class Screen implements Clickable, Scrollable {
     }
 
     /**
-     * Sets the max allowed scroll radius (in blocks) of the screen.
-     * It is recommended to keep this value small.
+     * Sets the max allowed scroll radius (in blocks) of the screen. It is
+     * recommended to keep this value small.
      * 
      * @param scrollRadius the new max allowed scroll radius
      * @throws IllegalArgumentException if {@code scrollRadius < 0}

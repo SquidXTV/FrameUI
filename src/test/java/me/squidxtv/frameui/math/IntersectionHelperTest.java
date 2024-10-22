@@ -1,9 +1,5 @@
 package me.squidxtv.frameui.math;
 
-import me.squidxtv.frameui.api.ScreenRegistry;
-import me.squidxtv.frameui.api.ScreenRegistryImpl;
-import me.squidxtv.frameui.core.Screen;
-import me.squidxtv.frameui.core.ScreenLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -12,6 +8,11 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
+
+import me.squidxtv.frameui.api.ScreenRegistry;
+import me.squidxtv.frameui.api.ScreenRegistryImpl;
+import me.squidxtv.frameui.core.Screen;
+import me.squidxtv.frameui.core.ScreenLocation;
 
 import java.awt.Point;
 import java.util.Collections;
@@ -228,7 +229,8 @@ class IntersectionHelperTest {
         Location eyeLocation = new Location(mock(), 1, 1, 0, 0, 0);
         when(player.getEyeLocation()).thenReturn(eyeLocation);
 
-        Optional<Intersection> nearest = IntersectionHelper.getNearestIntersection(List.of(first, second), player, _ -> Double.POSITIVE_INFINITY);
+        Optional<Intersection> nearest = IntersectionHelper.getNearestIntersection(List.of(first, second), player,
+                _ -> Double.POSITIVE_INFINITY);
         assertTrue(nearest.isPresent());
         assertEquals(first, nearest.get().screen());
     }
