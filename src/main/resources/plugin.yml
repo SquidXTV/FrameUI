@@ -1,6 +1,6 @@
 main: me.squidxtv.frameui.FrameUI
 name: FrameUI
-version: 1.0
+version: 1.0.0
 api-version: 1.21
 load: STARTUP
 author: SquidXTV
