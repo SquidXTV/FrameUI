@@ -1,7 +1,12 @@
+import org.jreleaser.model.Active
+import org.jreleaser.model.Distribution.DistributionType
+import java.util.Calendar
+
 plugins {
     id("java")
     id("com.diffplug.spotless") version "7.0.0.BETA3"
     `maven-publish`
+    id("org.jreleaser") version "1.14.0"
 }
 
 group = "me.squidxtv"
@@ -114,7 +119,7 @@ publishing {
 
             pom {
                 name = rootProject.name
-                description = project.description
+                description = rootProject.description
                 url = "https://github.com/SquidXTV/FrameUI"
 
                 licenses {
@@ -146,6 +151,92 @@ publishing {
     repositories {
         maven {
             url = uri(layout.buildDirectory.dir("staging-deploy"))
+        }
+    }
+}
+
+jreleaser {
+    project {
+        name = rootProject.name
+        version = rootProject.version.toString()
+        description = rootProject.description
+
+        author("Connor Schweighöfer")
+        maintainer("SquidXTV")
+
+        tag("java")
+        tag("minecraft")
+        tag("library")
+        tag("spigot")
+
+        license = "GPL-3.0-or-later"
+
+        inceptionYear = "2023"
+        copyright = "${inceptionYear}-${Calendar.getInstance().get(Calendar.YEAR)} Connor Schweighöfer"
+
+        links {
+            homepage = "https://github.com/SquidXTV/FrameUI"
+            documentation = "https://github.com/SquidXTV/FrameUI"
+            faq = "https://github.com/SquidXTV/FrameUI/discussions"
+            help = "https://github.com/SquidXTV/FrameUI/discussions"
+            license = "https://spdx.org/licenses/GPL-3.0-or-later.html"
+        }
+    }
+
+    signing {
+        active = Active.ALWAYS
+        armored = true
+    }
+
+    distributions {
+        val stagingRepository = "build/staging-deploy/me/squidxtv/FrameUI/${rootProject.version}"
+
+        create("Plugin") {
+            active = Active.ALWAYS
+            distributionType = DistributionType.SINGLE_JAR
+
+            artifact {
+                setPath("${stagingRepository}/FrameUI-${rootProject.version}-sources.jar")
+            }
+        }
+
+        create("Javadoc") {
+            active = Active.ALWAYS
+            distributionType = DistributionType.SINGLE_JAR
+
+            artifact {
+                setPath("${stagingRepository}/FrameUI-${rootProject.version}-javadoc.jar")
+            }
+        }
+
+        create("Sources") {
+            active = Active.ALWAYS
+            distributionType = DistributionType.SINGLE_JAR
+
+            artifact {
+                setPath("${stagingRepository}/FrameUI-${rootProject.version}-sources.jar")
+            }
+        }
+    }
+
+    release {
+        github {
+            username = "SquidXTV"
+            repoOwner = "SquidXTV"
+            name = "FrameUI"
+            host = "github.com"
+        }
+    }
+
+    deploy {
+        maven {
+            mavenCentral {
+                create("sonatype") {
+                    active = Active.ALWAYS
+                    url = "https://central.sonatype.com/api/v1/publisher"
+                    stagingRepository("build/staging-deploy")
+                }
+            }
         }
     }
 }
