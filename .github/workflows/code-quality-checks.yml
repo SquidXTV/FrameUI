@@ -1,0 +1,30 @@
+name: Code Quality Checks
+
+on: [pull_request]
+
+jobs:
+  spotless:
+    name: "Spotless"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '22'
+      - name: Run spotless check
+        run: ./gradlew spotlessCheck
+
+  tests:
+    name: "Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '22'
+      - name: Run tests
+        run: ./gradlew test
