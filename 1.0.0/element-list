@@ -1,0 +1,9 @@
+me.squidxtv.frameui
+me.squidxtv.frameui.api
+me.squidxtv.frameui.core
+me.squidxtv.frameui.core.action.click
+me.squidxtv.frameui.core.action.scroll
+me.squidxtv.frameui.core.impl
+me.squidxtv.frameui.listener
+me.squidxtv.frameui.math
+me.squidxtv.frameui.packets
