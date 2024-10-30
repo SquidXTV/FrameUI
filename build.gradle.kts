@@ -62,6 +62,7 @@ tasks {
             .tags("apiNote:a:API Note:", "implNote:a:Implementation Note:")
             .links("https://hub.spigotmc.org/javadocs/spigot/", "https://javadocs.packetevents.com/")
             .overview(file("$rootDir/src/main/resources/javadoc-overview.html").toString())
+            .destinationDirectory(destinationDir?.resolve("${rootProject.version}"))
     }
 
     test {
