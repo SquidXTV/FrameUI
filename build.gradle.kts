@@ -6,7 +6,7 @@ plugins {
     id("java")
     id("com.diffplug.spotless") version "7.0.0.BETA4"
     `maven-publish`
-    id("org.jreleaser") version "1.14.0"
+    id("org.jreleaser") version "1.15.0"
 }
 
 group = "me.squidxtv"
