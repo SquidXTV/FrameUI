@@ -24,7 +24,7 @@ repositories {
     }
 }
 
-val spigotVersion = "1.21.1-R0.1-SNAPSHOT"
+val spigotVersion = "1.21.3-R0.1-SNAPSHOT"
 val packetEventsVersion = "2.6.0"
 val junitVersion = "5.11.3"
 val mockitoVersion = "5.14.2"
