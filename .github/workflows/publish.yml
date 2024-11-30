@@ -30,5 +30,5 @@ jobs:
         run: ./gradlew clean
       - name: Stage all artifacts to a local directory
         run: ./gradlew publish
-#      - name: Deploy and release
-#        run: ./gradlew jreleaserFullRelease
+      - name: Deploy and release
+        run: ./gradlew jreleaserFullRelease
