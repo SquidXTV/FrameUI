@@ -196,7 +196,7 @@ jreleaser {
             distributionType = DistributionType.SINGLE_JAR
 
             artifact {
-                setPath("${stagingRepository}/FrameUI-${rootProject.version}-sources.jar")
+                setPath("${stagingRepository}/FrameUI-${rootProject.version}.jar")
             }
         }
 
