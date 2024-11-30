@@ -17,14 +17,11 @@
  */
 package me.squidxtv.frameui.math;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicesManager;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
 
 import me.squidxtv.frameui.api.ScreenRegistry;
 import me.squidxtv.frameui.api.ScreenRegistryImpl;
@@ -39,24 +36,14 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 class IntersectionHelperTest {
 
-    private static MockedStatic<Bukkit> bukkit;
-
     @BeforeAll
     public static void setUp() {
-        bukkit = mockStatic(Bukkit.class);
         ServicesManager manager = mock(ServicesManager.class);
         when(manager.load(ScreenRegistry.class)).thenReturn(new ScreenRegistryImpl());
-        when(Bukkit.getServicesManager()).thenReturn(manager);
-    }
-
-    @AfterAll
-    public static void tearDown() {
-        bukkit.close();
     }
 
     @Test

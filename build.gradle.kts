@@ -29,7 +29,6 @@ val packetEventsVersion = "2.6.0"
 val junitVersion = "5.11.3"
 val mockitoVersion = "5.14.2"
 
-
 dependencies {
     compileOnly("org.spigotmc:spigot-api:$spigotVersion")
     compileOnly("com.github.retrooper:packetevents-spigot:$packetEventsVersion")
@@ -177,7 +176,7 @@ jreleaser {
 
         links {
             homepage = "https://github.com/SquidXTV/FrameUI"
-            documentation = "https://github.com/SquidXTV/FrameUI"
+            documentation = "https://squidxtv.me/FrameUI/${rootProject.version}/"
             faq = "https://github.com/SquidXTV/FrameUI/discussions"
             help = "https://github.com/SquidXTV/FrameUI/discussions"
             license = "https://spdx.org/licenses/GPL-3.0-or-later.html"

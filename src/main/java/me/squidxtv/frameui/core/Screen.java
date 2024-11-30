@@ -17,7 +17,6 @@
  */
 package me.squidxtv.frameui.core;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -50,8 +49,7 @@ import java.util.UUID;
  */
 public class Screen implements Clickable, Scrollable {
 
-    private static final ScreenRegistry REGISTRY = Objects.requireNonNull(Bukkit.getServicesManager().load(ScreenRegistry.class),
-            "Couldn't properly load ScreenRegistry from the ServicesManager.");
+    private final ScreenRegistry registry;
 
     private final Plugin plugin;
     private final Set<UUID> viewers = new HashSet<>();
@@ -105,6 +103,8 @@ public class Screen implements Clickable, Scrollable {
         Objects.requireNonNull(location, "Location cannot be null");
         Objects.requireNonNull(spawner, "Spawner cannot be null");
         Objects.requireNonNull(renderer, "Renderer cannot be null");
+        this.registry = Objects.requireNonNull(plugin.getServer().getServicesManager().load(ScreenRegistry.class),
+                "Couldn't properly load ScreenRegistry from the ServicesManager.");
         this.plugin = plugin;
         this.itemFrames = new ItemFrame[height][width];
 
@@ -163,7 +163,7 @@ public class Screen implements Clickable, Scrollable {
             close();
         }
 
-        REGISTRY.add(this);
+        registry.add(this);
         initializeItemFrames(invisible);
         spawner.spawn(this);
         state = State.OPEN;
@@ -188,7 +188,7 @@ public class Screen implements Clickable, Scrollable {
             return;
         }
 
-        REGISTRY.remove(this);
+        registry.remove(this);
         spawner.despawn(this);
         for (ItemFrame[] row : itemFrames) {
             Arrays.fill(row, null);

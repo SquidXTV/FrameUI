@@ -17,6 +17,8 @@
  */
 package me.squidxtv.frameui;
 
+import io.github.retrooper.packetevents.bstats.bukkit.Metrics;
+import io.github.retrooper.packetevents.bstats.charts.SimplePie;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
@@ -30,11 +32,15 @@ import me.squidxtv.frameui.listener.ClickListener;
 import me.squidxtv.frameui.listener.LeaveListener;
 import me.squidxtv.frameui.listener.ScrollListener;
 
+import java.util.Arrays;
+
 /**
  * The {@code FrameUI} class is the main plugin class for the FrameUI plugin
  * library.
  */
 public class FrameUI extends JavaPlugin {
+
+    private Metrics metrics;
 
     @Override
     public void onEnable() {
@@ -56,6 +62,18 @@ public class FrameUI extends JavaPlugin {
         if (config.getBoolean("features.scroll", true)) {
             pluginManager.registerEvents(new ScrollListener(registry), this);
         }
+
+        metrics = new Metrics(this, 23942);
+        metrics.addCustomChart(new SimplePie("dependents_count",
+                () -> String.valueOf(Arrays.stream(pluginManager.getPlugins())
+                        .flatMap(plugin -> plugin.getDescription().getDepend().stream())
+                        .filter(s -> s.equalsIgnoreCase("FrameUI"))
+                        .count())));
+    }
+
+    @Override
+    public void onDisable() {
+        metrics.shutdown();
     }
 
 }
