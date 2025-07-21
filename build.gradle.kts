@@ -4,7 +4,7 @@ import java.util.Calendar
 
 plugins {
     id("java")
-    id("com.diffplug.spotless") version "7.0.0.BETA4"
+    id("com.diffplug.spotless") version "7.2.0"
     `maven-publish`
     id("org.jreleaser") version "1.17.0"
 }
